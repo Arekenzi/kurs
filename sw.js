@@ -1,7 +1,8 @@
 /* Кэш приложения: работает без интернета. Версию менять при обновлении файла. */
-var CACHE = "kurs-v1";
+var CACHE = "kurs-v2";
 var FILES = ["./", "./index.html", "./manifest.webmanifest",
-             "./icon-192.png", "./icon-512.png", "./icon-maskable.png"];
+             "./icon-192.png", "./icon-512.png", "./icon-maskable.png",
+             "./apple-touch-icon.png", "./favicon-64.png"];
 
 self.addEventListener("install", function (e) {
   self.skipWaiting();
