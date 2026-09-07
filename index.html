@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Курс</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#13171a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Курс">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
+<style>
+:root{--bg:#ECEEED;--card:#FFF;--ink:#13171A;--dim:#646C70;--faint:#98A0A3;
+--line:#DBDFDD;--line2:#BAC1BE;--am:#8F6410;--am-bg:#FAF0DA;--pm:#27406E;--pm-bg:#E5EAF3;
+--warn:#8C2E2C;--warn-bg:#F8EBEA;--ok:#3A6B33;--ok-bg:#E9F1E6;--r:10px}
+@media (prefers-color-scheme:dark){:root{--bg:#121618;--card:#1C2124;--ink:#ECEEED;--dim:#99A2A5;
+--faint:#6B7478;--line:#2A3134;--line2:#3B4447;--am:#E3AF58;--am-bg:#2C2311;--pm:#9FB8EA;
+--pm-bg:#151E30;--warn:#E59391;--warn-bg:#2C1514;--ok:#8FC385;--ok-bg:#182416}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums;padding-bottom:104px}
+.wrap{max-width:600px;margin:0 auto;padding:12px 14px 0}
+h1{font-size:20px;margin:0;font-weight:600;letter-spacing:-.02em}
+h2{font-size:12px;font-weight:600;color:var(--dim);margin:22px 0 8px;letter-spacing:.04em;text-transform:uppercase}
+.sub{font-size:13px;color:var(--dim);margin-top:4px;line-height:1.4}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.badge{background:var(--ink);color:var(--bg);border-radius:20px;padding:6px 13px;font-size:13px;font-weight:600;white-space:nowrap}
+.badge.off{background:var(--line2);color:var(--card)}
+.badge.soon{background:var(--pm);color:#fff}
+.badge.end{background:var(--ok);color:#fff}
+.wkbar{display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.wkbar button{padding:8px 13px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:9px;font-size:15px;cursor:pointer}
+.wkbar .g{flex:1;text-align:center;font-size:13px;color:var(--dim);line-height:1.3}
+.wkbar .g b{display:block;color:var(--ink);font-size:15px;font-weight:600}
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:12px}
+.strip button{padding:7px 0 6px;border:1px solid var(--line);background:var(--card);color:var(--dim);border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px}
+.strip button .d{font-size:11px}.strip button .n{font-size:16px;font-weight:600;color:var(--ink)}
+.strip button.on{background:var(--ink);border-color:var(--ink)}
+.strip button.on .n,.strip button.on .d{color:var(--bg)}
+.strip button.tdy{border-color:var(--ink);border-width:2px}
+.strip button.pre{opacity:.38}
+.strip .dot{width:5px;height:5px;border-radius:50%;background:var(--ok);margin-top:2px}
+.strip .dot.part{background:var(--am)}.strip button.on .dot{background:var(--bg)}
+.strip .sp{height:7px}
+.prog{height:5px;background:var(--line);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.prog i{display:block;height:100%;background:var(--ok);width:0;transition:width .2s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 14px;margin-bottom:14px;overflow:hidden}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:600;padding:11px 14px;margin:0 -14px}
+.hd.a{background:var(--am-bg);color:var(--am)}.hd.p{background:var(--pm-bg);color:var(--pm)}
+.hd .t{display:flex;align-items:center;gap:7px}.hd small{font-weight:400;opacity:.85;font-size:12px}
+.hd .cnt{font-weight:400;font-size:12px;opacity:.85}
+.row{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid var(--line);align-items:flex-start;cursor:pointer}
+.row:last-child{border-bottom:none}
+.bx{width:28px;height:28px;flex:none;border:1.5px solid var(--line2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:transparent;font-size:16px;font-weight:700}
+.bx.on,.row.done .bx{background:var(--ok);border-color:var(--ok);color:#fff}
+.row.done .nm,.row.done .ds,.row.done .mg{opacity:.4;text-decoration:line-through}
+.nm{font-size:16px;font-weight:600;line-height:1.25}
+.ds{font-size:15px;color:var(--dim);margin-top:2px}.ds b{color:var(--ink);font-weight:600}
+.mg{font-size:13px;color:var(--faint);margin-top:2px}
+.site{display:inline-block;font-size:12px;font-weight:600;background:var(--pm-bg);color:var(--pm);padding:3px 9px;border-radius:20px;margin-top:6px}
+.empty{padding:20px 0;color:var(--faint);font-size:15px;text-align:center}
+.tag{font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;margin-left:6px;vertical-align:2px}
+.tag.new{background:var(--am-bg);color:var(--am)}
+.tag.up{background:var(--pm-bg);color:var(--pm)}
+.tag.dn{background:var(--warn-bg);color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:left;font-size:11px;font-weight:500;color:var(--dim);padding:9px 4px;border-bottom:1px solid var(--line2);text-transform:uppercase}
+td{padding:11px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+td.l{text-align:left;font-weight:400;color:var(--dim)}
+.tl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tl table{font-size:13px;min-width:100%}
+.tl th,.tl td{white-space:nowrap;padding:8px 6px;text-align:center;width:auto}
+.tl th:first-child,.tl td:first-child{text-align:left;position:sticky;left:0;background:var(--card);
+font-weight:600;z-index:2;width:130px;min-width:130px;max-width:130px;
+overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+box-shadow:7px 0 7px -5px rgba(0,0,0,.30),1px 0 0 var(--line2)}
+.tl td,.tl th{min-width:40px}
+.tl td:first-child .u{font-weight:400;color:var(--faint);font-size:11px;margin-left:4px}
+.tl td.now,.tl th.now{background:var(--ok-bg)}
+.tl td.now:first-child{background:var(--card)}
+.tl .z{color:var(--faint)}
+input,button,textarea,select{font-family:inherit}
+input[type=date],input[type=text],input[type=number],textarea,select{width:100%;padding:12px;font-size:16px;border:1px solid var(--line2);background:var(--card);color:var(--ink);border-radius:var(--r)}
+textarea{min-height:70px;resize:vertical}
+label{display:block;font-size:13px;color:var(--dim);margin:14px 0 5px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{width:100%;padding:13px;font-size:15px;font-weight:600;border:1px solid var(--line2);background:var(--card);color:var(--ink);border-radius:var(--r);cursor:pointer;margin-top:10px}
+.btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.dgr{color:var(--warn);border-color:var(--warn)}
+.btn.sm{padding:9px;font-size:14px;margin-top:0}
+.seg+.btn,.btn+.seg,.seg+.seg{margin-top:10px}
+.seg button.on{box-shadow:none}
+.qk{display:flex;gap:8px;margin-top:8px}
+.qk button{flex:1;padding:11px 4px;font-size:13px;border:1px solid var(--line2);background:var(--card);color:var(--ink);border-radius:var(--r);cursor:pointer}
+.dsel{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dsel button{padding:9px 0;font-size:13px;border:1px solid var(--line2);background:var(--card);color:var(--dim);border-radius:8px;cursor:pointer}
+.dsel button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;padding:11px 4px;font-size:14px;border:1px solid var(--line2);background:var(--card);color:var(--dim);border-radius:9px;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.per{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:var(--card)}
+.per .ph{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;color:var(--dim);margin-bottom:8px}
+.per .del{background:none;border:none;color:var(--warn);font-size:13px;cursor:pointer;padding:2px 6px;width:auto}
+.dlist .it{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.dlist .it:last-child{border-bottom:none}
+.dlist .it .in{flex:1;min-width:0}
+.dlist .it .t2{font-size:13px;color:var(--dim);margin-top:2px}
+.dlist .it .ar{color:var(--faint);font-size:18px}
+.note{background:var(--pm-bg);border-left:3px solid var(--pm);border-radius:0 9px 9px 0;padding:12px 14px;font-size:14px;line-height:1.5;margin:12px 0}
+.note.w{background:var(--warn-bg);border-left-color:var(--warn)}
+.note.g{background:var(--ok-bg);border-left-color:var(--ok)}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:10px}
+.stat .lb{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.big{font-size:32px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:9}
+.tabs button{flex:1;background:none;border:none;padding:8px 2px;font-size:11px;color:var(--faint);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tabs button .ic{font-size:16px;line-height:1;font-weight:600}
+.tabs button.on{color:var(--ink);font-weight:600}
+.hide{display:none}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:20px;font-size:14px;z-index:20;opacity:0;transition:opacity .2s;pointer-events:none;max-width:88%;text-align:center}
+#toast.on{opacity:1}
+.ebar{display:flex;align-items:center;gap:10px;margin-bottom:14px;
+position:sticky;top:0;z-index:8;background:var(--bg);padding:8px 0;
+box-shadow:0 8px 8px -8px rgba(0,0,0,.25)}
+.ebar button{padding:9px 14px;border:1px solid var(--line2);background:var(--card);color:var(--ink);border-radius:9px;font-size:14px;cursor:pointer;width:auto}
+.ebar .sp{flex:1}
+
+.row{position:relative;padding-left:12px}
+.row:before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:transparent}
+.row.cat-course:before{background:#C0553F}
+.row.cat-supp:before{background:#3B7A9E}
+.row.cat-pct:before{background:#6B5BA8}
+.row.cat-sport:before{background:#4C8A46}
+.skipbtn{flex:none;width:30px;height:30px;border:1px solid var(--line);background:transparent;
+color:var(--faint);border-radius:8px;font-size:14px;cursor:pointer;align-self:center;padding:0}
+.row.skipped{opacity:.55}
+.row.skipped .nm{text-decoration:line-through}
+.row.skipped .skipbtn{color:var(--warn);border-color:var(--warn)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--dim);margin-bottom:10px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:0}
+.dayrow{padding:12px 0;border-bottom:1px solid var(--line)}
+.dayrow:last-child{border-bottom:none}
+.dayrow.today{background:var(--ok-bg);margin:0 -14px;padding:12px 14px}
+.dayrow .dh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px}
+.dayrow .dd{font-size:15px;font-weight:600}
+.dayrow .dw{font-size:12px;color:var(--faint)}
+.dayrow .li{font-size:14px;color:var(--dim);line-height:1.5}
+.dayrow .li b{color:var(--ink);font-weight:600}
+.wkhead{font-size:12px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;padding:16px 0 4px}
+
+/* --- запрет горизонтального ухода страницы --- */
+html{overflow-x:hidden}
+body{overflow-x:hidden;max-width:100%}
+.wrap{max-width:100%}
+/* поля в сетках должны сжиматься, иначе распирают страницу */
+.f2>*,.f3>*{min-width:0}
+input,select,textarea{min-width:0;max-width:100%}
+/* длинные названия переносятся, а не выталкивают строку */
+.row>div{min-width:0}
+.nm,.ds,.mg,.site,.t2,.li,.dd{overflow-wrap:anywhere}
+.dlist .it .in{min-width:0}
+.hd .t{min-width:0;flex:1}
+.hd .t span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wkbar .g{min-width:0}
+.wkbar .g b{overflow-wrap:anywhere}
+.stat .big{overflow-wrap:anywhere}
+.seg button,.qk button{min-width:0;overflow-wrap:anywhere}
+.note,.sub,.empty{overflow-wrap:anywhere}
+.ebar{flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><h1 id="ttl">Сегодня</h1><div class="badge" id="badge">—</div></div>
+
+  <div id="v-day">
+    <div class="wkbar">
+      <button id="pw">‹</button><div class="g" id="wklab"></div>
+      <button id="nw">›</button><button id="tdy">Сегодня</button>
+    </div>
+    <div class="strip" id="strip"></div>
+    <div class="prog"><i id="pbar"></i></div>
+    <div id="alerts"></div>
+    <div id="blocks"></div>
+  </div>
+
+  <div id="v-plan" class="hide">
+    <div class="seg" id="planMode" style="margin:0 0 12px">
+      <button data-pm="days">По дням</button><button data-pm="weeks">Таблицей</button></div>
+    <button class="btn" id="toDrugs" style="margin:0 0 16px">Препараты в схеме</button>
+    <div class="legend">
+      <span><i style="background:#C0553F"></i>Курс</span>
+      <span><i style="background:#3B7A9E"></i>Поддержка</span>
+      <span><i style="background:#6B5BA8"></i>ПКТ</span>
+      <span><i style="background:#4C8A46"></i>Спортпит</span>
+    </div>
+    <div id="planDays"></div>
+    <div id="planWeeks" class="hide">
+    
+    <div class="card" style="padding:0"><div class="tl"><table id="tlAM"></table></div></div>
+    <div class="card" style="padding:0"><div class="tl"><table id="tlPM"></table></div></div>
+    <div class="sub" id="planlegend"></div>
+    </div>
+    <h2>В какие дни</h2>
+    <div class="card" style="padding:0 10px"><table id="tblDays"></table></div>
+    <h2>Проверка схемы</h2>
+    <div id="warns"></div>
+    <h2>Что меняется по неделям</h2>
+    <div id="changes"></div>
+  </div>
+
+  <div id="v-drugs" class="hide">
+    <button class="btn pri" id="addDrug" style="margin-top:0">+ Добавить препарат</button>
+    <button class="btn" id="catBrowse">Справочник веществ</button>
+    <div class="card dlist" id="drugList" style="margin-top:14px"></div>
+    <div class="qk">
+      <button id="seedBtn">Загрузить мою схему</button>
+      <button id="clearBtn">Очистить список</button>
+    </div>
+    <div class="sub">«Загрузить мою схему» добавит препараты из твоей исходной расписки. Всё в списке можно править и удалять.</div>
+  </div>
+
+  <div id="v-edit" class="hide">
+    <div class="ebar">
+      <button id="edBack">‹ Назад</button><div class="sp"></div>
+      <button id="edCopy">Дублировать</button>
+      <button id="edDel" style="color:var(--warn);border-color:var(--warn)">Удалить</button>
+    </div>
+    <button class="btn" id="edPick" style="margin-top:0">Выбрать из справочника</button>
+    <div id="edCat"></div>
+    <label>Тип карточки</label>
+    <div class="seg" id="edType">
+      <button data-ty="aas">Препарат курса</button>
+      <button data-ty="med">Лекарство</button>
+      <button data-ty="sport">Спортпит</button>
+    </div>
+    <label>Раздел схемы</label>
+    <div class="seg" id="edCatSel">
+      <button data-c="course">Курс</button>
+      <button data-c="supp">Поддержка</button>
+      <button data-c="pct">ПКТ</button>
+      <button data-c="sport">Спортпит</button>
+    </div>
+    <label>Название</label>
+    <input type="text" id="edName" placeholder="например Тестостерон энантат">
+    <div class="f2">
+      <div><label>Единица</label>
+        <select id="edUnit"><option>мл</option><option>таб</option><option>капс</option><option>мг</option><option>мкг</option><option>МЕ</option><option>ЕД</option><option>капли</option><option>доза</option></select></div>
+      <div><label>Способ</label>
+        <select id="edRoute"></select></div>
+    </div>
+    <label>Сколько мг в одной единице <span style="color:var(--faint)">(необязательно)</span></label>
+    <input type="number" id="edConc" inputmode="decimal" placeholder="например 250 мг в 1 мл">
+    <div id="edForms"></div>
+    <div id="edLyoSel"><label>Форма во флаконе</label>
+      <div class="seg" id="edLyo">
+        <button data-l="0">Готовый раствор</button><button data-l="1">Сухой порошок</button></div></div>
+    <div id="edVolWrap"><label>Объём ампулы или флакона, мл</label>
+      <input type="number" id="edVol" inputmode="decimal" placeholder="например 1"></div>
+    <div id="edLyoWrap">
+      <label>Сухого вещества во флаконе</label>
+      <div class="f2">
+        <input type="number" id="edVialAmt" inputmode="decimal" placeholder="например 5000">
+        <select id="edVialUnit"><option>мг</option><option>мкг</option><option>МЕ</option></select>
+      </div>
+      <label>Развожу физраствором, мл</label>
+      <input type="number" id="edSolvent" inputmode="decimal" placeholder="например 2">
+      <div id="edLyoCalc"></div>
+    </div>
+    <div id="edServWrap"><label>Форма выпуска</label>
+      <select id="edForm"></select>
+      <label>Размер порции</label>
+      <div class="f2"><input type="number" id="edServ" inputmode="decimal" placeholder="например 30">
+      <input type="text" id="edServU" placeholder="г / капс / мл"></div></div>
+    <label>Ротация мест укола</label>
+    <select id="edRot"><option value="none">не нужна</option><option value="belly">живот, 8 точек</option><option value="glute">ягодицы, лево/право</option><option value="thigh">бёдра, лево/право</option><option value="delt">плечи, лево/право</option></select>
+    <div class="f2">
+      <div><label>Хватает дней <span style="color:var(--faint)">(флакон)</span></label><input type="number" id="edVialDays" inputmode="numeric" placeholder="напр. 10"></div>
+      <div><label>Вскрыт / разведён</label><input type="date" id="edVialOpen"></div>
+    </div>
+    <label>Заметка</label>
+    <textarea id="edNote" placeholder="натощак, запивать водой, хранить в холодильнике…"></textarea>
+
+    <h2>Периоды приёма</h2>
+    <div class="sub" style="margin-bottom:10px">Один период — это отрезок недель с одной дозой. Меняется доза или дни — добавь новый период. Утро и вечер тоже задаются отдельными периодами.</div>
+    <div id="edPers"></div>
+    <button class="btn" id="edAddPer">+ Добавить период</button>
+    <div id="edWarn"></div>
+    <button class="btn pri" id="edSave" style="margin-bottom:26px">Сохранить</button>
+  </div>
+
+  <div id="v-cat" class="hide">
+    <div id="catPickBar"></div>
+    <div class="seg" id="catKind" style="margin-bottom:10px">
+      <button data-k="drug">Препараты</button><button data-k="supp">Спортпит</button></div>
+    <input type="text" id="catQ" placeholder="Поиск по названию">
+    <div class="qk" id="catGrp" style="flex-wrap:wrap"></div>
+    <div id="catList"></div>
+    <div class="sub" style="margin:16px 0 26px">В справочнике указана форма выпуска — то, что написано на ампуле или упаковке. Дозу режима задаёшь ты сам. Для зарегистрированных препаратов приведена доза из инструкции с указанием показания.</div>
+  </div>
+
+  <div id="v-health" class="hide">
+    <div id="hAlerts"></div>
+    <h2>Сегодня</h2>
+    <div class="card" style="padding:14px">
+      <div class="f2">
+        <div><label style="margin-top:0">Давление</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="number" id="vSys" inputmode="numeric" placeholder="120">
+            <span style="color:var(--faint)">/</span>
+            <input type="number" id="vDia" inputmode="numeric" placeholder="80"></div></div>
+        <div><label style="margin-top:0">Пульс</label><input type="number" id="vHr" inputmode="numeric" placeholder="65"></div>
+      </div>
+      <label>Вес, кг</label>
+      <input type="number" id="vWt" inputmode="decimal" placeholder="82,5">
+      <label>Самочувствие</label>
+      <div class="seg" id="vMood" style="flex-wrap:wrap"></div>
+      <div id="vState"></div>
+    </div>
+
+    <h2>Динамика</h2>
+    <div class="seg" id="chartPick" style="margin-bottom:10px;flex-wrap:wrap"></div>
+    <div class="card" style="padding:12px"><div id="chart"></div></div>
+
+    <h2>Анализы</h2>
+    <div id="labWhen"></div>
+    <button class="btn pri" id="labAdd" style="margin-top:0">+ Внести результаты</button>
+    <div id="labList"></div>
+  </div>
+
+  <div id="v-labedit" class="hide">
+    <div class="ebar"><button id="leBack">‹ Назад</button><div class="sp"></div>
+      <button id="leDel" style="color:var(--warn);border-color:var(--warn)">Удалить</button></div>
+    <label>Дата сдачи</label>
+    <input type="date" id="leDate">
+    <div class="sub">Заполняй только то, что есть в бланке. Пустые поля не сохраняются.</div>
+    <div id="leFields"></div>
+    <button class="btn pri" id="leSave" style="margin-bottom:26px">Сохранить</button>
+  </div>
+
+  <div id="v-buy" class="hide">
+    <div class="ebar"><button id="buyBack">‹ Назад</button><div class="sp"></div>
+      <button id="buyList">Список покупок</button></div>
+    <div class="sub" style="margin-bottom:12px">В каждой позиции три поля: сколько единиц в упаковке, цена упаковки и сколько есть сейчас. Остаток вводится в единицах препарата — миллилитрах, таблетках, миллиграммах.</div>
+    <div id="buySum"></div>
+    <div id="buyRows"></div>
+    <div class="sub" style="margin:14px 0 26px">Остаток списывается автоматически по твоим отметкам «принято». Пропущенные приёмы не списываются. Обновляй остаток при каждой закупке.</div>
+  </div>
+
+  <div id="v-lab" class="hide">
+    <div id="labwhen"></div>
+    <h2>Что сдавать</h2>
+    <div class="card" style="padding:0 10px"><table id="labtbl"></table></div>
+    <div class="sub">Давление меряй дома раз в неделю.</div>
+    <h2>Даты сдачи</h2>
+    <div class="card" style="padding:0 10px"><table id="labdates"></table></div>
+    <div class="note w"><b>Анастрозол не начинай вслепую.</b> Сдай эстрадиол до того, как включишь его в схему, и решай по цифре. Если уронить Е2 слишком низко — уйдут суставы, либидо, настроение и липиды, а ощущаться это будет как «мало теста».</div>
+    <div class="sub" style="margin:18px 0 26px">Это не медицинская рекомендация. Приложение только ведёт расписание, которое ты задал сам, и не проверяет дозы на безопасность. Схему стоит показать врачу хотя бы ради контроля анализов.</div>
+  </div>
+
+  <div id="v-set" class="hide">
+    <button class="btn" id="toDrugs2" style="margin-top:0">Препараты в схеме</button>
+    <h2>Курс</h2>
+    <label>Первый день курса</label>
+    <input type="date" id="startdate">
+    <div class="qk"><button id="qToday">Начал сегодня</button><button id="qMon">С понедельника</button></div>
+    <label>Длительность курса, недель</label>
+    <input type="number" id="weeks" inputmode="numeric" min="1" max="52" placeholder="12">
+    <div id="setupinfo"></div>
+    <h2>Время приёмов</h2>
+    <div class="sub">Нужно для напоминаний и выгрузки в календарь.</div>
+    <div class="f2">
+      <div><label>Утро</label><input type="time" id="tAm" value="08:00"></div>
+      <div><label>Вечер</label><input type="time" id="tPm" value="22:00"></div>
+    </div>
+    <div class="f2">
+      <div><label>Днём</label><input type="time" id="tDay" value="13:00"></div>
+    </div>
+    <div class="f2">
+      <div><label>До тренировки</label><input type="time" id="tPre" value="17:30"></div>
+      <div><label>После тренировки</label><input type="time" id="tPost" value="19:30"></div>
+    </div>
+    <h2>Напоминания</h2>
+    <div class="f2">
+      <div><label style="margin-top:0">Предупредить за, минут</label>
+        <input type="number" id="nLead" inputmode="numeric" placeholder="10"></div>
+      <div><label style="margin-top:0">Повтор через, минут</label>
+        <input type="number" id="nRepeat" inputmode="numeric" placeholder="20"></div>
+    </div>
+    <div class="sub">Повтор — второе напоминание на случай, если первое пропустил. Ноль отключает.</div>
+    <button class="btn pri" id="icsBtn">Выгрузить в календарь телефона (.ics)</button>
+    <div class="sub">Это единственный способ получать напоминания при закрытом приложении. Файл открывается в календаре, события добавляются с будильниками.</div>
+    <button class="btn" id="notifBtn">Уведомления, пока приложение открыто</button>
+    <div class="sub" id="notifState"></div>
+    <h2>Контроль</h2>
+    <button class="btn pri" id="goBuy" style="margin-top:0">Закупка и склад</button>
+    <button class="btn" id="goLab">Анализы и контроль</button>
+    <div class="qk" style="margin-top:14px">
+      <button id="quickDl">Скачать копию</button>
+      <button id="quickUp">К загрузке копии</button>
+    </div>
+    <h2>Паузы в курсе</h2>
+    <div class="sub">Дни, когда ничего не принимаешь. Курс продлевается на их количество, нумерация недель не сбивается.</div>
+    <div id="pauseList"></div>
+    <div class="f2" style="margin-top:8px">
+      <div><label style="margin-top:0">С</label><input type="date" id="pauseA"></div>
+      <div><label style="margin-top:0">По</label><input type="date" id="pauseB"></div>
+    </div>
+    <button class="btn" id="pauseAdd">Добавить паузу</button>
+    <h2>Дисциплина</h2>
+    <div class="g2">
+      <div class="stat"><div class="lb">Выполнено</div><div class="big" id="adh">—</div><div class="sub" id="adhs"></div></div>
+      <div class="stat"><div class="lb">Дней подряд</div><div class="big" id="streak">—</div><div class="sub">полностью закрытых</div></div>
+    </div>
+    <h2>Закупка</h2>
+    <div class="f2">
+      <div><label style="margin-top:0">Валюта</label><input type="text" id="cur" placeholder="₸"></div>
+      <div><label style="margin-top:0">Предупреждать за, дней</label><input type="number" id="warnDays" inputmode="numeric" placeholder="7"></div>
+    </div>
+    <h2>Резервная копия</h2>
+    <div class="note w">Данные живут в хранилище этого файла. Другая версия приложения откроется пустой. Перед обновлением скачивай копию, после — загружай обратно.</div>
+    <button class="btn pri" id="dlBtn" style="margin-top:0">Скачать копию файлом</button>
+    <label>Загрузить копию из файла</label>
+    <input type="file" id="upFile" accept=".json,.txt,application/json,text/plain">
+    <div class="sub" id="bkState">Выбери файл kurs-….json или moya-shema.json</div>
+    <h2>Копия строкой</h2>
+    <div class="sub">Запасной способ, если файл не проходит.</div>
+    <button class="btn" id="expBtn">Скопировать всё</button>
+    <label>Вставить сохранённую копию</label>
+    <textarea id="impTxt" placeholder="вставь строку сюда"></textarea>
+    <button class="btn" id="impBtn">Восстановить</button>
+    <h2>Сброс</h2>
+    <button class="btn dgr" id="reset">Стереть все данные</button>
+    <div class="sub" style="margin-bottom:26px">Удалит препараты, отметки, даты и анализы.</div>
+  </div>
+</div>
+<div id="toast"></div>
+<div class="tabs">
+  <button data-v="day" class="on"><span class="ic">✓</span>Сегодня</button>
+  <button data-v="health"><span class="ic">♥</span>Здоровье</button>
+  <button data-v="plan"><span class="ic">▤</span>Схема</button>
+  <button data-v="cat"><span class="ic">◉</span>Справочник</button>
+  <button data-v="set"><span class="ic">◷</span>Ещё</button>
+</div>
+
+<script>
+/*==LOGIC==*/
+/* Справочник: паспорт вещества. Форма выпуска = факт об упаковке.
+   Дозу режима пользователь задаёт сам. */
+/* Справочник веществ. Форма выпуска и фармакокинетика — факты о препарате.
+   Доза режима задаётся пользователем. w = меры предосторожности. */
+var CAT=[
+/* ===== Инъекционные ААС ===== */
+{id:"t-prop",g:"inj",n:"Тестостерон пропионат",unit:"мл",route:"в/м",oil:1,forms:[50,100],vols:[1,10],hlt:"~20 часов",gap:2,freq:"ежедневно или через день",arom:1,aa17:0,prog:0,
+ d:"Самый короткий эфир тестостерона. Быстро входит и быстро уходит, при редких уколах уровень гуляет пилой.",
+ w:"Масляный раствор — только внутримышечно, внутривенное введение вызывает масляную эмболию. Инъекции болезненные, возможны инфильтраты. Повышает гематокрит и давление.",mon:"гематокрит, эстрадиол, липиды, АД"},
+{id:"t-ace",g:"inj",n:"Тестостерон ацетат",unit:"мл",route:"в/м",oil:1,forms:[50,100],vols:[10],hlt:"~1 сутки",gap:2,freq:"ежедневно или через день",arom:1,aa17:0,prog:0,
+ d:"Очень короткий эфир, встречается редко, близок к пропионату.",
+ w:"Только внутримышечно. Требует ежедневных инъекций, иначе уровень скачет.",mon:"гематокрит, эстрадиол, АД"},
+{id:"t-pp",g:"inj",n:"Тестостерон фенилпропионат",unit:"мл",route:"в/м",oil:1,forms:[100],vols:[1,10],hlt:"~1,5–2 суток",gap:3,freq:"через день или раз в 3 дня",arom:1,aa17:0,prog:0,
+ d:"Короткий эфир, чуть длиннее пропионата. Входит в состав смесей.",
+ w:"Только внутримышечно. Риски по гематокриту, давлению и эстрогену как у прочих эфиров тестостерона.",mon:"гематокрит, эстрадиол, липиды, АД"},
+{id:"t-iso",g:"inj",n:"Тестостерон изокапроат",unit:"мл",route:"в/м",oil:1,forms:[60],vols:[1],hlt:"~4 суток",gap:4,freq:"раз в 3–4 дня",arom:1,aa17:0,prog:0,
+ d:"Средний эфир, самостоятельно почти не выпускается — встречается как компонент сустанона.",
+ w:"Только внутримышечно. Отдельно оценивать сложно: обычно идёт в смеси с тремя другими эфирами.",mon:"гематокрит, эстрадиол, липиды"},
+{id:"t-ent",g:"inj",n:"Тестостерон энантат",unit:"мл",route:"в/м",oil:1,forms:[200,250],vols:[1,10],hlt:"~4,5 суток",gap:4,freq:"раз в 3–4 дня",arom:1,aa17:0,prog:0,
+ d:"Средний эфир, самый распространённый. Ровный уровень при уколах дважды в неделю; один укол в неделю даёт провал к концу интервала.",
+ w:"Только внутримышечно. Подавляет собственную выработку тестостерона, восстановление занимает месяцы. Гематокрит выше 54% требует отмены и обращения к врачу.",mon:"гематокрит, эстрадиол, липиды, АД, ЛГ/ФСГ"},
+{id:"t-cyp",g:"inj",n:"Тестостерон ципионат",unit:"мл",route:"в/м",oil:1,forms:[200,250],vols:[1,10],hlt:"~5 суток",gap:4,freq:"раз в 3–4 дня",arom:1,aa17:0,prog:0,
+ d:"Практически близнец энантата, чуть длиннее. Разница клинически незначима.",
+ w:"Только внутримышечно. Риски идентичны энантату.",mon:"гематокрит, эстрадиол, липиды, АД, ЛГ/ФСГ"},
+{id:"t-dec",g:"inj",n:"Тестостерон деканоат",unit:"мл",route:"в/м",oil:1,forms:[100,200],vols:[1,10],hlt:"~7–9 суток",gap:7,freq:"раз в 5–7 дней",arom:1,aa17:0,prog:0,
+ d:"Длинный эфир, отдельно встречается редко, в основном как компонент смесей.",
+ w:"Только внутримышечно. Медленно выходит на плато и медленно выводится — коррекция дозы занимает недели.",mon:"гематокрит, эстрадиол, липиды, АД"},
+{id:"t-und",g:"inj",n:"Тестостерон ундеканоат инъекционный (Небидо)",unit:"мл",route:"в/м",oil:1,forms:[250],vols:[4],hlt:"~20–34 суток",gap:21,freq:"раз в 10–14 недель (зарегистрированный режим)",arom:1,aa17:0,prog:0,
+ dose:"Зарегистрированный режим заместительной терапии: 1000 мг, повторно через 6 недель, далее каждые 10–14 недель.",
+ d:"Сверхдлинный эфир, зарегистрирован для заместительной терапии гипогонадизма.",
+ w:"Описаны случаи масляной микроэмболии лёгких сразу после инъекции — вводить очень медленно, глубоко в мышцу. Из-за длины любая ошибка в дозе тянется месяцами.",mon:"гематокрит, эстрадиол, липиды, АД, ПСА"},
+{id:"t-sus",g:"inj",n:"Смесь эфиров тестостерона (Сустанон)",unit:"мл",route:"в/м",oil:1,forms:[250],vols:[1],hlt:"смесь: от ~20 часов до ~3 недель",gap:3,freq:"раз в 3 дня для ровного уровня",arom:1,aa17:0,prog:0,
+ d:"Четыре эфира в ампуле: пропионат, фенилпропионат, изокапроат, деканоат.",
+ w:"Только внутримышечно. Содержит арахисовое масло — противопоказан при аллергии на арахис и сою. Заявленный режим раз в 3 недели даёт глубокие провалы.",mon:"гематокрит, эстрадиол, липиды, АД"},
+{id:"t-susp",g:"inj",n:"Тестостерон суспензия (водный)",unit:"мл",route:"в/м",oil:0,forms:[100],vols:[10],hlt:"несколько часов",gap:1,freq:"ежедневно",arom:1,aa17:0,prog:0,
+ d:"Без эфира, чистый тестостерон в воде. Работает почти сразу и уходит за сутки.",
+ w:"Инъекции болезненные, высокий риск воспаления и абсцессов. Кристаллы забивают иглу. Резкие скачки уровня и эстрадиола.",mon:"гематокрит, эстрадиол, АД"},
+{id:"n-dec",g:"inj",n:"Нандролон деканоат",unit:"мл",route:"в/м",oil:1,forms:[100,200,250],vols:[1,10],hlt:"~6–7 суток",gap:7,freq:"раз в 4–7 дней",arom:1,aa17:0,prog:1,
+ d:"19-нор-производное. Ароматизируется слабо, но обладает прогестагенной активностью.",
+ w:"Ингибиторы ароматазы против прогестагенного механизма не работают — нужен контроль пролактина. Ось подавляет жёстко и надолго, восстановление после него самое затяжное. Частая жалоба — падение либидо и эректильная дисфункция при нормальном тестостероне.",mon:"пролактин, эстрадиол, ЛГ/ФСГ, липиды, гематокрит"},
+{id:"n-pp",g:"inj",n:"Нандролон фенилпропионат",unit:"мл",route:"в/м",oil:1,forms:[100],vols:[1,10],hlt:"~1,5–2 суток",gap:3,freq:"через день или раз в 3 дня",arom:1,aa17:0,prog:1,
+ d:"Короткий эфир нандролона: те же свойства, быстрее выводится.",
+ w:"Прогестагенная активность как у деканоата, контроль пролактина обязателен. При побочках отменяется быстрее.",mon:"пролактин, эстрадиол, ЛГ/ФСГ, липиды"},
+{id:"n-und",g:"inj",n:"Нандролон ундеканоат",unit:"мл",route:"в/м",oil:1,forms:[200],vols:[10],hlt:"~7–9 суток",gap:7,freq:"раз в 5–7 дней",arom:1,aa17:0,prog:1,
+ d:"Длинный эфир нандролона, встречается редко.",
+ w:"Те же прогестагенные риски. Из-за длины отмена при побочках действует с большой задержкой.",mon:"пролактин, эстрадиол, ЛГ/ФСГ, липиды"},
+{id:"bold",g:"inj",n:"Болденон ундецилленат",unit:"мл",route:"в/м",oil:1,forms:[200,250],vols:[10],hlt:"~14 суток",gap:7,freq:"раз в 5–7 дней",arom:1,aa17:0,prog:0,
+ d:"Длинный эфир, выходит на плато медленно — первые недели эффекта почти нет.",
+ w:"Заметно поднимает гематокрит и эритроциты, это его главный риск: контроль ОАК обязателен. Часто усиливает аппетит и тревожность.",mon:"гематокрит и гемоглобин обязательно, эстрадиол, АД"},
+{id:"dhb",g:"inj",n:"Дигидроболденон (1-тестостерон)",unit:"мл",route:"в/м",oil:1,forms:[100],vols:[10],hlt:"~5 суток (ципионат)",gap:4,freq:"раз в 3–4 дня",arom:0,aa17:0,prog:0,
+ d:"Производное болденона, не ароматизируется. Не зарегистрирован нигде как лекарство.",
+ w:"Известен крайне болезненными инъекциями и стойкими постинъекционными воспалениями. Данных о безопасности у людей практически нет. Заметно давит липиды.",mon:"липиды, АД, гематокрит"},
+{id:"tren-a",g:"inj",n:"Тренболон ацетат",unit:"мл",route:"в/м",oil:1,forms:[100],vols:[10],hlt:"~1 сутки",gap:2,freq:"ежедневно или через день",arom:0,aa17:0,prog:1,
+ d:"Не ароматизируется, но выраженно прогестагенный — эстрогеновые эффекты идут по другому механизму.",
+ w:"Один из самых тяжёлых по побочкам: ночная потливость, бессонница, одышка при нагрузке, тахикардия, влияние на психику и агрессию. Жёстко бьёт по липидам и нагружает почки. Ингибиторы ароматазы бесполезны, нужен контроль пролактина.",mon:"пролактин, липиды, креатинин, АД, пульс в покое"},
+{id:"tren-e",g:"inj",n:"Тренболон энантат",unit:"мл",route:"в/м",oil:1,forms:[200],vols:[10],hlt:"~7 суток",gap:4,freq:"раз в 3–4 дня",arom:0,aa17:0,prog:1,
+ d:"Длинный эфир тренболона.",
+ w:"Те же побочки, что у ацетата, но отмена действует с задержкой в недели. Начинать знакомство с длинного эфира рискованно — реакцию заранее не узнать.",mon:"пролактин, липиды, креатинин, АД"},
+{id:"tren-h",g:"inj",n:"Тренболон гексагидробензилкарбонат (параболан)",unit:"мл",route:"в/м",oil:1,forms:[76.5,100],vols:[1,10],hlt:"~8 суток",gap:5,freq:"раз в 4–5 дней",arom:0,aa17:0,prog:1,
+ d:"Длинный эфир тренболона, исторически выпускался как Parabolan.",
+ w:"Риски как у остальных форм тренболона, отмена самая медленная в группе.",mon:"пролактин, липиды, креатинин, АД"},
+{id:"mast-p",g:"inj",n:"Дростанолон пропионат (мастерон)",unit:"мл",route:"в/м",oil:1,forms:[100],vols:[10],hlt:"~1 сутки",gap:2,freq:"ежедневно или через день",arom:0,aa17:0,prog:0,
+ d:"Производное ДГТ, не ароматизируется, обладает слабым антиэстрогенным действием.",
+ w:"Выраженно андрогенный: ускоряет выпадение волос при предрасположенности, влияет на простату, ухудшает липиды. При уже низком эстрадиоле усугубляет падение.",mon:"липиды, ПСА после 40 лет, АД"},
+{id:"mast-e",g:"inj",n:"Дростанолон энантат",unit:"мл",route:"в/м",oil:1,forms:[200],vols:[10],hlt:"~4–5 суток",gap:4,freq:"раз в 3–4 дня",arom:0,aa17:0,prog:0,
+ d:"Длинный эфир дростанолона, те же свойства при более редких инъекциях.",
+ w:"Риски как у пропионата, отмена медленнее.",mon:"липиды, ПСА после 40 лет, АД"},
+{id:"primo-e",g:"inj",n:"Метенолон энантат (примоболан)",unit:"мл",route:"в/м",oil:1,forms:[100],vols:[1,10],hlt:"~10 суток",gap:7,freq:"раз в 5–7 дней",arom:0,aa17:0,prog:0,
+ d:"Мягкое производное ДГТ, не ароматизируется, по печени нейтрален.",
+ w:"Считается щадящим, но ось подавляет и липиды портит. Подделывается чаще прочих — под его видом нередко продают дешёвые эфиры.",mon:"липиды, гематокрит, ЛГ/ФСГ"},
+{id:"winny-inj",g:"inj",n:"Станозолол инъекционный (винстрол депо)",unit:"мл",route:"в/м",oil:0,forms:[50],vols:[10],hlt:"~24 часа",gap:2,freq:"ежедневно или через день",arom:0,aa17:1,prog:0,
+ d:"Водная суспензия станозолола. Молекула 17-альфа-алкилирована — печень нагружает и в инъекционной форме.",
+ w:"Вопреки распространённому мнению, укол печень не щадит: алкилирование остаётся. Инъекции очень болезненные, часты воспаления и абсцессы. Сильно роняет ЛПВП, сушит суставы.",mon:"липидограмма, печёночные ферменты, АД"},
+
+/* ===== Оральные ААС ===== */
+{id:"o-dbol",g:"oral",n:"Метандиенон (данабол, метан)",unit:"таб",route:"внутрь",oil:0,forms:[5,10],hlt:"~4–6 часов",gap:1,freq:"каждый день, обычно дробно",arom:1,aa17:1,prog:0,
+ d:"17-альфа-алкилирован. Сильно ароматизируется: задержка воды, давление, эстрогеновые побочки.",
+ w:"Гепатотоксичен: контроль АЛТ, АСТ, ГГТ, билирубина каждые 2–3 недели. Не сочетать с алкоголем и другими 17-АА. Заметный откат после отмены за счёт ухода воды.",mon:"АЛТ, АСТ, ГГТ, билирубин, эстрадиол, АД"},
+{id:"o-tbol",g:"oral",n:"Туринабол (хлордегидрометилтестостерон)",unit:"таб",route:"внутрь",oil:0,forms:[10],hlt:"~16 часов",gap:1,freq:"каждый день",arom:0,aa17:1,prog:0,
+ d:"17-альфа-алкилирован. Не ароматизируется, воду не задерживает.",
+ w:"Нагрузка на печень: потолок обычно 6–8 недель, нужен гепатопротектор и контроль ферментов. Заметно роняет ЛПВП. Детектируется в допинг-тестах месяцами.",mon:"АЛТ, АСТ, ГГТ, билирубин, липидограмма"},
+{id:"o-winny",g:"oral",n:"Станозолол (винстрол, таблетки)",unit:"таб",route:"внутрь",oil:0,forms:[10,50],hlt:"~9 часов",gap:1,freq:"каждый день",arom:0,aa17:1,prog:0,
+ d:"17-альфа-алкилирован, производное ДГТ, не ароматизируется.",
+ w:"Сильнее прочих роняет ЛПВП и поднимает ЛПНП. Даёт сухость и боль в суставах и связках, риск травм растёт.",mon:"липидограмма обязательно, печёночные ферменты, АД"},
+{id:"o-var",g:"oral",n:"Оксандролон (анавар)",unit:"таб",route:"внутрь",oil:0,forms:[5,10],hlt:"~9 часов",gap:1,freq:"каждый день",arom:0,aa17:1,prog:0,
+ dose:"Зарегистрированные дозы (восстановление веса после травм и ожогов): 2,5–20 мг в сутки.",
+ d:"17-альфа-алкилирован, но по печени считается самым мягким в группе. В ряде стран зарегистрирован.",
+ w:"Несмотря на репутацию мягкого, липиды портит выраженно и ось подавляет. Один из самых подделываемых препаратов.",mon:"липидограмма, печёночные ферменты"},
+{id:"o-adrol",g:"oral",n:"Оксиметолон (анаполон)",unit:"таб",route:"внутрь",oil:0,forms:[50],hlt:"~8–9 часов",gap:1,freq:"каждый день",arom:0,aa17:1,prog:1,
+ dose:"Зарегистрированные дозы при анемиях: 1–5 мг на кг веса в сутки.",
+ d:"Один из самых мощных и самых тяжёлых для печени препаратов группы.",
+ w:"Максимальная гепатотоксичность в группе: при длительном приёме описаны пелиоз печени и опухоли. Эстрогеноподобные эффекты идут по механизму, против которого ингибиторы ароматазы бесполезны. Частые головные боли и скачки давления.",mon:"АЛТ, АСТ, ГГТ, билирубин каждые 2–3 недели, АД, липиды"},
+{id:"o-sdrol",g:"oral",n:"Метилдростанолон (супердрол)",unit:"таб",route:"внутрь",oil:0,forms:[10],hlt:"~8 часов",gap:1,freq:"каждый день",arom:0,aa17:1,prog:0,
+ d:"Дизайнерский стероид, продавался как «пищевая добавка» до запрета. Как лекарство не зарегистрирован нигде.",
+ w:"Крайне гепатотоксичен: описаны случаи тяжёлого холестатического поражения печени и печёночной недостаточности за считанные недели приёма. Резко обваливает ЛПВП. Один из самых опасных препаратов в этом списке.",mon:"печёночные ферменты и билирубин каждые 1–2 недели, липидограмма, АД"},
+{id:"o-primo",g:"oral",n:"Метенолон ацетат (примоболан оральный)",unit:"таб",route:"внутрь",oil:0,forms:[25],hlt:"~2–3 часа",gap:1,freq:"каждый день, дробно",arom:0,aa17:0,prog:0,
+ d:"Редкий оральный ААС без 17-альфа-алкилирования — печень нагружает мало.",
+ w:"Плохо усваивается и слаб по эффекту. Ось подавляет, липиды портит.",mon:"липиды, ЛГ/ФСГ"},
+{id:"o-halo",g:"oral",n:"Флуоксиместерон (халотестин)",unit:"таб",route:"внутрь",oil:0,forms:[5,10],hlt:"~9 часов",gap:1,freq:"каждый день",arom:0,aa17:1,prog:0,
+ d:"Сильно андрогенный препарат, массы почти не даёт.",
+ w:"Один из самых гепатотоксичных. Выраженно влияет на агрессию и психику. Резко ухудшает липидный профиль.",mon:"печёночные ферменты часто, липиды, АД, психическое состояние"},
+{id:"o-mest",g:"oral",n:"Местеролон (Провирон)",unit:"таб",route:"внутрь",oil:0,forms:[25],hlt:"~12 часов",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы при андрогенной недостаточности: 25–75 мг в сутки.",
+ d:"Производное ДГТ, не 17-альфа-алкилирован, печень почти не нагружает. Вытесняет тестостерон из связи с ГСПГ, повышая долю свободного.",
+ w:"Ингибитором ароматазы не является — заменой анастрозолу не служит. Андрогенный: волосы, простата, липиды. Ось подавляет слабее прочих, но подавляет.",mon:"липиды, ПСА после 40 лет"},
+{id:"o-andriol",g:"oral",n:"Тестостерона ундеканоат оральный (Андриол)",unit:"капс",route:"внутрь",oil:0,forms:[40],hlt:"~1,5–2 часа",gap:1,freq:"2–3 раза в сутки с жирной пищей",arom:1,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: 120–160 мг в сутки первые 2–3 недели, далее 40–120 мг.",
+ d:"Единственная оральная форма тестостерона, всасывающаяся через лимфу в обход печени. Не 17-альфа-алкилирован.",
+ w:"Без жирной пищи почти не усваивается. Уровень нестабилен, требует 2–3 приёмов в сутки. Дорог в пересчёте на эффект.",mon:"тестостерон, эстрадиол, липиды"},
+{id:"o-mtest",g:"oral",n:"Метилтестостерон",unit:"таб",route:"внутрь",oil:0,forms:[5,10,25],hlt:"~3 часа",gap:1,freq:"каждый день, дробно",arom:1,aa17:1,prog:0,
+ d:"Старейший оральный андроген, сейчас применяется редко.",
+ w:"17-альфа-алкилирован и гепатотоксичен. Сильно ароматизируется. Вытеснен более безопасными формами тестостерона — практического смысла почти не осталось.",mon:"печёночные ферменты, эстрадиол, липиды"},
+{id:"o-danaz",g:"oral",n:"Даназол",unit:"капс",route:"внутрь",oil:0,forms:[100,200],hlt:"~4,5 часа",gap:1,freq:"каждый день",arom:0,aa17:1,prog:1,
+ dose:"Зарегистрированные дозы при эндометриозе и наследственном ангиоотёке: 200–800 мг в сутки.",
+ d:"Слабый андроген с антигонадотропным действием, зарегистрированный препарат.",
+ w:"17-альфа-алкилирован, гепатотоксичен. Описаны случаи внутричерепной гипертензии и тромбозов. Сильно давит ЛГ и ФСГ.",mon:"печёночные ферменты, липиды, зрение"},
+
+/* ===== Контроль эстрогена и пролактина ===== */
+{id:"ana",g:"ai",n:"Анастрозол",unit:"таб",route:"внутрь",oil:0,forms:[1],hlt:"~46 часов",gap:2,freq:"по инструкции 1 мг раз в сутки",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза: 1 мг 1 раз в сутки (рак молочной железы).",
+ d:"Нестероидный обратимый ингибитор ароматазы: блокирует превращение тестостерона в эстрадиол.",
+ w:"Главный риск — уронить эстрадиол слишком низко: боли в суставах, провал либидо, подавленность, ухудшение липидов и плотности костей. Начинать по анализу, а не по расписанию. Против прогестагенных препаратов не работает.",mon:"эстрадиол до начала и через 2 недели после"},
+{id:"letro",g:"ai",n:"Летрозол",unit:"таб",route:"внутрь",oil:0,forms:[2.5],hlt:"~2 суток",gap:2,freq:"по инструкции 2,5 мг раз в сутки",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза: 2,5 мг 1 раз в сутки.",
+ d:"Самый мощный из нестероидных ингибиторов ароматазы.",
+ w:"Из-за силы чаще всего обваливает эстрадиол в ноль. Для рутинного контроля на курсе избыточен.",mon:"эстрадиол обязательно"},
+{id:"exe",g:"ai",n:"Экземестан",unit:"таб",route:"внутрь",oil:0,forms:[25],hlt:"~24 часа",gap:1,freq:"по инструкции 25 мг раз в сутки",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза: 25 мг 1 раз в сутки после еды.",
+ d:"Стероидный необратимый ингибитор ароматазы.",
+ w:"Меньше бьёт по липидам, чем нестероидные, но действие необратимо — при передозировке восстановления фермента ждать дольше.",mon:"эстрадиол, липиды"},
+{id:"caber",g:"ai",n:"Каберголин",unit:"таб",route:"внутрь",oil:0,forms:[0.5],hlt:"~60–70 часов",gap:3,freq:"по инструкции 2 раза в неделю",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная стартовая доза при гиперпролактинемии: 0,5 мг в неделю, разделённая на 2 приёма.",
+ d:"Агонист дофамина, снижает пролактин. Применяется при прогестагенных препаратах.",
+ w:"Тошнота, головокружение, падение давления, особенно в начале. При длительном приёме высоких доз описано поражение клапанов сердца. Не начинать без анализа на пролактин.",mon:"пролактин до начала и через 3–4 недели, АД"},
+{id:"bromo",g:"ai",n:"Бромокриптин",unit:"таб",route:"внутрь",oil:0,forms:[2.5],hlt:"~6 часов",gap:1,freq:"по инструкции 2 раза в сутки",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы при гиперпролактинемии: 2,5–7,5 мг в сутки.",
+ d:"Более старый агонист дофамина, предшественник каберголина.",
+ w:"Побочки выражены сильнее, чем у каберголина: тошнота, головокружение, ортостатическая гипотензия. Требует нескольких приёмов в сутки.",mon:"пролактин, АД"},
+
+/* ===== ПКТ ===== */
+{id:"tam",g:"pct",n:"Тамоксифен",unit:"таб",route:"внутрь",oil:0,forms:[10,20],hlt:"~5–7 суток",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: 20–40 мг в сутки по онкологическим показаниям.",
+ d:"СЭРМ: блокирует эстрогеновые рецепторы в тканях груди и растормаживает выработку ЛГ и ФСГ.",
+ w:"Повышает риск венозных тромбозов, особенно при неподвижности, перелётах и тромбофилии. Возможны нарушения зрения, приливы, подавленность. Начинать не раньше, чем эфир вышел, иначе смысла нет.",mon:"ЛГ, ФСГ, тестостерон, эстрадиол через 4 недели, коагулограмма при факторах риска"},
+{id:"clom",g:"pct",n:"Кломифена цитрат",unit:"таб",route:"внутрь",oil:0,forms:[50],hlt:"~5 суток (изомеры до 30)",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза: 50 мг в сутки курсом 5 дней (стимуляция овуляции).",
+ d:"СЭРМ, стимулирует выброс ЛГ и ФСГ сильнее тамоксифена. Смесь двух изомеров.",
+ w:"Чаще тамоксифена даёт зрительные нарушения — вспышки, мушки, нечёткость; при их появлении отменять. Перепады настроения и тревожность. Зукломифен накапливается неделями.",mon:"ЛГ, ФСГ, тестостерон, зрение"},
+{id:"enclo",g:"pct",n:"Энкломифен",unit:"таб",route:"внутрь",oil:0,forms:[12.5,25],hlt:"~10 часов",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ d:"Изолированный транс-изомер кломифена, отвечающий за стимуляцию ЛГ и ФСГ.",
+ w:"Не накапливается в отличие от смеси изомеров, зрительные побочки реже. Как самостоятельный препарат зарегистрирован не везде, качество источников непредсказуемо.",mon:"ЛГ, ФСГ, тестостерон"},
+{id:"torem",g:"pct",n:"Торемифен",unit:"таб",route:"внутрь",oil:0,forms:[20,60],hlt:"~5 суток",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза: 60 мг 1 раз в сутки (рак молочной железы).",
+ d:"СЭРМ, близкий родственник тамоксифена.",
+ w:"Удлиняет интервал QT — противопоказан при аритмиях и в сочетании с препаратами, влияющими на QT. Риск тромбозов как у тамоксифена.",mon:"ЛГ, ФСГ, тестостерон, ЭКГ при факторах риска"},
+{id:"ralox",g:"pct",n:"Ралоксифен",unit:"таб",route:"внутрь",oil:0,forms:[60],hlt:"~27 часов",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза: 60 мг 1 раз в сутки (остеопороз).",
+ d:"СЭРМ с преимущественным действием на ткань груди, применяется при гинекомастии.",
+ w:"Ось практически не стимулирует — для восстановления тестостерона не подходит. Повышает риск венозных тромбозов.",mon:"эстрадиол, состояние ткани груди"},
+{id:"hcg",g:"pct",n:"Хорионический гонадотропин (ХГЧ)",unit:"ЕД",route:"п/к",oil:0,forms:[500,1000,1500,5000],hlt:"~33 часа",gap:3,freq:"обычно 2–3 раза в неделю",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы при гипогонадизме: 1000–2000 МЕ 2–3 раза в неделю.",
+ d:"Имитирует ЛГ и напрямую стимулирует яички. Применяется на курсе для сохранения объёма яичек и перед ПКТ.",
+ w:"Повышает ароматизацию — эстрадиол на нём растёт. Ось не восстанавливает: гипофиз не будит, в одиночку ПКТ не заменяет. Высокие дозы длительно приводят к десенситизации клеток Лейдига.",mon:"эстрадиол, тестостерон"},
+{id:"hmg",g:"pct",n:"Менотропины (ЧМГ, HMG)",unit:"ЕД",route:"п/к",oil:0,forms:[75,150],hlt:"~10–70 часов",gap:3,freq:"обычно через день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы при мужском бесплодии: 75–150 МЕ 3 раза в неделю в сочетании с ХГЧ.",
+ d:"Содержит ФСГ и ЛГ, применяется при нарушениях сперматогенеза.",
+ w:"Дорог, требует холодовой цепи. Без ХГЧ и врачебного контроля смысла не имеет. Возможны местные реакции.",mon:"ФСГ, ЛГ, спермограмма"},
+{id:"gonad",g:"pct",n:"Гонадорелин",unit:"мл",route:"п/к",oil:0,forms:[100],hlt:"2–10 минут",gap:1,freq:"пульсовое введение, несколько раз в сутки",arom:0,aa17:0,prog:0,
+ d:"Аналог гонадотропин-рилизинг-гормона.",
+ w:"Крайне короткий период полувыведения: эффект даёт только пульсовое введение. При редком введении бесполезен, при постоянной стимуляции наоборот подавляет ось.",mon:"ЛГ, ФСГ, тестостерон"},
+
+/* ===== Гормон роста и пептиды ===== */
+{id:"hgh",g:"pep",n:"Соматропин (гормон роста)",unit:"ЕД",route:"п/к",oil:0,forms:[4,10,12,16,36],hlt:"~2–4 часа (п/к)",gap:1,freq:"ежедневно, обычно вечером",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы при дефиците ГР у взрослых: 0,15–0,3 мг в сутки с постепенным повышением.",
+ d:"Рекомбинантный человеческий гормон роста. Зарегистрирован при дефиците ГР, синдромах Тёрнера и Прадера-Вилли.",
+ w:"Задержка жидкости, туннельный синдром, боль в суставах, инсулинорезистентность вплоть до диабета. При акромегалии и активных опухолях противопоказан. Требует холодильника. Контроль глюкозы и ИФР-1 обязателен.",mon:"глюкоза натощак, HbA1c, ИФР-1, ТТГ и Т4"},
+{id:"serm-rel",g:"pep",n:"Серморелин",unit:"мл",route:"п/к",oil:0,forms:[],hlt:"~11–12 минут",gap:1,freq:"ежедневно на ночь",arom:0,aa17:0,prog:0,
+ d:"Аналог рилизинг-гормона гормона роста (первые 29 аминокислот). Стимулирует собственный выброс ГР.",
+ w:"Очень короткое действие. Требует сохранной функции гипофиза. Данных по длительному применению у здоровых мало.",mon:"ИФР-1, глюкоза"},
+{id:"tesa",g:"pep",n:"Тесаморелин",unit:"мг",route:"п/к",oil:0,forms:[1,2],hlt:"~26–38 минут",gap:1,freq:"ежедневно",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза (липодистрофия при ВИЧ): 2 мг подкожно 1 раз в сутки.",
+ d:"Стабилизированный аналог ГРГ, зарегистрирован в США.",
+ w:"Повышает ИФР-1 и может ухудшать чувствительность к инсулину. Противопоказан при активных опухолях. Местные реакции в месте укола.",mon:"ИФР-1, глюкоза"},
+{id:"ipa",g:"pep",n:"Ипаморелин",unit:"мг",route:"п/к",oil:0,forms:[2,5],hlt:"~2 часа",gap:1,freq:"1–3 раза в сутки",arom:0,aa17:0,prog:0,
+ d:"Селективный секретагог гормона роста, почти не влияет на кортизол и пролактин.",
+ w:"Не зарегистрирован нигде как лекарство. Данных по безопасности длительного применения у людей нет. Как и любой стимулятор ГР, потенциально ускоряет рост существующих опухолей.",mon:"ИФР-1, глюкоза"},
+{id:"cjc-dac",g:"pep",n:"CJC-1295 с DAC",unit:"мг",route:"п/к",oil:0,forms:[2,5],hlt:"~6–8 суток",gap:4,freq:"1–2 раза в неделю",arom:0,aa17:0,prog:0,
+ d:"Аналог ГРГ с присоединённым комплексом, продлевающим действие до недели.",
+ w:"Не зарегистрирован. Создаёт постоянно повышенный фон ГР вместо физиологических пиков — отдалённые последствия неизвестны. Задержка жидкости, влияние на глюкозу.",mon:"ИФР-1, глюкоза"},
+{id:"cjc-nodac",g:"pep",n:"CJC-1295 без DAC (Mod GRF 1-29)",unit:"мг",route:"п/к",oil:0,forms:[2,5],hlt:"~30 минут",gap:1,freq:"1–3 раза в сутки",arom:0,aa17:0,prog:0,
+ d:"Короткая версия того же аналога ГРГ, даёт импульсный выброс.",
+ w:"Не зарегистрирован. Требует нескольких инъекций в сутки. Данных по безопасности нет.",mon:"ИФР-1, глюкоза"},
+{id:"ghrp2",g:"pep",n:"GHRP-2",unit:"мг",route:"п/к",oil:0,forms:[5,10],hlt:"~30–60 минут",gap:1,freq:"2–3 раза в сутки",arom:0,aa17:0,prog:0,
+ d:"Секретагог гормона роста, стимулирует выброс через рецептор грелина.",
+ w:"Не зарегистрирован. Повышает кортизол и пролактин, хотя слабее GHRP-6. Усиливает аппетит.",mon:"ИФР-1, пролактин, кортизол, глюкоза"},
+{id:"ghrp6",g:"pep",n:"GHRP-6",unit:"мг",route:"п/к",oil:0,forms:[5,10],hlt:"~15–60 минут",gap:1,freq:"2–3 раза в сутки",arom:0,aa17:0,prog:0,
+ d:"Секретагог гормона роста с выраженным влиянием на аппетит.",
+ w:"Не зарегистрирован. Сильнее прочих поднимает кортизол и пролактин. Резкий голод после инъекции.",mon:"ИФР-1, пролактин, кортизол, глюкоза"},
+{id:"hexa",g:"pep",n:"Гексарелин",unit:"мг",route:"п/к",oil:0,forms:[2,5],hlt:"~55 минут",gap:1,freq:"1–2 раза в сутки",arom:0,aa17:0,prog:0,
+ d:"Самый мощный из секретагогов этой группы.",
+ w:"Не зарегистрирован. Быстро развивается десенситизация — эффект падает через несколько недель. Заметно поднимает кортизол и пролактин.",mon:"ИФР-1, пролактин, кортизол"},
+{id:"igf1",g:"pep",n:"IGF-1 LR3",unit:"мкг",route:"п/к",oil:0,forms:[100,1000],hlt:"~20–30 часов",gap:1,freq:"ежедневно",arom:0,aa17:0,prog:0,
+ d:"Модифицированный инсулиноподобный фактор роста с удлинённым действием.",
+ w:"Не зарегистрирован. Может вызывать гипогликемию — состояние, опасное для жизни. Теоретический риск стимуляции роста опухолей выше, чем у секретагогов. Требует холодильника.",mon:"глюкоза, ИФР-1"},
+{id:"mgf",g:"pep",n:"PEG-MGF",unit:"мг",route:"п/к",oil:0,forms:[2,5],hlt:"~48–72 часа (пегилированный)",gap:2,freq:"через день",arom:0,aa17:0,prog:0,
+ d:"Механический фактор роста, вариант ИФР-1, пегилированный для продления действия.",
+ w:"Не зарегистрирован. Клинических данных у людей практически нет. Эффективность в исследованиях не подтверждена.",mon:"—"},
+{id:"bpc",g:"pep",n:"BPC-157",unit:"мкг",route:"п/к",oil:0,forms:[250,500],hlt:"около 4 часов (оценочно)",gap:1,freq:"1–2 раза в сутки",arom:0,aa17:0,prog:0,
+ d:"Синтетический пептид из желудочного сока, изучался на животных на предмет заживления тканей.",
+ w:"Не зарегистрирован ни в одной стране, испытаний на людях не проходил. Все данные — на крысах. Внесён WADA в запрещённый список. Долгосрочная безопасность неизвестна.",mon:"—"},
+{id:"tb500",g:"pep",n:"TB-500 (тимозин бета-4)",unit:"мг",route:"п/к",oil:0,forms:[2,5],hlt:"~2–3 часа",gap:3,freq:"1–2 раза в неделю",arom:0,aa17:0,prog:0,
+ d:"Фрагмент белка тимозина бета-4, изучался как средство восстановления тканей.",
+ w:"Не зарегистрирован. Стимулирует ангиогенез — теоретический риск при наличии опухолей. Клинических данных у здоровых людей нет.",mon:"—"},
+{id:"mt2",g:"pep",n:"Меланотан II",unit:"мг",route:"п/к",oil:0,forms:[10],hlt:"~1 час",gap:1,freq:"ежедневно в фазе загрузки",arom:0,aa17:0,prog:0,
+ d:"Аналог меланоцитстимулирующего гормона, вызывает потемнение кожи.",
+ w:"Не зарегистрирован. Тошнота, приливы, спонтанные эрекции. Главный риск — потемнение и изменение родинок: описаны случаи маскировки и стимуляции меланомы. При наличии множественных невусов противопоказан.",mon:"осмотр дерматолога, контроль родинок"},
+{id:"pt141",g:"pep",n:"PT-141 (бремеланотид)",unit:"мг",route:"п/к",oil:0,forms:[10],hlt:"~2,7 часа",gap:1,freq:"по потребности",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза (гипоактивное сексуальное желание у женщин, США): 1,75 мг подкожно по потребности, не чаще 1 раза в сутки.",
+ d:"Меланокортиновый агонист, действует на центральные механизмы возбуждения.",
+ w:"Повышает артериальное давление — противопоказан при неконтролируемой гипертензии и сердечно-сосудистых заболеваниях. Тошнота, приливы, потемнение кожи.",mon:"АД"},
+{id:"ss31",g:"pep",n:"SS-31 (элампретид)",unit:"мл",route:"п/к",oil:0,forms:[],hlt:"~2,5 часа",gap:1,freq:"ежедневно",arom:0,aa17:0,prog:0,
+ d:"Митохондриальный пептид, проходил клинические испытания при митохондриальной миопатии и болезнях почек.",
+ w:"Не зарегистрирован ни в одной стране. Данных по безопасности длительного применения у здоровых людей нет. Чистота вещества из неаптечных источников не контролируется. Сухой лиофилизат — в морозилке, разведённый — в холодильнике, срок годности после разведения ограничен.",mon:"—"},
+
+/* ===== Жиросжигатели и метаболические ===== */
+{id:"clen",g:"fat",n:"Кленбутерол",unit:"мкг",route:"внутрь",oil:0,forms:[20,40],hlt:"~26–36 часов",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы как бронхолитик (там, где зарегистрирован): 20–40 мкг 2 раза в сутки.",
+ d:"Бета-2-агонист, бронхолитик с термогенным эффектом. В большинстве стран для людей не зарегистрирован.",
+ w:"Тахикардия, тремор, бессонница, судороги из-за потери калия и таурина. При длительном приёме описана гипертрофия сердечной мышцы. На фоне ААС, которые уже нагружают сердце, риск складывается. Отравления кленбутеролом требуют госпитализации.",mon:"пульс, АД, калий, ЭКГ"},
+{id:"t3",g:"fat",n:"Лиотиронин (Т3)",unit:"мкг",route:"внутрь",oil:0,forms:[25,50],hlt:"~1–2 суток",gap:1,freq:"каждый день, дробно",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы при гипотиреозе: 25–75 мкг в сутки.",
+ d:"Активный гормон щитовидной железы.",
+ w:"Подавляет собственную выработку гормонов щитовидной железы, восстановление после отмены занимает недели и месяцы. Ускоряет распад мышечной ткани. Аритмии, тахикардия, потеря костной массы. Резкая отмена высоких доз опасна.",mon:"ТТГ, Т3, Т4 свободный, пульс, ЭКГ"},
+{id:"t4",g:"fat",n:"Левотироксин (Т4)",unit:"мкг",route:"внутрь",oil:0,forms:[25,50,75,100],hlt:"~7 суток",gap:1,freq:"каждый день натощак",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы при гипотиреозе подбираются по ТТГ, обычно 25–150 мкг в сутки.",
+ d:"Прогормон щитовидной железы, превращается в Т3 в тканях.",
+ w:"Действует мягче Т3, но так же подавляет собственную функцию щитовидной железы. Принимать строго натощак, отдельно от кальция, железа и еды.",mon:"ТТГ через 6–8 недель, Т4 свободный"},
+{id:"metf",g:"fat",n:"Метформин",unit:"мг",route:"внутрь",oil:0,forms:[500,850,1000],hlt:"~5–6 часов",gap:1,freq:"каждый день с едой",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: 500–2000 мг в сутки, начиная с малых.",
+ d:"Снижает инсулинорезистентность. Применяется при её росте на фоне гормона роста.",
+ w:"Диарея и тошнота в начале приёма. Противопоказан при почечной недостаточности — редкий, но смертельный риск лактоацидоза. Отменять за 48 часов до исследований с контрастом.",mon:"глюкоза, HbA1c, креатинин и СКФ"},
+{id:"sema",g:"fat",n:"Семаглутид",unit:"мг",route:"п/к",oil:0,forms:[0.25,0.5,1,2.4],hlt:"~7 суток",gap:7,freq:"1 раз в неделю",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы при ожирении: старт 0,25 мг в неделю с повышением до 2,4 мг.",
+ d:"Агонист ГПП-1, снижает аппетит и замедляет опорожнение желудка.",
+ w:"Тошнота, рвота, риск панкреатита и желчнокаменной болезни. Противопоказан при медуллярном раке щитовидной железы в анамнезе. На дефиците калорий вместе с ААС повышает риск потери мышечной массы, если не добирать белок.",mon:"вес, глюкоза, амилаза при болях в животе"},
+{id:"tirz",g:"fat",n:"Тирзепатид",unit:"мг",route:"п/к",oil:0,forms:[2.5,5,7.5,10,12.5,15],hlt:"~5 суток",gap:7,freq:"1 раз в неделю",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: старт 2,5 мг в неделю с повышением до 15 мг.",
+ d:"Двойной агонист ГИП и ГПП-1, сильнее семаглутида по снижению веса.",
+ w:"Те же риски, что у семаглутида, выражены сильнее: тошнота, панкреатит, желчнокаменная болезнь. Требует контроля белка в рационе.",mon:"вес, глюкоза, состав тела"},
+{id:"yoh",g:"fat",n:"Йохимбин",unit:"мг",route:"внутрь",oil:0,forms:[5,10],hlt:"~36 минут",gap:1,freq:"натощак перед нагрузкой",arom:0,aa17:0,prog:0,
+ d:"Альфа-2-адреноблокатор растительного происхождения.",
+ w:"Поднимает давление, вызывает тревожность и панические атаки. Категорически несовместим с ингибиторами МАО. На курсе, где давление и так растёт, вклад ощутимый.",mon:"АД, пульс"},
+{id:"ephed",g:"fat",n:"Эфедрин",unit:"мг",route:"внутрь",oil:0,forms:[25,50],hlt:"~3–6 часов",gap:1,freq:"дробно в первой половине дня",arom:0,aa17:0,prog:0,
+ d:"Симпатомиметик с термогенным эффектом. Оборот ограничен во многих странах.",
+ w:"Тахикардия, гипертензия, аритмии, бессонница. Описаны инсульты и внезапная сердечная смерть при сочетании с кофеином и нагрузкой. С ААС, поднимающими давление, сочетание особенно рискованное.",mon:"АД, пульс, ЭКГ"},
+
+/* ===== Поддерживающая терапия ===== */
+{id:"urso",g:"sup",n:"Урсодезоксихолевая кислота (Урсосан, Урсофальк)",unit:"мг",route:"внутрь",oil:0,forms:[250,500],hlt:"~3,5–5,8 суток",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза при холестазе: 10–15 мг на кг веса в сутки, обычно на ночь.",
+ d:"Гепатопротектор с доказанным действием при холестазе — том самом типе поражения печени, который дают 17-АА оралы.",
+ w:"Противопоказана при остром холецистите, обструкции желчных путей, рентгенположительных камнях. В начале приёма возможна диарея.",mon:"АЛТ, АСТ, ГГТ, билирубин"},
+{id:"tudca",g:"sup",n:"Тауроурсодезоксихолевая кислота (TUDCA)",unit:"мг",route:"внутрь",oil:0,forms:[250,500],hlt:"близко к УДХК",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ d:"Таурин-конъюгированная форма урсодезоксихолевой кислоты, продаётся как добавка.",
+ w:"Регистрации как лекарства в большинстве стран нет, качество зависит от производителя. Доказательная база меньше, чем у обычной УДХК, а цена выше.",mon:"АЛТ, АСТ, ГГТ, билирубин"},
+{id:"silim",g:"sup",n:"Силимарин (расторопша)",unit:"мг",route:"внутрь",oil:0,forms:[70,140],hlt:"~6 часов",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Обычные дозы в инструкциях: 140 мг 2–3 раза в сутки.",
+ d:"Растительный гепатопротектор.",
+ w:"При холестатическом поражении, характерном для 17-АА, слабее урсодезоксихолевой кислоты — заменой ей не является.",mon:"печёночные ферменты"},
+{id:"pent",g:"sup",n:"Пентоксифиллин (Трентал)",unit:"мг",route:"внутрь",oil:0,forms:[100,400,600],hlt:"~1–1,6 часа",gap:1,freq:"каждый день, обычно 2–3 приёма",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: 100 мг 3 раза в сутки или пролонг 400 мг 2–3 раза в сутки.",
+ d:"Улучшает текучесть крови и микроциркуляцию, снижает вязкость. Применяется при росте гематокрита.",
+ w:"Противопоказан при кровотечениях, свежем инфаркте, кровоизлиянии в сетчатку. С антиагрегантами складывается риск кровотечений. Аптечные формы — 100 и 400 мг.",mon:"гематокрит, гемоглобин, АД"},
+{id:"asa",g:"sup",n:"Ацетилсалициловая кислота (Аспирин Кардио)",unit:"мг",route:"внутрь",oil:0,forms:[75,100,300],hlt:"~15–20 минут (метаболит дольше)",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Кардиологические дозы: 75–100 мг в сутки.",
+ d:"Антиагрегант. Применяется при повышенном гематокрите и риске тромбозов.",
+ w:"Раздражает слизистую желудка, риск язв и кровотечений. Не сочетать с НПВС и алкоголем. Отменить минимум за 5–7 дней до операции. С пентоксифиллином и омега-3 риск кровотечений складывается.",mon:"ОАК, гематокрит, состояние ЖКТ"},
+{id:"omepr",g:"sup",n:"Омепразол",unit:"мг",route:"внутрь",oil:0,forms:[20,40],hlt:"~1 час (эффект до суток)",gap:1,freq:"каждый день натощак",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: 20–40 мг 1 раз в сутки.",
+ d:"Ингибитор протонной помпы, защита желудка при приёме аспирина и НПВС.",
+ w:"Длительный приём ухудшает всасывание B12, магния и кальция. Отменять постепенно — возможен рикошетный рост кислотности.",mon:"B12 и магний при приёме дольше нескольких месяцев"},
+{id:"tada",g:"sup",n:"Тадалафил",unit:"мг",route:"внутрь",oil:0,forms:[5,20],hlt:"~17,5 часа",gap:1,freq:"каждый день (низкая доза)",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза для ежедневного приёма: 5 мг в сутки.",
+ d:"Ингибитор ФДЭ-5. Улучшает кровоток, иногда применяется при повышении АД на курсе.",
+ w:"Категорически несовместим с нитратами — резкое падение давления. Осторожно с альфа-адреноблокаторами. Головная боль, заложенность носа, боль в спине.",mon:"АД"},
+{id:"telm",g:"sup",n:"Телмисартан",unit:"мг",route:"внутрь",oil:0,forms:[40,80],hlt:"~24 часа",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: 40–80 мг 1 раз в сутки.",
+ d:"Блокатор рецепторов ангиотензина для контроля артериального давления.",
+ w:"Не сочетать с другими блокаторами ренин-ангиотензиновой системы. Контроль калия и креатинина. В начале приёма возможна гипотония.",mon:"АД дома регулярно, креатинин, калий"},
+{id:"enal",g:"sup",n:"Эналаприл",unit:"мг",route:"внутрь",oil:0,forms:[5,10,20],hlt:"~11 часов (эналаприлат)",gap:1,freq:"каждый день, 1–2 приёма",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: 5–20 мг в сутки.",
+ d:"Ингибитор АПФ для контроля давления.",
+ w:"Характерный сухой кашель у части пациентов. Риск гиперкалиемии, особенно с калийсберегающими диуретиками. Контроль креатинина.",mon:"АД, калий, креатинин"},
+{id:"nebi",g:"sup",n:"Небиволол",unit:"мг",route:"внутрь",oil:0,forms:[5],hlt:"~10 часов",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза: 5 мг 1 раз в сутки.",
+ d:"Селективный бета-блокатор с сосудорасширяющим эффектом.",
+ w:"Снижает пульс и переносимость нагрузок — на тренировках это чувствуется. Противопоказан при бронхиальной астме и выраженной брадикардии. Резко не отменять.",mon:"АД, пульс"},
+{id:"ator",g:"sup",n:"Аторвастатин",unit:"мг",route:"внутрь",oil:0,forms:[10,20,40,80],hlt:"~14 часов",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: 10–80 мг 1 раз в сутки.",
+ d:"Статин для коррекции липидного профиля.",
+ w:"Риск миопатии и рабдомиолиза, особенно на фоне тяжёлых тренировок — при необъяснимых мышечных болях сдать КФК. Контроль печёночных ферментов, которые на 17-АА и так подняты.",mon:"липидограмма, АЛТ, АСТ, КФК"},
+{id:"rosu",g:"sup",n:"Розувастатин",unit:"мг",route:"внутрь",oil:0,forms:[5,10,20,40],hlt:"~19 часов",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная стартовая доза: 5–10 мг в сутки.",
+ d:"Статин с более выраженным действием на ЛПНП.",
+ w:"Назначается по анализам, а не по расписанию. Те же риски миопатии. Контроль КФК и печёночных ферментов.",mon:"липидограмма, АЛТ, АСТ, КФК"},
+{id:"ezet",g:"sup",n:"Эзетимиб",unit:"мг",route:"внутрь",oil:0,forms:[10],hlt:"~22 часа",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза: 10 мг 1 раз в сутки.",
+ d:"Блокирует всасывание холестерина в кишечнике, добавляется к статину.",
+ w:"Сам по себе слабее статина. В комбинации со статином риск поражения печени выше.",mon:"липидограмма, печёночные ферменты"},
+{id:"omega",g:"sup",n:"Омега-3 (ЭПК/ДГК)",unit:"мг",route:"внутрь",oil:0,forms:[500,1000],hlt:"—",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ d:"Поддержка липидного профиля. Эффект умеренный, статины не заменяет.",
+ w:"В высоких дозах разжижает кровь — с аспирином и пентоксифиллином эффект складывается. Отменить перед операциями.",mon:"липидограмма"},
+{id:"nac",g:"sup",n:"N-ацетилцистеин",unit:"мг",route:"внутрь",oil:0,forms:[600],hlt:"~5,6 часа",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ d:"Предшественник глутатиона, применяется как поддержка печени.",
+ w:"Доказательная база при холестазе слабее, чем у урсодезоксихолевой кислоты — заменой не является. Возможны тошнота и изжога.",mon:"печёночные ферменты"},
+{id:"coq10",g:"sup",n:"Коэнзим Q10",unit:"мг",route:"внутрь",oil:0,forms:[100,200],hlt:"~34 часа",gap:1,freq:"каждый день с жирной пищей",arom:0,aa17:0,prog:0,
+ d:"Применяется для смягчения мышечных болей на статинах, которые снижают его синтез.",
+ w:"Доказательная база умеренная. Без жиров усваивается плохо.",mon:"—"},
+
+/* ===== Волосы и кожа ===== */
+{id:"finas",g:"skin",n:"Финастерид",unit:"мг",route:"внутрь",oil:0,forms:[1,5],hlt:"~6–8 часов",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: 1 мг в сутки при андрогенной алопеции, 5 мг при аденоме простаты.",
+ d:"Ингибитор 5-альфа-редуктазы, снижает превращение тестостерона в ДГТ. Применяется против выпадения волос.",
+ w:"Возможны снижение либидо, эректильная дисфункция и подавленность; у части людей симптомы описаны как сохраняющиеся после отмены. Против ДГТ-производных препаратов (мастерон, станозолол, примоболан) бесполезен — они уже не превращаются 5-альфа-редуктазой. Занижает ПСА примерно вдвое, о чём нужно предупреждать врача.",mon:"ПСА с поправкой, либидо и настроение"},
+{id:"dutas",g:"skin",n:"Дутастерид",unit:"мг",route:"внутрь",oil:0,forms:[0.5],hlt:"~5 недель",gap:1,freq:"каждый день",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированная доза: 0,5 мг 1 раз в сутки.",
+ d:"Блокирует оба типа 5-альфа-редуктазы, сильнее финастерида.",
+ w:"Период полувыведения около пяти недель — при побочках отмена действует месяцами. Те же сексуальные и психические побочки, что у финастерида, но чаще.",mon:"ПСА с поправкой, либидо и настроение"},
+{id:"minox",g:"skin",n:"Миноксидил (наружно)",unit:"мл",route:"наружно",oil:0,forms:[2,5],hlt:"местное действие",gap:1,freq:"2 раза в сутки на кожу головы",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированный режим: 1 мл раствора 5% дважды в сутки на сухую кожу головы.",
+ d:"Сосудорасширяющее средство местного действия против выпадения волос.",
+ w:"В первые недели усиливается выпадение — это ожидаемая фаза. При попадании на лицо возможен рост нежелательных волос. Системное всасывание может вызвать отёки и тахикардию.",mon:"состояние кожи, отёки"},
+{id:"isotr",g:"skin",n:"Изотретиноин",unit:"мг",route:"внутрь",oil:0,forms:[8,10,16,20],hlt:"~10–20 часов",gap:1,freq:"каждый день с жирной пищей",arom:0,aa17:0,prog:0,
+ dose:"Зарегистрированные дозы: 0,5–1 мг на кг веса в сутки до курсовой дозы 120–150 мг/кг.",
+ d:"Ретиноид, применяется при тяжёлых формах акне, включая стероидное.",
+ w:"Абсолютно противопоказан при беременности — тяжёлые пороки развития. Сильно повышает липиды и печёночные ферменты, что на курсе складывается с эффектом ААС. Сухость слизистых, боли в суставах, влияние на настроение. Отпускается по рецепту и требует наблюдения дерматолога.",mon:"липидограмма и печёночные ферменты ежемесячно"}
+];
+var GRP={inj:"Инъекционные ААС",oral:"Оральные ААС",ai:"Контроль эстрогена и пролактина",
+         pct:"ПКТ и восстановление",pep:"Гормон роста и пептиды",fat:"Жиросжигатели и метаболические",
+         sup:"Поддерживающая терапия",skin:"Волосы и кожа"};
+
+
+/* ---------- Спортивное питание ---------- */
+var SUPP=[
+{id:"whey",n:"Сывороточный протеин",g:"prot",form:"порошок",unit:"г",serv:30,when:"после тренировки или между приёмами пищи",
+ d:"Быстроусвояемый белок. Закрывает суточную норму белка, когда её тяжело набрать едой.",
+ w:"Не заменяет полноценное питание. При непереносимости лактозы брать изолят или гидролизат."},
+{id:"casein",n:"Казеин",g:"prot",form:"порошок",unit:"г",serv:30,when:"на ночь",
+ d:"Медленный белок, усваивается несколько часов.",
+ w:"Не сочетать по времени с быстрым белком — смысл теряется. При проблемах с ЖКТ даёт тяжесть."},
+{id:"gainer",n:"Гейнер",g:"prot",form:"порошок",unit:"г",serv:100,when:"после тренировки",
+ d:"Смесь белка и углеводов для набора калорий.",
+ w:"Основная масса состава — сахара. При склонности к набору жира и инсулинорезистентности не подходит."},
+{id:"crea",n:"Креатин моногидрат",g:"base",form:"порошок",unit:"г",serv:5,when:"в любое время, ежедневно",
+ d:"Самая изученная добавка в спорте. Повышает силовые показатели и задерживает воду в мышцах.",
+ w:"Задерживает воду — на фоне препаратов, поднимающих давление, вклад складывается. Пить достаточно воды. При болезнях почек — только с врачом."},
+{id:"bcaa",n:"BCAA",g:"amino",form:"порошок",unit:"г",serv:5,when:"во время тренировки",
+ d:"Три аминокислоты с разветвлённой цепью.",
+ w:"При достаточном общем белке в рационе смысла почти не добавляют."},
+{id:"eaa",n:"EAA (незаменимые аминокислоты)",g:"amino",form:"порошок",unit:"г",serv:10,when:"во время или после тренировки",
+ d:"Полный набор незаменимых аминокислот, полезнее BCAA.",
+ w:"Цельный белок не заменяет, дороже в пересчёте на грамм."},
+{id:"citr",n:"Цитруллина малат",g:"pre",form:"порошок",unit:"г",serv:6,when:"за 40–60 минут до тренировки",
+ d:"Повышает уровень оксида азота, улучшает кровенаполнение и выносливость.",
+ w:"Снижает давление — с тадалафилом и гипотензивными эффект складывается."},
+{id:"beta",n:"Бета-аланин",g:"pre",form:"порошок",unit:"г",serv:3,when:"ежедневно, время не важно",
+ d:"Буферизует закисление мышц, отодвигает отказ в длинных подходах.",
+ w:"Даёт покалывание кожи — безопасно, но неприятно. Работает только при накоплении, разовый приём бесполезен."},
+{id:"caff",n:"Кофеин",g:"pre",form:"таблетки",unit:"мг",serv:200,when:"за 30–45 минут до тренировки",
+ d:"Стимулятор, повышает работоспособность и снижает восприятие усилия.",
+ w:"Поднимает давление и пульс — на курсе, где АД и так растёт, это ощутимый вклад. Не принимать вечером: ломает сон. Считать общую дозу вместе с предтреном и кофе."},
+{id:"pwo",n:"Предтренировочный комплекс",g:"pre",form:"порошок",unit:"г",serv:10,when:"за 20–30 минут до тренировки",
+ d:"Смесь стимуляторов, цитруллина, бета-аланина и прочего.",
+ w:"Состав часто непрозрачен, дозы спрятаны за «фирменной смесью». Кофеин суммируется с другими источниками. При росте давления на курсе — самая спорная позиция."},
+{id:"lcar",n:"L-карнитин",g:"base",form:"жидкость",unit:"мл",serv:25,when:"перед тренировкой",
+ d:"Участвует в транспорте жирных кислот в митохондрии.",
+ w:"Эффект на снижение жира у здоровых людей в исследованиях слабый. Часто продаётся в сиропах с сахаром."},
+{id:"glut",n:"Глютамин",g:"amino",form:"порошок",unit:"г",serv:5,when:"после тренировки или на ночь",
+ d:"Условно незаменимая аминокислота.",
+ w:"У здоровых тренирующихся доказанного эффекта на массу и восстановление нет."},
+{id:"multi",n:"Витаминно-минеральный комплекс",g:"vit",form:"таблетки",unit:"таб",serv:1,when:"утром с едой",
+ d:"Покрытие базовых дефицитов при бедном рационе.",
+ w:"Витамины A, D, E накапливаются — не превышать дозу и не складывать несколько комплексов сразу."},
+{id:"vitd",n:"Витамин D3",g:"vit",form:"капли",unit:"МЕ",serv:2000,when:"утром с жирной едой",
+ d:"Влияет на костную ткань, иммунитет и уровень тестостерона при дефиците.",
+ w:"Дозу подбирать по анализу 25(OH)D. Передозировка приводит к гиперкальциемии."},
+{id:"mg",n:"Магний",g:"vit",form:"таблетки",unit:"мг",serv:300,when:"вечером",
+ d:"Участвует в работе мышц и нервной системы, помогает при судорогах и плохом сне.",
+ w:"Оксид магния усваивается плохо — лучше цитрат, глицинат или малат. В больших дозах послабляет."},
+{id:"zinc",n:"Цинк",g:"vit",form:"таблетки",unit:"мг",serv:25,when:"вечером, отдельно от кальция и железа",
+ d:"Участвует в синтезе тестостерона, при дефиците его восполнение помогает.",
+ w:"Длительный приём высоких доз вытесняет медь. Натощак вызывает тошноту."},
+{id:"zma",n:"ZMA (цинк, магний, B6)",g:"vit",form:"капсулы",unit:"капс",serv:3,when:"за 30–60 минут до сна",
+ d:"Комбинация для сна и восстановления.",
+ w:"Тот же цинк и магний — не складывать с ними по отдельности, иначе доза удвоится."},
+{id:"mela",n:"Мелатонин",g:"vit",form:"таблетки",unit:"мг",serv:3,when:"за 30–60 минут до сна",
+ d:"Регулятор цикла сна, актуален при бессоннице на курсе.",
+ w:"Не снотворное: работает на засыпание, а не на глубину сна. При высоких дозах утренняя вялость. Не сочетать с алкоголем."},
+{id:"coll",n:"Коллаген",g:"joint",form:"порошок",unit:"г",serv:10,when:"ежедневно, лучше с витамином C",
+ d:"Поддержка связок и суставов.",
+ w:"Доказательная база умеренная. Причину боли не устраняет — при стойких болях идти к врачу."},
+{id:"gluco",n:"Глюкозамин и хондроитин",g:"joint",form:"таблетки",unit:"таб",serv:2,when:"ежедневно с едой",
+ d:"Классическая связка для суставов.",
+ w:"Эффект в исследованиях спорный и проявляется не раньше 8–12 недель. Осторожно при аллергии на морепродукты."},
+{id:"elect",n:"Электролиты",g:"base",form:"порошок",unit:"г",serv:5,when:"во время тренировки",
+ d:"Натрий, калий, магний — восполнение потерь с потом.",
+ w:"При гипертонии следить за натрием: он поднимает давление."},
+{id:"fiber",n:"Клетчатка",g:"base",form:"порошок",unit:"г",serv:10,when:"утром или между приёмами пищи",
+ d:"Поддержка пищеварения при высокобелковом рационе.",
+ w:"Пить с большим количеством воды. Разносить по времени с таблетками — снижает их всасывание."}
+];
+var SGRP={prot:"Протеины и гейнеры",amino:"Аминокислоты",pre:"Предтрен и стимуляторы",
+          base:"Базовые добавки",vit:"Витамины и минералы",joint:"Суставы и связки"};
+var FORMS=["порошок","капсулы","таблетки","жидкость","батончик","гель"];
+var ROUTES=["внутрь","в/м","п/к","в/в","под язык","наружно","интраназально"];
+var CATS={course:"Курс",supp:"Поддерживающая терапия",pct:"ПКТ",sport:"Спортпит"};
+var TIMES={am:"Утро",day:"День",pre:"До тренировки",post:"После тренировки",pm:"Вечер"};
+
+
+var ALL=[0,1,2,3,4,5,6],MT=[0,3],MON=[0];
+var TORDER=["am","day","pre","post","pm"];
+var DS=["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
+var DL=["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота","Воскресенье"];
+var SITES=["слева выше пупка","слева от пупка","слева ниже пупка","ниже пупка","справа ниже пупка","справа от пупка","справа выше пупка","выше пупка"];
+var LAB=["ОАК — гематокрит, гемоглобин","АЛТ, АСТ, ГГТ, билирубин","Липидограмма","Эстрадиол (Е2)","ЛГ, ФСГ, пролактин","Креатинин"];
+var ROTN={belly:"живот",glute:"ягодица",thigh:"бедро",delt:"плечо"};
+
+function seedDrugs(){return [
+ {id:"ss31",type:"aas",cat:"course",catId:"ss31",n:"SS-31",unit:"мл",route:"п/к",conc:"",rot:"belly",vialDays:"10",vialOpen:"",
+  note:"натощак, за 30 мин до еды. Сухой — морозилка, разведённый — холодильник.",
+  per:[{from:1,to:null,time:"am",dose:"0,1",days:ALL.slice()}]},
+ {id:"tur",type:"aas",cat:"course",catId:"o-tbol",n:"Туринабол",unit:"таб",route:"внутрь",conc:"",rot:"none",vialDays:"",vialOpen:"",note:"",
+  per:[{from:5,to:6,time:"am",dose:"1",days:ALL.slice()},{from:7,to:null,time:"am",dose:"2",days:ALL.slice()},
+       {from:5,to:8,time:"pm",dose:"1",days:ALL.slice()},{from:9,to:null,time:"pm",dose:"2",days:ALL.slice()}]},
+ {id:"test",type:"aas",cat:"course",catId:"t-ent",n:"Тестостерон",unit:"мл",route:"в/м",conc:"",rot:"glute",vialDays:"",vialOpen:"",note:"",
+  per:[{from:1,to:4,time:"pm",dose:"0,5",days:MT.slice()},{from:5,to:null,time:"pm",dose:"1",days:MT.slice()}]},
+ {id:"gan",type:"aas",cat:"course",n:"Ганада",unit:"мл",route:"п/к",conc:"",rot:"belly",vialDays:"",vialOpen:"",
+  note:"уточнить, гонадорелин это или ХГЧ — кратность у них разная",
+  per:[{from:5,to:null,time:"pm",dose:"0,5",days:MON.slice()}]},
+ {id:"ana",type:"med",cat:"supp",catId:"ana",n:"Анастрозол",unit:"таб",route:"внутрь",conc:"",rot:"none",vialDays:"",vialOpen:"",note:"",
+  per:[{from:5,to:null,time:"pm",dose:"0,5",days:MT.slice()}]},
+ {id:"urs",type:"med",cat:"supp",catId:"urso",n:"Урсосан",unit:"мг",route:"внутрь",conc:"",rot:"none",vialDays:"",vialOpen:"",note:"",
+  per:[{from:1,to:null,time:"pm",dose:"500",days:ALL.slice()}]},
+ {id:"tre",type:"med",cat:"supp",catId:"pent",n:"Трентал",unit:"мг",route:"внутрь",conc:"",rot:"none",vialDays:"",vialOpen:"",note:"",
+  per:[{from:1,to:null,time:"pm",dose:"200",days:ALL.slice()}]},
+ {id:"asp",type:"med",cat:"supp",catId:"asa",n:"Аспирин Кардио",unit:"мг",route:"внутрь",conc:"",rot:"none",vialDays:"",vialOpen:"",note:"",
+  per:[{from:1,to:4,time:"pm",dose:"50",days:ALL.slice()},{from:5,to:null,time:"pm",dose:"100",days:ALL.slice()}]}
+]}
+
+
+var LABS=[
+{k:"hct",n:"Гематокрит",u:"%",lo:39,hi:50,crit:54,g:"Кровь"},
+{k:"hgb",n:"Гемоглобин",u:"г/л",lo:130,hi:170,crit:185,g:"Кровь"},
+{k:"rbc",n:"Эритроциты",u:"10¹²/л",lo:4.3,hi:5.7,g:"Кровь"},
+{k:"alt",n:"АЛТ",u:"Ед/л",lo:0,hi:41,crit:120,g:"Печень"},
+{k:"ast",n:"АСТ",u:"Ед/л",lo:0,hi:40,crit:120,g:"Печень"},
+{k:"ggt",n:"ГГТ",u:"Ед/л",lo:0,hi:60,g:"Печень"},
+{k:"bil",n:"Билирубин общий",u:"мкмоль/л",lo:3.4,hi:20.5,g:"Печень"},
+{k:"chol",n:"Холестерин общий",u:"ммоль/л",lo:0,hi:5.2,g:"Липиды"},
+{k:"hdl",n:"ЛПВП",u:"ммоль/л",lo:1.0,hi:2.2,g:"Липиды"},
+{k:"ldl",n:"ЛПНП",u:"ммоль/л",lo:0,hi:3.0,g:"Липиды"},
+{k:"tg",n:"Триглицериды",u:"ммоль/л",lo:0,hi:1.7,g:"Липиды"},
+{k:"e2",n:"Эстрадиол",u:"пг/мл",lo:11,hi:44,g:"Гормоны"},
+{k:"tst",n:"Тестостерон общий",u:"нмоль/л",lo:8.6,hi:29,g:"Гормоны"},
+{k:"lh",n:"ЛГ",u:"мЕд/л",lo:1.7,hi:8.6,g:"Гормоны"},
+{k:"fsh",n:"ФСГ",u:"мЕд/л",lo:1.5,hi:12.4,g:"Гормоны"},
+{k:"prl",n:"Пролактин",u:"мЕд/л",lo:73,hi:407,g:"Гормоны"},
+{k:"crea",n:"Креатинин",u:"мкмоль/л",lo:62,hi:106,g:"Почки"},
+{k:"glu",n:"Глюкоза",u:"ммоль/л",lo:3.9,hi:5.9,g:"Обмен"},
+{k:"psa",n:"ПСА",u:"нг/мл",lo:0,hi:4,g:"Простата"}
+];
+var VITALS=[{k:"sys",n:"Систолическое",u:"мм рт.ст.",lo:100,hi:135,crit:160},
+{k:"dia",n:"Диастолическое",u:"мм рт.ст.",lo:60,hi:85,crit:100},
+{k:"hr",n:"Пульс в покое",u:"уд/мин",lo:50,hi:85,crit:100},
+{k:"wt",n:"Вес",u:"кг"}];
+var MOOD=["Плохо","Так себе","Норм","Хорошо","Отлично"];
+function labByKey(k){for(var i=0;i<LABS.length;i++)if(LABS[i].k===k)return LABS[i];return null}
+function labState(def,v){
+  if(v===""||v===null||v===undefined||isNaN(v))return "";
+  if(def.crit&&v>=def.crit)return "crit";
+  if(def.lo!==undefined&&v<def.lo)return "low";
+  if(def.hi!==undefined&&v>def.hi)return "high";
+  return "ok";
+}
+function diaryGet(d){return (st.diary&&st.diary[key(d)])||{}}
+function labEntries(){return (st.labs||[]).slice().sort(function(x,y){return x.d<y.d?-1:1})}
+function lastLab(k){
+  var e=labEntries();
+  for(var i=e.length-1;i>=0;i--)if(e[i].v&&e[i].v[k]!==""&&e[i].v[k]!==undefined)return {d:e[i].d,v:+e[i].v[k]};
+  return null;
+}
+function healthAlerts(){
+  var out=[];
+  LABS.forEach(function(L){
+    var l=lastLab(L.k);if(!l)return;
+    var s=labState(L,l.v);
+    if(s==="crit")out.push({lvl:"crit",text:L.n+" "+l.v+" "+L.u+" — критично выше нормы (до "+L.hi+"). Это повод остановиться и идти к врачу."});
+    else if(s==="high")out.push({lvl:"warn",text:L.n+" "+l.v+" "+L.u+" — выше нормы ("+L.lo+"–"+L.hi+")."});
+    else if(s==="low")out.push({lvl:"warn",text:L.n+" "+l.v+" "+L.u+" — ниже нормы ("+L.lo+"–"+L.hi+")."});
+  });
+  var d=diaryGet(today());
+  VITALS.forEach(function(V){
+    if(!V.crit||d[V.k]===undefined||d[V.k]==="")return;
+    var v=+d[V.k];
+    if(v>=V.crit)out.push({lvl:"crit",text:V.n+" "+v+" "+V.u+" — высоко. Померь повторно в покое; если держится, курс не главный приоритет."});
+  });
+  return out;
+}
+// Когда сдавать: минимум концентрации — перед следующим уколом самого длинного эфира
+function bestLabDay(){
+  var sd=startD();if(!sd)return null;
+  var best=null;
+  (st.drugs||[]).forEach(function(dr){
+    var c=catOf(dr);if(!c||c.g!=="inj")return;
+    if(!best||(c.gap||0)>(catOf(best).gap||0))best=dr;
+  });
+  if(!best)return null;
+  var t=today();
+  for(var i=0;i<21;i++){
+    var d=addD(t,i),w=weekOf(d);
+    if(w===null||w>totalWeeks())continue;
+    var hit=persAt(best,w).some(function(p){return (p.days||[]).indexOf(dow(d))>=0});
+    if(hit)return {drug:best,date:d};
+  }
+  return null;
+}
+
+var DEF={v:6,start:"",weeks:"12",drugs:[],done:{},lab:{},diary:{},labs:[],pauses:[],tAm:"08:00",tDay:"13:00",tPre:"17:30",tPost:"19:30",tPm:"22:00",nLead:"10",nRepeat:"20",cur:"₸",warnDays:"7"};
+var st=JSON.parse(JSON.stringify(DEF));
+
+function today(){var d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function pad(n){return n<10?"0"+n:""+n}
+function key(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function parseD(s){if(!s)return null;var p=String(s).split("-");if(p.length!==3)return null;
+  var y=+p[0],mo=+p[1],da=+p[2];
+  if(!(y>=1970&&y<=2200)||!(mo>=1&&mo<=12)||!(da>=1&&da<=31))return null;
+  var d=new Date(y,mo-1,da);
+  if(d.getFullYear()!==y||d.getMonth()!==mo-1||d.getDate()!==da)return null;return d}
+function dow(d){return (d.getDay()+6)%7}
+function addD(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n)}
+function monday(d){return addD(d,-dow(d))}
+function diffD(a,b){return Math.round((a-b)/86400000)}
+function fmt(d){return d.toLocaleDateString("ru-RU",{day:"numeric",month:"long"})}
+function plural(n,a,b,c){var m=Math.abs(n)%100;if(m>=11&&m<=14)return c;m=m%10;return m===1?a:(m>=2&&m<=4?b:c)}
+function num(v){var x=parseFloat(String(v==null?"":v).replace(",","."));return isNaN(x)?0:x}
+function uid(){return "d"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+
+function startD(){return parseD(st.start)}
+function totalWeeks(){var w=parseInt(st.weeks,10);return (w>0&&w<=52)?w:12}
+function pauses(){return (st.pauses||[]).filter(function(p){return parseD(p.a)&&parseD(p.b)})}
+function isPaused(d){
+  return pauses().some(function(p){
+    var a=parseD(p.a),b=parseD(p.b);return d>=a&&d<=b;
+  });
+}
+function pausedBefore(d,s){
+  var n=0;
+  pauses().forEach(function(p){
+    var a=parseD(p.a),b=parseD(p.b);
+    if(a<s)a=s;
+    if(b>=d)b=addD(d,-1);
+    if(b>=a)n+=diffD(b,a)+1;
+  });
+  return n;
+}
+function pausedTotal(){
+  var s=startD();if(!s)return 0;
+  var n=0;
+  pauses().forEach(function(p){
+    var a=parseD(p.a),b=parseD(p.b);
+    if(a<s)a=s;
+    if(b>=a)n+=diffD(b,a)+1;
+  });
+  return n;
+}
+// Номер дня курса с учётом пауз. В день паузы — null.
+function dayNo(d){
+  var s=startD();if(!s)return null;
+  var raw=diffD(d,s);if(raw<0)return null;
+  if(isPaused(d))return null;
+  return raw-pausedBefore(d,s);
+}
+function courseEnd(){
+  var s=startD();if(!s)return null;
+  return addD(s,totalWeeks()*7-1+pausedTotal());
+}
+function weekOf(d){var n=dayNo(d);return n===null?null:Math.floor(n/7)+1}
+function isOver(d){var w=weekOf(d);return w!==null&&w>totalWeeks()}
+function daysToStart(){var s=startD();if(!s)return null;var n=diffD(s,today());return n>0?n:0}
+
+function perActive(p,w){
+  if(!p||w===null)return false;
+  var f=p.from||1,t=(p.to===null||p.to===undefined||p.to==="")?Infinity:p.to;
+  return w>=f&&w<=t;
+}
+function persAt(dr,w,time){
+  if(!dr||!dr.per)return [];
+  return dr.per.filter(function(p){
+    if(!perActive(p,w))return false;
+    if(time&&p.time!==time)return false;
+    return true;
+  });
+}
+// Подходит ли день под расписание периода
+function perHitsDay(p,d){
+  if(!p)return false;
+  if(p.mode==="every"){
+    var n=dayNo(d);if(n===null)return false;
+    var ev=Math.max(1,parseInt(p.every,10)||2);
+    var startN=((p.from||1)-1)*7;
+    return n>=startN&&((n-startN)%ev===0);
+  }
+  return (p.days||[]).indexOf(dow(d))>=0;
+}
+function perDaysText(p){
+  if(p.mode==="every"){
+    var ev=Math.max(1,parseInt(p.every,10)||2);
+    return ev===1?"каждый день":("каждые "+ev+" "+plural(ev,"день","дня","дней"));
+  }
+  var dl=(p.days||[]).slice().sort(function(x,y){return x-y});
+  if(dl.length===7)return "каждый день";
+  return dl.map(function(x){return DS[x]}).join(", ");
+}
+// Все приёмы на дату: [{drug, per}]
+function entriesFor(d,time){
+  var w=weekOf(d);if(w===null||w>totalWeeks())return [];
+  var out=[];
+  (st.drugs||[]).forEach(function(dr){
+    persAt(dr,w,time).forEach(function(p){
+      if(perHitsDay(p,d))out.push({drug:dr,per:p});
+    });
+  });
+  return out;
+}
+function entryKey(dk,dr,p){return dk+"|"+dr.id+"|"+p.time}
+function catLabel(dr){return CATS[dr.cat||"course"]||""}
+function doseText(dr,p){return (p.dose||"")+" "+(dr.unit||"")}
+function doseMg(dr,p){
+  var c=num(dr.conc),q=num(p.dose);
+  if(!c||!q)return "";
+  if(dr.unit==="мг"||dr.unit==="мкг")return "";
+  return "= "+Math.round(c*q*100)/100+" мг";
+}
+function weeklyMg(dr,w){
+  var s=0,c=num(dr.conc);if(!c)return 0;
+  if(dr.unit==="мг"||dr.unit==="мкг")return 0;
+  persAt(dr,w).forEach(function(p){s+=c*num(p.dose)*(p.days||[]).length});
+  return Math.round(s*100)/100;
+}
+// счётчик уколов данного препарата до даты включительно
+function shotNo(dr,d){
+  var n=dayNo(d),s=startD();if(n===null||!s)return 0;
+  var c=0;
+  for(var i=0;i<=n+pausedTotal()&&i<500;i++){
+    var dd=addD(s,i);if(dd>d)break;
+    var w=weekOf(dd);if(w===null)continue;
+    persAt(dr,w).forEach(function(p){if(perHitsDay(p,dd))c++});
+  }
+  return c;
+}
+function siteFor(dr,d){
+  if(!dr.rot||dr.rot==="none")return "";
+  var c=shotNo(dr,d);if(!c)return "";
+  if(dr.rot==="belly")return "Точка "+((c-1)%8+1)+" из 8 — "+SITES[(c-1)%8];
+  var side=(c%2===1)?"Левое":"Правое",w2=ROTN[dr.rot]||"место";
+  if(dr.rot==="glute")side=(c%2===1)?"Левая":"Правая";
+  return side+" "+w2+" · укол №"+c;
+}
+function dayStat(d){
+  var am=entriesFor(d,"am"),pm=entriesFor(d,"pm"),k=key(d),c=0;
+  var sk=0;
+  am.concat(pm).forEach(function(e){var s=st.done[entryKey(k,e.drug,e.per)];
+    if(s===true)c++;else if(s==="skip")sk++});
+  return {am:am,pm:pm,t:am.length+pm.length,c:c,sk:sk,k:k,w:weekOf(d)};
+}
+// Сводка изменений на неделе w относительно w-1
+function changesAt(w){
+  var out=[];
+  (st.drugs||[]).forEach(function(dr){
+    ["am","pm"].forEach(function(t){
+      var now=persAt(dr,w,t)[0],prev=w>1?persAt(dr,w-1,t)[0]:null;
+      var tl=t==="am"?"утро":"вечер";
+      if(now&&!prev)out.push({type:"new",text:"+ "+dr.n+" "+tl+" — "+doseText(dr,now)});
+      else if(!now&&prev)out.push({type:"stop",text:"− "+dr.n+" "+tl+" — отмена"});
+      else if(now&&prev&&num(now.dose)!==num(prev.dose))
+        out.push({type:num(now.dose)>num(prev.dose)?"up":"dn",
+          text:dr.n+" "+tl+": "+prev.dose+" → "+now.dose+" "+(dr.unit||"")});
+      else if(now&&prev&&(now.days||[]).join()!==(prev.days||[]).join())
+        out.push({type:"up",text:dr.n+" "+tl+": меняются дни приёма"});
+    });
+  });
+  return out;
+}
+function allChanges(){
+  var out=[];
+  for(var w=1;w<=totalWeeks();w++){var c=changesAt(w);if(c.length)out.push({w:w,items:c})}
+  return out;
+}
+function adherence(){
+  var s=startD();if(!s)return null;
+  var n=diffD(today(),s);if(n<0)return null;
+  var tot=0,dn=0,run=0;
+  for(var i=0;i<=n&&i<400;i++){
+    var x=dayStat(addD(s,i));if(!x.t)continue;
+    tot+=x.t;dn+=x.c;
+    if(x.c===x.t)run++;else run=0;
+  }
+  return {tot:tot,dn:dn,pct:tot?Math.round(dn/tot*100):0,streak:run};
+}
+function vialInfo(dr){
+  var days=parseInt(dr.vialDays,10),d0=parseD(dr.vialOpen);
+  if(!days||days<1||!d0)return null;
+  return {left:days-diffD(today(),d0),end:addD(d0,days)};
+}
+function validateDrug(dr){
+  var e=[];
+  if(!dr.n||!dr.n.trim())e.push("не задано название");
+  if(!dr.per||!dr.per.length)e.push("нет ни одного периода");
+  (dr.per||[]).forEach(function(p,i){
+    var f=p.from||1,t=(p.to===null||p.to==="")?Infinity:p.to;
+    if(f<1)e.push("период "+(i+1)+": неделя начала меньше 1");
+    if(t<f)e.push("период "+(i+1)+": конец раньше начала");
+    if(!num(p.dose))e.push("период "+(i+1)+": не указана доза");
+    if(p.mode==="every"){
+      if(!(parseInt(p.every,10)>0))e.push("период "+(i+1)+": не указан интервал");
+    }else if(!(p.days||[]).length)e.push("период "+(i+1)+": не выбран ни один день");
+  });
+  for(var i=0;i<(dr.per||[]).length;i++)for(var j=i+1;j<(dr.per||[]).length;j++){
+    var a=dr.per[i],b=dr.per[j];
+    if(a.time!==b.time)continue;
+    var af=a.from||1,at=(a.to===null||a.to==="")?Infinity:a.to;
+    var bf=b.from||1,bt=(b.to===null||b.to==="")?Infinity:b.to;
+    if(af<=bt&&bf<=at)e.push("периоды "+(i+1)+" и "+(j+1)+" перекрываются по неделям");
+  }
+  return e;
+}
+
+/* ---------- Справочник ---------- */
+function catById(id){for(var i=0;i<CAT.length;i++)if(CAT[i].id===id)return CAT[i];return null}
+function catOf(dr){return dr&&dr.catId?catById(dr.catId):null}
+function catSearch(q){
+  q=String(q||"").trim().toLowerCase();
+  if(!q)return CAT.slice();
+  return CAT.filter(function(c){
+    return c.n.toLowerCase().indexOf(q)>=0||(GRP[c.g]||"").toLowerCase().indexOf(q)>=0;
+  });
+}
+// максимальный разрыв между приёмами внутри недели (циклически)
+function maxGap(days){
+  var a=(days||[]).slice().sort(function(x,y){return x-y});
+  if(!a.length)return 99;
+  if(a.length===1)return 7;
+  var g=0;
+  for(var i=0;i<a.length;i++){
+    var nx=(i===a.length-1)?a[0]+7:a[i+1];
+    g=Math.max(g,nx-a[i]);
+  }
+  return g;
+}
+// активные препараты на неделе w
+function activeAt(w){
+  return (st.drugs||[]).filter(function(dr){return persAt(dr,w).length>0});
+}
+// сколько недель подряд препарат присутствует в схеме
+function weeksOn(dr){
+  var n=0;
+  for(var w=1;w<=totalWeeks();w++)if(persAt(dr,w).length)n++;
+  return n;
+}
+function protocolWarnings(){
+  var out=[],N=totalWeeks(),drugs=st.drugs||[];
+  // 1. интервал против периода полувыведения
+  drugs.forEach(function(dr){
+    var c=catOf(dr);if(!c||!c.gap)return;
+    (dr.per||[]).forEach(function(p){
+      var g=(p.mode==="every")?Math.max(1,parseInt(p.every,10)||1):maxGap(p.days);
+      if(g>c.gap)out.push({lvl:"warn",text:dr.n+": разрыв между приёмами до "+g+" "+
+        plural(g,"дня","дней","дней")+", а период полувыведения "+c.hlt+". Рекомендуемая частота — "+c.freq+"."});
+    });
+  });
+  // 2. два и более 17-АА одновременно
+  for(var w=1;w<=N;w++){
+    var aa=activeAt(w).filter(function(dr){var c=catOf(dr);return c&&c.aa17});
+    if(aa.length>=2){out.push({lvl:"warn",text:"Неделя "+w+": одновременно "+aa.length+
+      " 17-альфа-алкилированных препарата ("+aa.map(function(d){return d.n}).join(", ")+
+      "). Нагрузка на печень складывается."});break}
+  }
+  // 3. длительность 17-АА
+  drugs.forEach(function(dr){
+    var c=catOf(dr);if(!c||!c.aa17)return;
+    var n=weeksOn(dr);
+    if(n>8)out.push({lvl:"warn",text:dr.n+": 17-альфа-алкилированный, в схеме стоит "+n+
+      " недель. Обычный потолок — 6–8 недель."});
+  });
+  // 4. 17-АА без гепатопротектора
+  var hasAA=drugs.some(function(dr){var c=catOf(dr);return c&&c.aa17});
+  var hasHep=drugs.some(function(dr){return dr.catId==="urso"||dr.catId==="nac"});
+  if(hasAA&&!hasHep)out.push({lvl:"warn",text:"В схеме есть 17-альфа-алкилированный препарат, но нет гепатопротектора и контроля печёночных ферментов."});
+  // 5. ароматизирующие
+  var arom=drugs.filter(function(dr){var c=catOf(dr);return c&&c.arom});
+  if(arom.length)out.push({lvl:"info",text:"Ароматизируется: "+arom.map(function(d){return d.n}).join(", ")+
+    ". Эстрадиол нужно контролировать по анализу, а не по расписанию."});
+  // 6. прогестагенные
+  var prog=drugs.filter(function(dr){var c=catOf(dr);return c&&c.prog});
+  if(prog.length){
+    var hasCab=drugs.some(function(dr){return dr.catId==="caber"});
+    out.push({lvl:"warn",text:"Прогестагенная активность: "+prog.map(function(d){return d.n}).join(", ")+
+      ". Ингибитор ароматазы против этого механизма не работает — нужен контроль пролактина"+
+      (hasCab?".":", каберголина в схеме нет.")});
+  }
+  // 7. два ингибитора ароматазы сразу
+  for(var w2=1;w2<=N;w2++){
+    var ai=activeAt(w2).filter(function(dr){var c=catOf(dr);return c&&c.g==="ai"&&c.id!=="caber"});
+    if(ai.length>=2){out.push({lvl:"warn",text:"Неделя "+w2+": два ингибитора ароматазы одновременно ("+
+      ai.map(function(d){return d.n}).join(", ")+")."});break}
+  }
+  // 8. курс без ПКТ
+  var hasAAS=drugs.some(function(dr){var c=catOf(dr);return c&&(c.g==="inj"||c.g==="oral")});
+  var hasPCT=drugs.some(function(dr){var c=catOf(dr);return c&&c.g==="pct"});
+  if(hasAAS&&!hasPCT)out.push({lvl:"info",text:"В схеме нет препаратов для восстановления оси после курса. План выхода стоит продумать заранее."});
+  // 9. гонадорелин редкими введениями
+  drugs.forEach(function(dr){
+    if(dr.catId!=="gonad")return;
+    (dr.per||[]).forEach(function(p){
+      if(maxGap(p.days)>1)out.push({lvl:"warn",text:dr.n+": период полувыведения минуты. При введении реже нескольких раз в сутки физиологического эффекта не даёт."});
+    });
+  });
+  // 9б. неправдоподобная доза для сухого
+  drugs.forEach(function(dr){
+    if(!dr.lyo)return;
+    (dr.per||[]).forEach(function(p){
+      var s=lyoSanity(dr,p.dose);
+      if(s)out.push({lvl:"warn",text:dr.n+": "+s});
+    });
+  });
+  // 10. масляный раствор внутривенно
+  drugs.forEach(function(dr){
+    var c=catOf(dr);
+    if(c&&c.oil&&dr.route==="в/в")out.push({lvl:"warn",text:dr.n+": масляный раствор указан внутривенно. Это вызывает масляную эмболию — только внутримышечно."});
+  });
+  // 11. кофеин вечером
+  drugs.forEach(function(dr){
+    if(dr.suppId!=="caff"&&dr.suppId!=="pwo")return;
+    if((dr.per||[]).some(function(p){return p.time==="pm"}))
+      out.push({lvl:"warn",text:dr.n+" стоит на вечер. Стимуляторы ломают сон, а сон на курсе — главный ресурс восстановления."});
+  });
+  // 12. дублирование цинка и магния
+  var zn=drugs.filter(function(dr){return dr.suppId==="zinc"||dr.suppId==="zma"});
+  if(zn.length>=2)out.push({lvl:"warn",text:"Цинк и ZMA в схеме одновременно — доза цинка складывается."});
+  // 13. препараты без привязки к справочнику
+  var un=drugs.filter(function(dr){return !dr.catId&&!dr.suppId});
+  if(un.length)out.push({lvl:"info",text:"Не привязаны к справочнику: "+un.map(function(d){return d.n}).join(", ")+
+    ". Для них проверки не выполняются."});
+  return out;
+}
+
+/* ---------- Закупка и склад ---------- */
+// Расход единиц дозирования за день
+function usageOn(dr,d){
+  var w=weekOf(d);if(w===null||w>totalWeeks())return 0;
+  var s=0;
+  persAt(dr,w).forEach(function(p){if(perHitsDay(p,d))s+=num(p.dose)});
+  return s;
+}
+// Сколько нужно за весь курс
+function needTotal(dr){
+  var sd=startD();if(!sd)return 0;
+  var s=0,lim=totalWeeks()*7+pausedTotal();
+  for(var i=0;i<lim&&i<500;i++)s+=usageOn(dr,addD(sd,i));
+  return Math.round(s*1000)/1000;
+}
+// Сколько нужно начиная с даты (включительно)
+function needFrom(dr,from){
+  var sd=startD();if(!sd)return 0;
+  var end=courseEnd(),s=0,d=from;
+  if(d<sd)d=sd;
+  for(var i=0;i<500;i++){
+    var x=addD(d,i);if(x>end)break;
+    s+=usageOn(dr,x);
+  }
+  return Math.round(s*1000)/1000;
+}
+// Фактически израсходовано по отметкам «принято» с даты остатка по вчера
+function consumedSince(dr,from,to){
+  var s=0;
+  for(var i=0;i<400;i++){
+    var d=addD(from,i);if(d>to)break;
+    var w=weekOf(d);if(w===null||w>totalWeeks())continue;
+    persAt(dr,w).forEach(function(p){
+      if(!perHitsDay(p,d))return;
+      if(st.done[entryKey(key(d),dr,p)]===true)s+=num(p.dose);
+    });
+  }
+  return Math.round(s*1000)/1000;
+}
+function stockBase(dr){
+  var pu=packUnits(dr),p=num(dr.stockPacks),u=num(dr.stockUnits);
+  if(p||u)return Math.round((p*pu+u)*1000)/1000;
+  return num(dr.stock);
+}
+function hasStock(dr){
+  return !!(dr.stockD||String(dr.stockPacks||"")!==""||String(dr.stockUnits||"")!==""||String(dr.stock||"")!=="");
+}
+function packsForCourse(dr){
+  var pu=packUnits(dr),t=needTotal(dr);
+  return (pu&&t)?Math.ceil(t/pu):0;
+}
+function packsOnHand(dr){
+  var pu=packUnits(dr);if(!pu)return 0;
+  return Math.round(stockNow(dr)/pu*100)/100;
+}
+function stockNow(dr){
+  var base=stockBase(dr);if(!base&&base!==0)base=0;
+  var sd=parseD(dr.stockD);
+  if(!sd)return base;
+  var c=consumedSince(dr,sd,today());
+  return Math.round((base-c)*1000)/1000;
+}
+// На какую дату закончится текущий запас
+function runoutDate(dr){
+  var have=stockNow(dr);if(have<=0)return today();
+  var sd=startD();if(!sd)return null;
+  var d=today();if(d<sd)d=sd;
+  var end=courseEnd(),acc=0;
+  for(var i=0;i<500;i++){
+    var x=addD(d,i);if(x>end)return null;
+    acc+=usageOn(dr,x);
+    if(acc>have)return x;
+  }
+  return null;
+}
+function packEachDefault(dr){
+  if(dr.lyo)return num(dr.vialAmt);
+  if(dr.unit==="мл")return num(dr.vol);
+  if(dr.unit==="таб"||dr.unit==="капс")return 1;
+  return num(dr.conc);
+}
+function packUnits(dr){
+  // для сухих единица закупки — один флакон, а не коробка
+  if(dr.lyo){
+    var v=num(dr.packEach)||num(dr.vialAmt);
+    return v>0?v:0;
+  }
+  var n=num(dr.packN),e=num(dr.packEach);
+  if(!e)e=packEachDefault(dr);
+  if(n>0&&e>0)return Math.round(n*e*1000)/1000;
+  var u=num(dr.packUnits);return u>0?u:0;
+}
+function buyPlan(dr){
+  var need=needFrom(dr,today()),have=stockNow(dr),miss=Math.max(0,need-have);
+  var pu=packUnits(dr),price=num(dr.price);
+  var packs=pu?Math.ceil(miss/pu):0;
+  return {need:need,have:have,miss:Math.round(miss*1000)/1000,
+          packs:packs,cost:packs*price,pu:pu,price:price,
+          runout:runoutDate(dr),total:needTotal(dr)};
+}
+function courseCost(){
+  var sum=0,unknown=0;
+  (st.drugs||[]).forEach(function(dr){
+    var pu=packUnits(dr),price=num(dr.price),t=needTotal(dr);
+    if(!t)return;
+    if(pu&&price)sum+=Math.ceil(t/pu)*price;else unknown++;
+  });
+  return {sum:Math.round(sum),unknown:unknown};
+}
+function buyCost(){
+  var sum=0,n=0;
+  (st.drugs||[]).forEach(function(dr){
+    var b=buyPlan(dr);if(b.packs>0&&b.price){sum+=b.cost;n++}
+  });
+  return {sum:Math.round(sum),n:n};
+}
+function runoutAlerts(days){
+  var out=[];
+  (st.drugs||[]).forEach(function(dr){
+    if(!needTotal(dr)||!hasStock(dr))return;
+    var r=runoutDate(dr);if(!r)return;
+    var k=diffD(r,today());
+    if(k<=days)out.push({drug:dr,date:r,days:k});
+  });
+  return out.sort(function(x,y){return x.days-y.days});
+}
+
+/* ---------- Лиофилизат: сухое вещество во флаконе ---------- */
+// Концентрация после разведения: единиц дозирования в 1 мл
+function lyoConc(dr){
+  if(!dr||!dr.lyo)return 0;
+  var amt=num(dr.vialAmt),sol=num(dr.solvent);
+  if(!amt||!sol)return 0;
+  return amt/sol;
+}
+// Сколько мл набрать на дозу
+function lyoMl(dr,dose){
+  var c=lyoConc(dr),q=num(dose);
+  if(!c||!q)return 0;
+  var v=q/c;
+  return v<0.01?Math.round(v*100000)/100000:Math.round(v*1000)/1000;
+}
+// Деления инсулинового шприца U-100 (1 мл = 100 ед)
+function lyoUnits(dr,dose){
+  var ml=lyoMl(dr,dose);
+  return ml?Math.round(ml*100*10)/10:0;
+}
+// Текст подсказки для набора в шприц
+function lyoHint(dr,dose){
+  var ml=lyoMl(dr,dose);if(!ml)return "";
+  var u=lyoUnits(dr,dose);
+  var s="набрать "+String(ml).replace(".",",")+" мл";
+  if(u>=1)s+=" · "+String(u).replace(".",",")+" ед инсулинового шприца";
+  return s;
+}
+// Проверка правдоподобности дозы для сухого
+function lyoSanity(dr,dose){
+  var amt=num(dr.vialAmt),sol=num(dr.solvent),q=num(dose);
+  if(!amt||!sol||!q)return "";
+  var ml=q/amt*sol,u=dr.vialUnit||"мг";
+  if(q>amt)return "Доза "+dose+" "+u+" больше, чем во флаконе ("+amt+" "+u+"). Одного флакона не хватит на укол.";
+  if(ml>sol)return "Не сходится: на дозу нужно больше раствора, чем ты развёл.";
+  if(ml<0.02)return "Набрать пришлось бы меньше 0,02 мл — это не отмерить шприцем. Похоже, в дозу вписаны миллилитры вместо "+u+". Доза задаётся в "+u+", объём приложение посчитает само.";
+  return "";
+}
+// Сколько доз в одном флаконе
+function lyoDosesPerVial(dr,dose){
+  var amt=num(dr.vialAmt),q=num(dose);
+  if(!amt||!q)return 0;
+  return Math.floor(amt/q);
+}
+
+/*==/LOGIC==*/
+
+var view="day",cur=today(),saveT=null,edIdx=-1,edDraft=null,backTo="drugs";
+
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.className="on";
+  clearTimeout(t._x);t._x=setTimeout(function(){t.className=""},2000)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})}
+function save(){clearTimeout(saveT);saveT=setTimeout(function(){
+  var s=JSON.stringify(st);
+  try{if(window.storage&&window.storage.set)window.storage.set("kurs.v6",s)}catch(e){}
+  try{localStorage.setItem("kurs.v6",s)}catch(e){}},120)}
+
+var OLDMAP={ss31:["ss31","am"],turA:["tur","am"],turP:["tur","pm"],test:["test","pm"],
+  gan:["gan","pm"],ana:["ana","pm"],urs:["urs","pm"],tre:["tre","pm"],asp:["asp","pm"]};
+function migrate(o){
+  if(!o||typeof o!=="object")return null;
+  var out=JSON.parse(JSON.stringify(DEF));
+  ["start","weeks","tAm","tDay","tPre","tPost","tPm","nLead","nRepeat","cur","warnDays"].forEach(function(k){if(o[k])out[k]=o[k]});
+  out.diary=(o.diary&&typeof o.diary==="object")?o.diary:{};
+  out.labs=Array.isArray(o.labs)?o.labs:[];
+  out.pauses=Array.isArray(o.pauses)?o.pauses:[];
+  out.lab=(o.lab&&typeof o.lab==="object")?o.lab:{};
+  out.drugs=Array.isArray(o.drugs)&&o.drugs.length?o.drugs:seedDrugs();
+  out.drugs.forEach(function(d){
+    if(!d.type)d.type=d.suppId?"sport":(catById(d.catId)&&["inj","oral","pep"].indexOf(catById(d.catId).g)<0?"med":"aas");
+    if(!d.cat){var c=catById(d.catId);
+      d.cat=d.suppId?"sport":(c&&c.g==="pct")?"pct":(c&&(c.g==="ai"||c.g==="sup"))?"supp":"course"}
+    (d.per||[]).forEach(function(p){if(TORDER.indexOf(p.time)<0)p.time="pm"});
+  });
+  // концентрации из старой версии
+  if(o.cTest||o.cTur||o.cAna){
+    var mp={test:o.cTest,tur:o.cTur,ana:o.cAna};
+    out.drugs.forEach(function(d){if(mp[d.id]&&!d.conc)d.conc=mp[d.id]});
+  }
+  if(o.ss){var s=out.drugs.filter(function(d){return d.id==="ss31"})[0];
+    if(s&&!s.vialOpen){s.vialOpen=o.ss;s.vialDays=s.vialDays||"10"}}
+  out.done={};
+  if(o.done&&typeof o.done==="object")Object.keys(o.done).forEach(function(k){
+    if(!o.done[k])return;
+    var p=k.split("|");
+    if(p.length===3){out.done[k]=true;return}
+    if(p.length===2&&OLDMAP[p[1]])out.done[p[0]+"|"+OLDMAP[p[1]][0]+"|"+OLDMAP[p[1]][1]]=true;
+  });
+  out.v=6;return out;
+}
+function readLocal(){
+  var raw=null;
+  ["kurs.v6","kurs.v5","kurs.v4","kurs.v3","kurs3","kurs2","kurs:v1"].forEach(function(k){
+    if(raw)return;try{raw=localStorage.getItem(k)}catch(e){}});
+  return raw;
+}
+function finishLoad(cb){if(!st.drugs.length)st.drugs=seedDrugs();cb()}
+function load(cb){
+  // сначала хранилище приложения — оно переживает перезапуск надёжнее
+  if(window.storage&&window.storage.get){
+    try{
+      return window.storage.get("kurs.v6").then(function(r){
+        var used=false;
+        if(r&&r.value){try{var m=migrate(JSON.parse(r.value));if(m){st=m;used=true}}catch(e){}}
+        if(!used){var raw=readLocal();
+          if(raw){try{var m2=migrate(JSON.parse(raw));if(m2)st=m2}catch(e){}}}
+        finishLoad(cb);
+      }).catch(function(){
+        var raw=readLocal();
+        if(raw){try{var m3=migrate(JSON.parse(raw));if(m3)st=m3}catch(e){}}
+        finishLoad(cb);
+      });
+    }catch(e){}
+  }
+  var raw=readLocal();
+  if(raw){try{var m4=migrate(JSON.parse(raw));if(m4)st=m4}catch(e){}}
+  finishLoad(cb);
+}
+
+/* ---------- Сегодня ---------- */
+function renderBlock(time,d,cls,icon,title,hint){
+  var arr=entriesFor(d,time),k=key(d),w=weekOf(d),c=0;
+  arr.forEach(function(e){if(st.done[entryKey(k,e.drug,e.per)]===true)c++});
+  var el=document.createElement("div");el.className="card";
+  var clk=({am:st.tAm,day:st.tDay,pre:st.tPre,post:st.tPost,pm:st.tPm})[time]||"";
+  el.setAttribute("data-slot",time);
+  el.innerHTML='<div class="hd '+cls+'"><div class="t"><span>'+icon+'</span><span>'+title+
+    (clk?' '+clk:'')+'</span><small>'+hint+'</small></div><span class="cnt">'+c+'/'+arr.length+'</span></div>';
+  if(!arr.length){el.insertAdjacentHTML("beforeend",'<div class="empty">Ничего не принимаешь</div>');return el}
+  arr.forEach(function(e){
+    var dr=e.drug,p=e.per,kk=entryKey(k,dr,p),on=st.done[kk];
+    var tg="";
+    if(w>1){
+      var prev=persAt(dr,w-1,p.time)[0];
+      if(!prev)tg="new";else if(num(p.dose)>num(prev.dose))tg="up";
+      else if(num(p.dose)<num(prev.dose))tg="dn";
+    }else if(w===1)tg="";
+    var isFirstWeekOfPer=(p.from===w);
+    var mgv=doseMg(dr,p),site=siteFor(dr,d);
+    var r=document.createElement("div");
+    r.className="row cat-"+(dr.cat||"course")+(on===true?" done":on==="skip"?" skipped":"");
+    r.innerHTML='<div class="bx">✓</div><div style="flex:1">'+
+      '<div class="nm">'+esc(dr.n)+((isFirstWeekOfPer&&tg)?'<span class="tag '+tg+'">'+
+        (tg==="new"?"новое":tg==="up"?"доза выросла":"доза снижена")+'</span>':'')+'</div>'+
+      '<div class="ds"><b>'+esc(doseText(dr,p))+'</b>'+(dr.route?' — '+esc(dr.route):'')+'</div>'+
+      (mgv?'<div class="mg">'+mgv+'</div>':'')+
+      (dr.note?'<div class="mg">'+esc(dr.note)+'</div>':'')+
+      (dr.lyo&&lyoHint(dr,p.dose)?'<div class="site" style="background:var(--am-bg);color:var(--am)">'+esc(lyoHint(dr,p.dose))+'</div>':'')+
+      (site?'<div class="site">'+esc(site)+'</div>':'')+'</div>';
+    r.onclick=function(){st.done[kk]=st.done[kk]===true?false:true;save();refreshRow(r,sk,kk,dr)};
+    var sk=document.createElement("button");sk.className="skipbtn";
+    sk.title="пропустил";sk.textContent=on==="skip"?"↺":"✕";
+    sk.onclick=function(ev){ev.stopPropagation();
+      st.done[kk]=(st.done[kk]==="skip")?false:"skip";save();refreshRow(r,sk,kk,dr)};
+    r.appendChild(sk);
+    el.appendChild(r);
+  });
+  return el;
+}
+// Обновляет одну строку и счётчики, не пересобирая экран
+function refreshRow(r,sk,kk,dr){
+  var s=st.done[kk];
+  r.className="row cat-"+(dr.cat||"course")+(s===true?" done":s==="skip"?" skipped":"");
+  sk.textContent=s==="skip"?"↺":"✕";
+  refreshCounters();
+}
+function refreshCounters(){
+  var k=key(cur),tot=0,done=0;
+  TORDER.forEach(function(t){
+    var arr=entriesFor(cur,t),c=0;
+    arr.forEach(function(e){if(st.done[entryKey(k,e.drug,e.per)]===true)c++});
+    tot+=arr.length;done+=c;
+    var blk=document.querySelector('#blocks [data-slot="'+t+'"] .cnt');
+    if(blk)blk.textContent=c+"/"+arr.length;
+  });
+  var pb=document.getElementById("pbar");
+  if(pb)pb.style.width=(tot?Math.round(done/tot*100):0)+"%";
+  var s=dayStat(cur);
+  var d=document.querySelector('.strip button.on .dot,.strip button.on .sp');
+  if(d)d.className=!s.t?"sp":(s.c===s.t?"dot":(s.c>0?"dot part":"sp"));
+}
+function draw(){
+  var s=dayStat(cur),tw=weekOf(today()),dts=daysToStart(),isT=key(cur)===key(today()),sd=startD();
+  var b=document.getElementById("badge");
+  if(!sd){b.textContent="Дата не задана";b.className="badge off"}
+  else if(dts>0){b.textContent="Старт через "+dts+" "+plural(dts,"день","дня","дней");b.className="badge soon"}
+  else if(isOver(today())){b.textContent="Курс завершён";b.className="badge end"}
+  else{b.textContent="Неделя "+tw+" из "+totalWeeks();b.className="badge"}
+
+  var l2=s.w===null?(sd?"до начала курса":"курс не задан"):(s.w>totalWeeks()?"после окончания":"неделя "+s.w);
+  document.getElementById("wklab").innerHTML='<b>'+DL[dow(cur)]+", "+fmt(cur)+(isT?" · сегодня":"")+'</b>'+l2;
+
+  var m=monday(cur),strip=document.getElementById("strip");strip.innerHTML="";
+  for(var i=0;i<7;i++){(function(i){
+    var d=addD(m,i),x=dayStat(d),btn=document.createElement("button");
+    btn.className=(key(d)===key(cur)?"on ":"")+(key(d)===key(today())?"tdy ":"")+(x.t?"":"pre");
+    var dot=!x.t?'<span class="sp"></span>':x.c===x.t?'<span class="dot"></span>':
+      x.c>0?'<span class="dot part"></span>':'<span class="sp"></span>';
+    btn.innerHTML='<span class="d">'+DS[i]+'</span><span class="n">'+d.getDate()+'</span>'+dot;
+    btn.onclick=function(){cur=d;draw()};strip.appendChild(btn)})(i)}
+  document.getElementById("pbar").style.width=(s.t?Math.round(s.c/s.t*100):0)+"%";
+
+  var h="";
+  if(!sd)h='<div class="note w"><b>Курс не настроен.</b> «Ещё» → задай дату старта. Если это новая версия приложения, а схема осталась в старой — там же «Загрузить копию».</div>';
+  else if(s.w===null)h='<div class="note">Курс начнётся '+fmt(sd)+', это '+DL[dow(sd)].toLowerCase()+'.'+(dts>0?" Осталось "+dts+" "+plural(dts,"день","дня","дней")+".":"")+'</div>';
+  else if(isPaused(cur))h='<div class="note"><b>Пауза в курсе.</b> В этот день приёмов нет, курс сдвинут на длительность паузы.</div>';
+  else if(s.w>totalWeeks())h='<div class="note g"><b>Курс окончен на '+totalWeeks()+'-й неделе.</b> Дальше — восстановление и контрольные анализы.</div>';
+  else{
+    var y=dayStat(addD(cur,-1));
+    if(isT&&y.t&&(y.c+y.sk)<y.t)h+='<div class="note w">Вчера не отмечено '+(y.t-y.c-y.sk)+' из '+y.t+'.</div>';
+    var nxt=null;
+    for(var ww=s.w+1;ww<=totalWeeks();ww++){if(changesAt(ww).length){nxt=ww;break}}
+    if(nxt){var tg2=nxt-s.w;
+      h+='<div class="note">Через '+tg2+' '+plural(tg2,"неделю","недели","недель")+', с '+nxt+'-й: '+
+      changesAt(nxt).map(function(c){return c.text}).join("; ")+'.</div>'}
+    var wd=Math.max(1,parseInt(st.warnDays,10)||7);
+    runoutAlerts(wd).forEach(function(x){
+      h+='<div class="note w">'+esc(x.drug.n)+': запас '+(x.days<=0?"кончился":("кончится "+fmt(x.date)+", через "+x.days+" "+plural(x.days,"день","дня","дней")))+'. Пора закупать.</div>';
+    });
+    (st.drugs||[]).forEach(function(dr){
+      var v=vialInfo(dr);
+      if(v&&v.left<=2)h+='<div class="note w">'+esc(dr.n)+': флакон '+(v.left>0?
+        ("заканчивается через "+v.left+" "+plural(v.left,"день","дня","дней")):"закончился")+'.</div>';
+    });
+  }
+  document.getElementById("alerts").innerHTML=h;
+
+  var bl=document.getElementById("blocks");bl.innerHTML="";
+  if(!st.drugs.length){
+    bl.innerHTML='<div class="card"><div class="empty">Список препаратов пуст.<br>Открой вкладку «Препараты».</div></div>';
+  }else if(s.w===null){
+    bl.innerHTML='<div class="card"><div class="empty">'+(sd?"Курс ещё не начался":"Задай дату старта на вкладке «Курс»")+'</div></div>';
+  }else{
+    var order=TORDER.slice();
+    if(new Date().getHours()>=15&&isT)order=["pm","post","pre","day","am"];
+    var ICON={am:"\u2600\uFE0E",day:"\u25CB",pre:"\u25B6",post:"\u25C0",pm:"\u263E"};
+    var HINT={am:"натощак или с завтраком",day:"днём",pre:"перед тренировкой",post:"после тренировки",pm:"на ночь"};
+    order.forEach(function(t){
+      if(!entriesFor(cur,t).length&&t!=="am"&&t!=="pm")return;
+      bl.appendChild(renderBlock(t,cur,(t==="am"||t==="pre"||t==="day")?"a":"p",ICON[t],TIMES[t],HINT[t]));
+    });
+  }
+  if(view==="plan"){drawPlan();drawWarns()}
+  if(view==="drugs")drawDrugs();
+  if(view==="lab")drawLab();
+  if(view==="set")drawSet();
+}
+
+/* ---------- Схема ---------- */
+function drawPlan(){
+  if(planMode==="days")drawPlanDays();
+  var tw=weekOf(today()),N=totalWeeks();
+  ["am","pm"].forEach(function(time){
+    var t=document.getElementById(time==="am"?"tlAM":"tlPM");t.innerHTML="";
+    var list=(st.drugs||[]).filter(function(dr){
+      for(var w=1;w<=N;w++)if(persAt(dr,w,time).length)return true;return false});
+    if(!list.length){t.innerHTML='<tr><td class="l" style="padding:14px 10px">'+
+      (time==="am"?"Утром ничего не назначено":"Вечером ничего не назначено")+'</td></tr>';return}
+    var hr='<tr><th>'+(time==="am"?"Утро":"Вечер")+'</th>';
+    for(var w=1;w<=N;w++)hr+='<th class="'+(w===tw?"now":"")+'">'+w+'</th>';
+    t.innerHTML=hr+'</tr>';
+    list.forEach(function(dr){
+      var nm=String(dr.n||"").replace(/\s*\(.*?\)\s*$/,"");
+      var row='<tr><td title="'+esc(dr.n)+'">'+esc(nm)+'<span class="u">'+esc(dr.unit||"")+'</span></td>';
+      for(var w=1;w<=N;w++){
+        var p=persAt(dr,w,time)[0];
+        row+='<td class="'+(w===tw?"now":"")+'">'+(p?esc(p.dose):'<span class="z">—</span>')+'</td>';
+      }
+      t.innerHTML+=row+'</tr>';
+    });
+  });
+  syncTables(tw);
+  document.getElementById("planlegend").textContent=
+    "Колонки — номера недель. Зелёная — текущая. Обе таблицы листаются вместе. Полные названия и состав дня — в режиме «По дням».";
+  var td=document.getElementById("tblDays");td.innerHTML="";
+  (st.drugs||[]).forEach(function(dr){
+    var tms=[];TORDER.forEach(function(t){
+      if((dr.per||[]).some(function(p){return p.time===t}))tms.push(TIMES[t].toLowerCase())});
+    var wk=(dr.per||[]).map(function(p){
+      return (p.from||1)+"–"+((p.to===null||p.to==="")?"кон":p.to)}).join(", ");
+    var dtxt=(dr.per||[]).map(perDaysText).filter(function(v,i,arr){return arr.indexOf(v)===i}).join(" / ");
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td>'+esc(dr.n)+'</td><td class="l">'+dtxt+" · "+tms.join("/")+" · недели "+esc(wk)+'</td>';
+    td.appendChild(tr);
+  });
+  var ch=allChanges(),el=document.getElementById("changes");
+  if(!ch.length){el.innerHTML='<div class="sub">Схема не меняется от недели к неделе.</div>';return}
+  el.innerHTML=ch.map(function(g){
+    return '<div class="note'+(g.w===tw?" g":"")+'"><b>Неделя '+g.w+'</b><br>'+
+      g.items.map(function(i){return esc(i.text)}).join("<br>")+'</div>'}).join("");
+}
+
+/* ---------- Препараты ---------- */
+function drawDrugs(){
+  var el=document.getElementById("drugList");
+  if(!st.drugs.length){el.innerHTML='<div class="empty">Пусто. Добавь позицию или загрузи свою схему.</div>';return}
+  el.innerHTML="";
+  Object.keys(CATS).forEach(function(ck){
+    var list=st.drugs.filter(function(d){return (d.cat||"course")===ck});
+    if(!list.length)return;
+    var h=document.createElement("div");
+    h.style.cssText="font-size:12px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;padding:12px 0 4px";
+    h.textContent=CATS[ck];el.appendChild(h);
+    list.forEach(function(dr){
+      var i=st.drugs.indexOf(dr);
+      var wk=dr.per&&dr.per.length?dr.per.map(function(p){
+        return (p.from||1)+"–"+((p.to===null||p.to==="")?"кон":p.to)}).join(", "):"нет периодов";
+      var tm=[];TORDER.forEach(function(t){
+        if((dr.per||[]).some(function(p){return p.time===t}))tm.push(TIMES[t].toLowerCase())});
+      var it=document.createElement("div");it.className="it";
+      it.innerHTML='<div class="in"><div class="nm">'+esc(dr.n||"без названия")+'</div>'+
+        '<div class="t2">'+esc(dr.unit||"")+' · '+esc(dr.route||dr.form||"")+' · '+tm.join("/")+' · недели '+esc(wk)+'</div></div>'+
+        '<div class="ar">›</div>';
+      it.onclick=function(){openEdit(i)};el.appendChild(it);
+    });
+  });
+}
+/* ---------- Редактор ---------- */
+function blankPer(){return {from:1,to:null,time:"pm",dose:"",days:ALL.slice()}}
+function openEdit(i){
+  edIdx=i;
+  edDraft=i<0?{id:uid(),type:"aas",cat:"course",n:"",unit:"таб",route:"внутрь",conc:"",rot:"none",vialDays:"",vialOpen:"",note:"",per:[blankPer()]}
+             :JSON.parse(JSON.stringify(st.drugs[i]));
+  openEditFromDraft();
+}
+function openEditFromDraft(){
+  var i=edIdx;
+  document.getElementById("edName").value=edDraft.n||"";
+  document.getElementById("edUnit").value=edDraft.unit||"таб";
+  document.getElementById("edRoute").value=edDraft.route||"внутрь";
+  document.getElementById("edConc").value=edDraft.conc||"";
+  document.getElementById("edRot").value=edDraft.rot||"none";
+  document.getElementById("edVialDays").value=edDraft.vialDays||"";
+  document.getElementById("edVialOpen").value=edDraft.vialOpen||"";
+  document.getElementById("edNote").value=edDraft.note||"";
+  document.getElementById("edVol").value=edDraft.vol||"";
+  document.getElementById("edServ").value=edDraft.serv||"";
+  document.getElementById("edServU").value=edDraft.unit||"";
+  applyTypeUI();
+  document.getElementById("edDel").style.display=i<0?"none":"";
+  document.getElementById("edCopy").style.display=i<0?"none":"";
+  renderPers();
+  drawCatBits();drawWarnEdit();
+  show("edit");document.getElementById("ttl").textContent=i<0?"Новый препарат":"Препарат";
+}
+function renderPers(){
+  var box=document.getElementById("edPers");box.innerHTML="";
+  edDraft.per.forEach(function(p,i){
+    var d=document.createElement("div");d.className="per";
+    d.innerHTML='<div class="ph"><span>Период '+(i+1)+'</span>'+
+      (edDraft.per.length>1?'<button class="del" data-del="'+i+'">удалить</button>':'')+'</div>'+
+      '<div class="seg" data-mode="'+i+'" style="margin-bottom:8px">'+
+        '<button data-md="week" class="'+(p.mode!=="every"?"on":"")+'">По дням недели</button>'+
+        '<button data-md="every" class="'+(p.mode==="every"?"on":"")+'">Через день</button></div>'+
+      '<div class="seg" data-time="'+i+'" style="flex-wrap:wrap">'+
+        TORDER.map(function(t){return '<button data-t="'+t+'" class="'+(p.time===t?"on":"")+'" style="flex:1 0 44%">'+TIMES[t]+'</button>'}).join("")+
+        '</div>'+
+      '<div class="f3" style="margin-top:10px">'+
+        '<div><label style="margin-top:0">С недели</label><input type="number" inputmode="numeric" min="1" data-f="from" data-i="'+i+'" value="'+(p.from||1)+'"></div>'+
+        '<div><label style="margin-top:0">Недель</label><input type="number" inputmode="numeric" min="1" data-f="len" data-i="'+i+'" value="'+((p.to===null||p.to==="")?"":(p.to-(p.from||1)+1))+'" placeholder="до конца"></div>'+
+        '<div><label style="margin-top:0">Доза</label><input type="text" inputmode="decimal" data-f="dose" data-i="'+i+'" value="'+esc(p.dose||"")+'" placeholder="0,5"></div>'+
+      '</div>'+
+      (p.mode==="every"
+        ? '<label>Интервал</label><div class="f2">'+
+          '<input type="number" inputmode="numeric" min="1" data-f="every" data-i="'+i+'" value="'+(p.every||2)+'">'+
+          '<div class="sub" style="margin:0;align-self:center">раз в столько дней, отсчёт от начала периода</div></div>'
+        : '<label>Дни недели</label><div class="dsel" data-days="'+i+'">'+
+          DS.map(function(n,j){return '<button data-d="'+j+'" class="'+((p.days||[]).indexOf(j)>=0?"on":"")+'">'+n+'</button>'}).join("")+
+          '</div>'+
+          '<div class="qk"><button data-q="all" data-i="'+i+'">Все дни</button>'+
+          '<button data-q="mt" data-i="'+i+'">Пн и Чт</button>'+
+          '<button data-q="none" data-i="'+i+'">Снять все</button></div>')+
+      '<div class="perdate" data-pd="'+i+'" style="font-size:13px;color:var(--dim);margin-top:8px"></div>';
+    box.appendChild(d);
+  });
+  drawPerDates();
+  box.querySelectorAll("[data-del]").forEach(function(b){b.onclick=function(){
+    edDraft.per.splice(+b.dataset.del,1);renderPers()}});
+  box.querySelectorAll("[data-time] button").forEach(function(b){b.onclick=function(){
+    var i=+b.parentNode.dataset.time;edDraft.per[i].time=b.dataset.t;renderPers()}});
+  box.querySelectorAll("[data-mode] button").forEach(function(b){b.onclick=function(){
+    var i=+b.parentNode.dataset.mode,p=edDraft.per[i];
+    p.mode=b.dataset.md;
+    if(p.mode==="every"&&!p.every)p.every=2;
+    renderPers();drawWarnEdit()}});
+  box.querySelectorAll("[data-days] button").forEach(function(b){b.onclick=function(){
+    var i=+b.parentNode.dataset.days,j=+b.dataset.d,a=edDraft.per[i].days||[];
+    var k=a.indexOf(j);if(k>=0)a.splice(k,1);else a.push(j);
+    a.sort(function(x,y){return x-y});edDraft.per[i].days=a;renderPers();drawWarnEdit()}});
+  box.querySelectorAll("[data-q]").forEach(function(b){b.onclick=function(){
+    var i=+b.dataset.i,q=b.dataset.q;
+    edDraft.per[i].days=q==="all"?ALL.slice():q==="mt"?MT.slice():[];renderPers();drawWarnEdit()}});
+  box.querySelectorAll("input[data-f]").forEach(function(inp){inp.oninput=function(){
+    var i=+inp.dataset.i,f=inp.dataset.f,v=inp.value;
+    if(f==="every"){edDraft.per[i].every=Math.max(1,parseInt(v,10)||1)}
+    else if(f==="from"){var fr=parseInt(v,10)||1;
+      var oldLen=(edDraft.per[i].to===null||edDraft.per[i].to==="")?null:(edDraft.per[i].to-(edDraft.per[i].from||1)+1);
+      edDraft.per[i].from=fr;
+      edDraft.per[i].to=oldLen?fr+oldLen-1:null;}
+    else if(f==="len"){var ln=parseInt(v,10);
+      edDraft.per[i].to=(v===""||!ln)?null:((edDraft.per[i].from||1)+ln-1);}
+    else edDraft.per[i].dose=v;
+    drawPerDates();if(edDraft.lyo)drawLyoCalc();
+  }});
+}
+function collectEdit(){
+  edDraft.n=document.getElementById("edName").value.trim();
+  edDraft.unit=document.getElementById("edUnit").value;
+  edDraft.route=document.getElementById("edRoute").value;
+  edDraft.conc=document.getElementById("edConc").value;
+  edDraft.rot=document.getElementById("edRot").value;
+  edDraft.vialDays=document.getElementById("edVialDays").value;
+  edDraft.vialOpen=document.getElementById("edVialOpen").value;
+  edDraft.note=document.getElementById("edNote").value.trim();
+  edDraft.vol=document.getElementById("edVol").value;
+  if(edDraft.lyo){
+    edDraft.vialAmt=document.getElementById("edVialAmt").value;
+    edDraft.vialUnit=document.getElementById("edVialUnit").value;
+    edDraft.solvent=document.getElementById("edSolvent").value;
+    edDraft.unit=edDraft.vialUnit;
+  }
+  if(edType()==="sport"){
+    edDraft.form=document.getElementById("edForm").value;
+    edDraft.serv=document.getElementById("edServ").value;
+    var u=document.getElementById("edServU").value.trim();
+    if(u)edDraft.unit=u;
+  }
+}
+
+/* ---------- Справочник ---------- */
+var catMode="browse",catFilter="",catKind="drug";
+function catRow(c,pick){
+  var b=[];
+  if(c.aa17)b.push("17-АА");
+  if(c.arom)b.push("ароматизируется");
+  if(c.prog)b.push("прогестагенный");
+  var forms=c.forms&&c.forms.length?
+    (c.unit==="мл"?c.forms.join(" / ")+" мг/мл":
+     c.unit==="ЕД"?c.forms.join(" / ")+" ЕД":
+     c.forms.join(" / ")+" мг"):"—";
+  var el=document.createElement("div");el.className="card";el.style.marginBottom="10px";
+  el.innerHTML='<div style="padding:13px 0">'+
+    '<div class="nm">'+esc(c.n)+'</div>'+
+    '<div class="t2" style="font-size:13px;color:var(--dim);margin-top:3px">'+
+      esc(c.route)+' · '+esc(forms)+' · T½ '+esc(c.hlt)+'</div>'+
+    (b.length?'<div style="margin-top:6px">'+b.map(function(x){
+      return '<span class="tag '+(x==="17-АА"?"dn":"up")+'" style="margin:0 6px 0 0">'+x+'</span>'}).join("")+'</div>':'')+
+    '<div style="font-size:14px;line-height:1.5;margin-top:8px">'+esc(c.d)+'</div>'+
+    (c.freq?'<div class="mg" style="margin-top:6px"><b style="color:var(--ink)">Частота:</b> '+esc(c.freq)+'</div>':'')+
+    (c.dose?'<div class="mg" style="margin-top:4px"><b style="color:var(--ink)">Инструкция:</b> '+esc(c.dose)+'</div>':'')+
+    (c.mon&&c.mon!=="—"?'<div class="mg" style="margin-top:4px"><b style="color:var(--ink)">Контроль:</b> '+esc(c.mon)+'</div>':'')+
+    (c.w?'<div class="note w" style="margin:10px 0 0"><b>Меры предосторожности:</b> '+esc(c.w)+'</div>':'')+
+    '</div>';
+  if(pick){
+    var btn=document.createElement("button");btn.className="btn sm pri";
+    btn.textContent="Взять в схему";btn.style.marginBottom="12px";
+    btn.onclick=function(){applyCat(c)};
+    el.appendChild(btn);
+  }
+  return el;
+}
+function drawCat(){
+  var pick=catMode==="pick",isS=catKind==="supp";
+  document.querySelectorAll("#catKind button").forEach(function(b){
+    b.className=(b.dataset.k===catKind?"on":"")});
+  document.getElementById("catPickBar").innerHTML=pick?
+    '<div class="note">Выбери позицию — её паспорт подставится в карточку. Дозу, дни и время задаёшь сам.</div>':
+    '<div class="note w">Ответственность за применение любого из этих средств несёт исключительно тот, кто их применяет. Справочник описывает свойства веществ и не является назначением, рекомендацией или руководством к приёму.</div>';
+  var g=document.getElementById("catGrp");g.innerHTML="";
+  var groups=isS?SGRP:GRP;
+  [["","Все"]].concat(Object.keys(groups).map(function(k){return [k,groups[k]]})).forEach(function(p){
+    var b=document.createElement("button");b.textContent=p[1];
+    b.style.flex="0 0 auto";b.style.marginBottom="6px";
+    if(catFilter===p[0]){b.style.background="var(--ink)";b.style.color="var(--bg)";b.style.borderColor="var(--ink)"}
+    b.onclick=function(){catFilter=p[0];drawCat()};g.appendChild(b)});
+  var q=document.getElementById("catQ").value;
+  var gk=Object.keys(groups);
+  var list=(isS?suppSearch(q):catSearch(q)).filter(function(c){return !catFilter||c.g===catFilter})
+    .sort(function(x,y){return gk.indexOf(x.g)-gk.indexOf(y.g)});
+  var box=document.getElementById("catList");box.innerHTML="";
+  if(!list.length){box.innerHTML='<div class="empty">Ничего не найдено</div>';return}
+  var cur="";
+  list.forEach(function(c){
+    if(c.g!==cur){cur=c.g;var h=document.createElement("h2");h.textContent=groups[c.g];box.appendChild(h)}
+    box.appendChild(isS?suppRow(c,pick):catRow(c,pick));
+  });
+}
+function suppRow(s,pick){
+  var el=document.createElement("div");el.className="card";el.style.marginBottom="10px";
+  el.innerHTML='<div style="padding:13px 0">'+
+    '<div class="nm">'+esc(s.n)+'</div>'+
+    '<div style="font-size:13px;color:var(--dim);margin-top:3px">'+esc(s.form)+' · порция '+s.serv+' '+esc(s.unit)+' · '+esc(s.when)+'</div>'+
+    '<div style="font-size:14px;line-height:1.5;margin-top:8px">'+esc(s.d)+'</div>'+
+    '<div class="note w" style="margin:10px 0 0"><b>Осторожно:</b> '+esc(s.w)+'</div></div>';
+  if(pick){var b=document.createElement("button");b.className="btn sm pri";
+    b.textContent="Взять в схему";b.style.marginBottom="12px";
+    b.onclick=function(){applySupp(s)};el.appendChild(b)}
+  return el;
+}
+function applyCat(c){
+  if(!edDraft)edDraft={id:uid(),per:[blankPer()]};
+  edDraft.catId=c.id;edDraft.n=c.n;edDraft.unit=c.unit;edDraft.route=c.route;
+  edDraft.type=(c.g==="inj"||c.g==="oral"||c.g==="pep")?"aas":"med";
+  edDraft.cat=(c.g==="pct")?"pct":(c.g==="inj"||c.g==="oral"||c.g==="pep")?"course":"supp";
+  if(c.vols&&c.vols.length&&!edDraft.vol)edDraft.vol=String(c.vols[0]);
+  if((c.g==="pep"||c.id==="hcg"||c.id==="hmg")&&c.route==="п/к"){
+    edDraft.lyo=1;edDraft.vialUnit=(c.unit==="ЕД")?"МЕ":c.unit;edDraft.unit=edDraft.vialUnit;
+    if(c.forms&&c.forms.length&&!edDraft.vialAmt)edDraft.vialAmt=String(c.forms[c.forms.length-1]);
+  }
+  if(c.forms&&c.forms.length&&c.unit!=="мг"&&c.unit!=="мкг")edDraft.conc=String(c.forms[0]);
+  if(c.gap&&edDraft.per&&edDraft.per.length===1&&!num(edDraft.per[0].dose)){
+    edDraft.per[0].days=suggestDays(c.gap);
+  }
+  catMode="browse";
+  openEditFromDraft();
+  toast("Подставлено: "+c.n);
+}
+function suggestDays(gap){
+  if(gap<=1)return ALL.slice();
+  if(gap===2)return [0,2,4,6];
+  if(gap===3)return [0,3];
+  if(gap<=4)return [0,3];
+  return [0];
+}
+function drawCatBits(){
+  var c=catOf(edDraft),box=document.getElementById("edCat"),fb=document.getElementById("edForms");
+  if(!edDraft){box.innerHTML="";fb.innerHTML="";return}
+  box.innerHTML=c?'<div class="note g" style="margin:10px 0 0">Из справочника: '+esc(c.n)+
+    ' · T½ '+esc(c.hlt)+' · рекомендуемая частота — '+esc(c.freq||"—")+
+    '<br><button class="btn sm" id="edUnlink" style="margin-top:8px">Отвязать</button></div>':"";
+  var u=document.getElementById("edUnlink");
+  if(u)u.onclick=function(){delete edDraft.catId;drawCatBits();drawWarnEdit()};
+  if(edDraft&&edDraft.lyo){fb.innerHTML="";return}
+  if(c&&c.forms&&c.forms.length){
+    var lbl=c.unit==="мл"?"мг/мл":c.unit==="ЕД"?"ЕД":"мг";
+    fb.innerHTML='<div class="qk" style="flex-wrap:wrap">'+c.forms.map(function(f){
+      return '<button data-form="'+f+'" style="flex:0 0 auto">'+f+' '+lbl+'</button>'}).join("")+'</div>'+
+      '<div class="sub">Формы выпуска из справочника. Ставь ту, что на твоей упаковке.</div>';
+    fb.querySelectorAll("[data-form]").forEach(function(b){b.onclick=function(){
+      document.getElementById("edConc").value=b.dataset.form;edDraft.conc=b.dataset.form}});
+  }else fb.innerHTML="";
+}
+function drawLyoCalc(){
+  var el=document.getElementById("edLyoCalc");if(!el||!edDraft)return;
+  var c=lyoConc(edDraft);
+  if(!c){el.innerHTML='<div class="sub">Заполни количество во флаконе и объём растворителя — посчитаю, сколько набирать в шприц.</div>';return}
+  var u=edDraft.vialUnit||"мг";
+  var bad=[],rows=[];
+  (edDraft.per||[]).forEach(function(p){
+    if(!num(p.dose))return;
+    var s=lyoSanity(edDraft,p.dose);
+    if(s){bad.push(s);return}
+    var n=lyoDosesPerVial(edDraft,p.dose);
+    rows.push("Доза "+p.dose+" "+u+" → "+lyoHint(edDraft,p.dose)+
+      (n?". Флакона хватит на "+n+" "+plural(n,"укол","укола","уколов"):""));
+  });
+  el.innerHTML='<div class="note g" style="margin:10px 0 0"><b>После разведения: '+
+    (Math.round(c*100)/100)+" "+u+' в 1 мл.</b>'+(rows.length?"<br>"+rows.join("<br>"):"")+'</div>'+
+    (bad.length?'<div class="note w" style="margin:10px 0 0">'+bad.map(esc).join("<br>")+'</div>':"");
+}
+function drawWarnEdit(){
+  var c=catOf(edDraft),w=[];
+  if(c&&c.oil&&document.getElementById("edRoute").value==="в/в")
+    w.push("МАСЛЯНЫЙ РАСТВОР ВНУТРИВЕННО НЕДОПУСТИМ. Это вызывает масляную эмболию — состояние, опасное для жизни. Только внутримышечно.");
+  if(edType()==="sport"&&!num(document.getElementById("edServ").value))
+    w.push("Не указан размер порции.");
+  if(c&&c.gap)(edDraft.per||[]).forEach(function(p,i){
+    var g=(p.mode==="every")?Math.max(1,parseInt(p.every,10)||1):maxGap(p.days);
+    if(g>c.gap)w.push("Период "+(i+1)+": разрыв до "+g+" дн. при T½ "+c.hlt+". Рекомендуется "+c.freq+".");
+  });
+  document.getElementById("edWarn").innerHTML=w.length?
+    '<div class="note w">'+w.map(esc).join("<br>")+'</div>':"";
+}
+function drawWarns(){
+  var ws=protocolWarnings(),el=document.getElementById("warns");
+  if(!ws.length){el.innerHTML='<div class="note g">Противоречий не найдено.</div>';return}
+  el.innerHTML=ws.map(function(x){
+    return '<div class="note'+(x.lvl==="warn"?" w":"")+'">'+esc(x.text)+'</div>'}).join("")+
+    '<div class="sub">Проверки формальные: они ловят противоречия внутри схемы, но не оценивают безопасность доз.</div>';
+}
+/* ---------- Типы карточек, даты периодов, спортпит, календарь ---------- */
+function edType(){return (edDraft&&edDraft.type)||"aas"}
+function applyTypeUI(){
+  if(!edDraft)return;
+  var t=edType();
+  document.querySelectorAll("#edType button").forEach(function(b){
+    b.className=(b.dataset.ty===t?"on":"")});
+  document.querySelectorAll("#edCatSel button").forEach(function(b){
+    b.className=(b.dataset.c===(edDraft.cat||"course")?"on":"")});
+  var isSport=t==="sport",inj=!isSport&&(edDraft.route==="п/к"||edDraft.route==="в/м"||edDraft.route==="в/в");
+  var lyo=!!edDraft.lyo;
+  document.getElementById("edServWrap").style.display=isSport?"":"none";
+  document.getElementById("edLyoSel").style.display=inj?"":"none";
+  document.getElementById("edVolWrap").style.display=(!isSport&&!lyo&&edDraft.unit==="мл")?"":"none";
+  document.getElementById("edLyoWrap").style.display=(inj&&lyo)?"":"none";
+  document.querySelectorAll("#edLyo button").forEach(function(b){
+    b.className=((b.dataset.l==="1")===lyo?"on":"")});
+  if(lyo){
+    document.getElementById("edVialAmt").value=edDraft.vialAmt||"";
+    document.getElementById("edVialUnit").value=edDraft.vialUnit||"мг";
+    document.getElementById("edSolvent").value=edDraft.solvent||"";
+    edDraft.unit=edDraft.vialUnit||"мг";
+    document.getElementById("edUnit").value=edDraft.unit;
+    drawLyoCalc();
+  }
+  [["edConc",isSport||lyo],["edRot",isSport]].forEach(function(p){
+    var el=document.getElementById(p[0]),lb=el.previousElementSibling;
+    el.style.display=p[1]?"none":"";
+    if(lb&&lb.tagName==="LABEL")lb.style.display=p[1]?"none":"";
+  });
+  document.getElementById("edPick").textContent=isSport?"Выбрать из каталога спортпита":"Выбрать из справочника";
+  var f=document.getElementById("edForm");
+  if(!f.options.length)FORMS.forEach(function(x){
+    var o=document.createElement("option");o.textContent=x;f.appendChild(o)});
+  if(edDraft.form)f.value=edDraft.form;
+}
+function drawPerDates(){
+  if(!edDraft)return;
+  var sd=startD();
+  document.querySelectorAll("[data-pd]").forEach(function(el){
+    var p=edDraft.per[+el.dataset.pd];if(!p)return;
+    var f=p.from||1,t=p.to;
+    if(!sd){el.textContent=t?("недели "+f+"–"+t):("с недели "+f+" до конца курса");return}
+    var d1=addD(sd,(f-1)*7);
+    el.textContent=t?("с "+fmt(d1)+" по "+fmt(addD(sd,t*7-1))+" · "+(t-f+1)+" "+plural(t-f+1,"неделя","недели","недель"))
+                    :("с "+fmt(d1)+" до конца курса");
+  });
+}
+function suppById(id){for(var i=0;i<SUPP.length;i++)if(SUPP[i].id===id)return SUPP[i];return null}
+function suppSearch(q){q=String(q||"").trim().toLowerCase();
+  return q?SUPP.filter(function(s){return s.n.toLowerCase().indexOf(q)>=0||(SGRP[s.g]||"").toLowerCase().indexOf(q)>=0}):SUPP.slice()}
+function applySupp(s){
+  if(!edDraft)edDraft={id:uid(),per:[blankPer()]};
+  edDraft.type="sport";edDraft.cat="sport";edDraft.suppId=s.id;edDraft.n=s.n;
+  edDraft.form=s.form;edDraft.serv=String(s.serv);edDraft.unit=s.unit;edDraft.route="внутрь";
+  if(edDraft.per&&edDraft.per.length===1&&!num(edDraft.per[0].dose)){
+    edDraft.per[0].dose=String(s.serv);
+    edDraft.per[0].time=/тренировк/.test(s.when)?(/после/.test(s.when)?"post":"pre"):(/ночь|сна|вечер/.test(s.when)?"pm":"am");
+  }
+  catMode="browse";openEditFromDraft();toast("Подставлено: "+s.n);
+}
+function val(id,dflt){var e=document.getElementById(id);return (e&&e.value)||dflt}
+function pad2(n){return n<10?"0"+n:""+n}
+function icsTime(d,hm){var p=(hm||"08:00").split(":");
+  return d.getFullYear()+pad2(d.getMonth()+1)+pad2(d.getDate())+"T"+pad2(+p[0])+pad2(+p[1])+"00"}
+function buildICS(){
+  var sd=startD();if(!sd)return null;
+  var times={am:val("tAm","08:00"),day:val("tDay","13:00"),pre:val("tPre","17:30"),post:val("tPost","19:30"),pm:val("tPm","22:00")};
+  var lead=Math.max(0,parseInt(st.nLead,10)||10),rep=Math.max(0,parseInt(st.nRepeat,10)||0);
+  var L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//kurs//RU","CALSCALE:GREGORIAN"];
+  var N=totalWeeks(),cnt=0,lim=N*7+pausedTotal();
+  for(var i=0;i<lim&&i<500;i++){
+    var d=addD(sd,i);
+    TORDER.forEach(function(t){
+      var e=entriesFor(d,t);if(!e.length)return;
+      var txt=e.map(function(x){return x.drug.n+" "+doseText(x.drug,x.per)}).join(", ");
+      L.push("BEGIN:VEVENT","UID:kurs-"+key(d)+"-"+t+"@local",
+        "DTSTAMP:"+icsTime(sd,"00:00")+"Z","DTSTART:"+icsTime(d,times[t]),"DURATION:PT15M",
+        "SUMMARY:"+TIMES[t]+": "+txt.slice(0,180),
+        "DESCRIPTION:"+txt.replace(/,/g,"\\,"),
+        "BEGIN:VALARM","TRIGGER:-PT"+lead+"M","ACTION:DISPLAY","DESCRIPTION:"+TIMES[t],"END:VALARM");
+      if(rep>0)L.push("BEGIN:VALARM","TRIGGER:PT"+rep+"M","ACTION:DISPLAY","DESCRIPTION:"+TIMES[t]+" — не отмечено?","END:VALARM");
+      L.push("END:VEVENT");
+      cnt++;
+    });
+  }
+  L.push("END:VCALENDAR");
+  return {text:L.join("\r\n"),count:cnt};
+}
+function syncTables(tw){
+  var boxes=[].slice.call(document.querySelectorAll("#planWeeks .tl"));
+  if(boxes.length<2)return;
+  boxes.forEach(function(b){
+    b.onscroll=function(){
+      if(b._lock)return;
+      boxes.forEach(function(o){if(o!==b){o._lock=1;o.scrollLeft=b.scrollLeft;o._lock=0}});
+    };
+  });
+  if(!tw||tw<1||boxes[0]._jumped)return;
+  boxes[0]._jumped=1;
+  setTimeout(function(){
+    var c=boxes[0].querySelector("th.now")||boxes[1].querySelector("th.now");
+    if(!c)return;
+    var x=Math.max(0,c.offsetLeft-170);
+    boxes.forEach(function(b){b.scrollLeft=x});
+  },40);
+}
+
+/* ---------- Схема по дням ---------- */
+var planMode="days";
+function drawPlanDays(){
+  var box=document.getElementById("planDays"),sd=startD();
+  if(!sd){box.innerHTML='<div class="card"><div class="empty">Задай дату старта на вкладке «Ещё»</div></div>';return}
+  if(!st.drugs.length){box.innerHTML='<div class="card"><div class="empty">В схеме нет препаратов</div></div>';return}
+  var N=totalWeeks(),tk=key(today()),html="",curW=0,open=false;
+  var lim=N*7+pausedTotal();
+  for(var i=0;i<lim&&i<500;i++){
+    var d=addD(sd,i),w=weekOf(d);
+    if(w===null){
+      if(open)html+='</div>';open=false;curW=0;
+      html+='<div class="card" style="margin-bottom:10px"><div class="dayrow"><div class="dh">'+
+        '<span class="dd">'+fmt(d)+'</span><span class="dw">'+DL[dow(d)]+' · пауза</span></div>'+
+        '<div class="li">—</div></div></div>';
+      continue;
+    }
+    if(w!==curW){
+      if(open)html+='</div>';
+      curW=w;
+      var ws=addD(sd,(w-1)*7),we=addD(sd,w*7-1);
+      html+='<div class="wkhead">Неделя '+w+' · '+fmt(ws)+' – '+fmt(we)+'</div><div class="card">';
+      open=true;
+    }
+    var parts=[];
+    TORDER.forEach(function(t){
+      var e=entriesFor(d,t);if(!e.length)return;
+      parts.push('<div class="li"><b>'+TIMES[t]+':</b> '+e.map(function(x){
+        return esc(x.drug.n)+' '+esc(doseText(x.drug,x.per))}).join(", ")+'</div>');
+    });
+    html+='<div class="dayrow'+(key(d)===tk?" today":"")+'">'+
+      '<div class="dh"><span class="dd">'+fmt(d)+'</span><span class="dw">'+DL[dow(d)]+
+      (key(d)===tk?" · сегодня":"")+'</span></div>'+
+      (parts.length?parts.join(""):'<div class="li">—</div>')+'</div>';
+  }
+  if(open)html+='</div>';
+  box.innerHTML=html;
+  var t=box.querySelector(".dayrow.today");
+  if(t&&!box._scrolled){box._scrolled=1}
+}
+function setPlanMode(m){
+  planMode=m;
+  document.querySelectorAll("#planMode button").forEach(function(b){
+    b.className=(b.dataset.pm===m?"on":"")});
+  document.getElementById("planDays").className=(m==="days"?"":"hide");
+  document.getElementById("planWeeks").className=(m==="weeks"?"":"hide");
+  if(m==="days")drawPlanDays();
+}
+
+/* ---------- Экран закупки ---------- */
+function curSign(){return (st.cur||"₸")}
+function fmtMoney(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ")+" "+curSign()}
+function drawBuy(){
+  var sum=document.getElementById("buySum"),rows=document.getElementById("buyRows");
+  var noStart=!startD();
+  var list=(st.drugs||[]).filter(function(dr){return noStart?(dr.per&&dr.per.length):needTotal(dr)>0});
+  if(!list.length){sum.innerHTML="";rows.innerHTML='<div class="card"><div class="empty">В схеме нет позиций с дозами</div></div>';return}
+  var h="";
+  if(noStart){
+    sum.innerHTML='<div class="note w">Дата старта не задана — расход и даты не считаются. Остаток и цены вносить можно уже сейчас.<br><button class="btn pri" id="buyFixDate" style="margin-top:10px">Задать дату старта</button></div>';
+    var fx=document.getElementById("buyFixDate");
+    if(fx)fx.onclick=function(){show("set")};
+    drawBuyRows(rows,list,true);return;
+  }
+  var cc=courseCost(),bc=buyCost(),wd=Math.max(1,parseInt(st.warnDays,10)||7);
+  var al=runoutAlerts(wd);
+  if(al.length)h+='<div class="note w"><b>Заканчивается:</b><br>'+al.map(function(x){
+    return esc(x.drug.n)+" — "+(x.days<=0?"уже кончилось":("хватит до "+fmt(x.date)+", это "+x.days+" "+plural(x.days,"день","дня","дней")))}).join("<br>")+'</div>';
+  h+='<div class="g2">'+
+     '<div class="stat"><div class="lb">Докупить</div><div class="big">'+fmtMoney(bc.sum)+'</div><div class="sub">'+bc.n+' '+plural(bc.n,"позиция","позиции","позиций")+'</div></div>'+
+     '<div class="stat"><div class="lb">Курс целиком</div><div class="big">'+fmtMoney(cc.sum)+'</div><div class="sub">'+(cc.unknown?"без цены: "+cc.unknown:"все цены заданы")+'</div></div></div>';
+  sum.innerHTML=h;
+
+  drawBuyRows(rows,list,false);
+}
+function packSumText(dr){
+  var pu=packUnits(dr);
+  if(!pu)return "Заполни, сколько в упаковке — тогда посчитаю закупку";
+  return (dr.lyo?"Флакон":"Упаковка")+" = "+pu+" "+(dr.unit||"")+" · остаток "+stockNow(dr)+" "+(dr.unit||"");
+}
+function buyHead(dr,b,noStart){
+  var u=esc(dr.unit||""),pu=b.pu,pk=dr.lyo?"фл.":"уп.";
+  var haveP=pu?Math.round(b.have/pu*100)/100:0;
+  var needP=packsForCourse(dr);
+  var ro=!hasStock(dr)?"остаток не задан":
+    (b.runout?("хватит до "+fmt(b.runout)):(b.have>0?"хватит до конца курса":"запаса нет"));
+  if(noStart)return "есть "+b.have+" "+u+(pu?" ("+haveP+" "+pk+")":"")+" · расход посчитается после даты старта";
+  return "на весь курс "+b.total+" "+u+(needP?" = "+needP+" "+pk:"")+
+    "<br>есть "+b.have+" "+u+(pu?" ("+haveP+" "+pk+")":"")+" · "+ro;
+}
+function drawBuyRows(rows,list,noStart){
+  rows.innerHTML="";
+  if(!list.length){rows.innerHTML='<div class="card"><div class="empty">В схеме нет позиций</div></div>';return}
+  list.forEach(function(dr){
+    var b=buyPlan(dr),i=st.drugs.indexOf(dr);
+    var c=document.createElement("div");c.className="card";c.style.padding="14px";
+    var head=buyHead(dr,b,noStart);
+    c.innerHTML='<div class="nm">'+esc(dr.n)+'</div>'+
+      '<div class="sub" style="margin-bottom:10px">'+head+'</div>'+
+      '<div class="'+(dr.lyo?"f2":"f3")+'">'+
+        (dr.lyo?'':'<div><label style="margin-top:0">Штук в упак.</label><input type="number" inputmode="decimal" placeholder="1" data-bf="packN" data-bi="'+i+'" value="'+esc(dr.packN||"")+'"></div>')+
+        '<div><label style="margin-top:0">'+(dr.lyo?"Во флаконе, ":"В одной, ")+esc(dr.unit||"ед")+'</label><input type="number" inputmode="decimal" placeholder="'+(packEachDefault(dr)||"")+'" data-bf="packEach" data-bi="'+i+'" value="'+esc(dr.packEach||"")+'"></div>'+
+        '<div><label style="margin-top:0">Цена</label><input type="number" inputmode="decimal" data-bf="price" data-bi="'+i+'" value="'+esc(dr.price||"")+'"></div>'+
+      '</div>'+
+      '<div class="f2" style="margin-top:8px">'+
+        '<div><label style="margin-top:0">Есть '+(dr.lyo?"флаконов":"упаковок")+'</label><input type="number" inputmode="decimal" placeholder="0" data-bf="stockPacks" data-bi="'+i+'" value="'+esc(dr.stockPacks||"")+'"></div>'+
+        '<div><label style="margin-top:0">+ вскрытая, '+esc(dr.unit||"ед")+'</label><input type="number" inputmode="decimal" placeholder="0" data-bf="stockUnits" data-bi="'+i+'" value="'+esc(dr.stockUnits||"")+'"></div>'+
+      '</div>'+
+      '<div class="packsum" style="font-size:13px;color:var(--dim);margin-top:6px">'+packSumText(dr)+'</div>'+
+      '<div class="buytail">'+(noStart?'':!hasStock(dr)?'<div class="sub" style="margin-top:8px">Укажи, сколько есть — посчитаю докупку.</div>':b.packs>0?'<div class="note w" style="margin:10px 0 0">Докупить '+b.packs+' '+
+        (dr.lyo?plural(b.packs,"флакон","флакона","флаконов"):plural(b.packs,"упаковку","упаковки","упаковок"))+
+        (b.price?' — '+fmtMoney(b.cost):' (цена не задана)')+'</div>':
+       (b.pu?'<div class="note g" style="margin:10px 0 0">Хватает до конца курса</div>':
+             '<div class="sub" style="margin-top:8px">Укажи, сколько единиц в упаковке — посчитаю закупку.</div>'))+'</div>';
+    rows.appendChild(c);
+  });
+  rows.querySelectorAll("input[data-bf]").forEach(function(inp){
+    inp.onchange=function(){
+      var dr=st.drugs[+inp.dataset.bi],f=inp.dataset.bf;
+      dr[f]=inp.value;
+      if(f==="stock"||f==="stockPacks"||f==="stockUnits")dr.stockD=key(today());
+      save();refreshBuyCard(inp,dr);
+    };
+  });
+}
+function refreshBuyCard(inp,dr){
+  var card=inp.closest(".card");if(!card)return;
+  var b=buyPlan(dr),noStart=!startD();
+  var ro=b.runout?("хватит до "+fmt(b.runout)):(b.have>0?"хватит до конца курса":"запас не задан");
+  var head=noStart
+    ? ('есть '+b.have+' '+esc(dr.unit||"")+' · расход посчитается после даты старта')
+    : ('на курс '+b.total+' '+esc(dr.unit||"")+' · осталось нужно '+b.need+' · есть '+b.have+' · '+ro);
+  var sub=card.querySelector(".sub");if(sub)sub.innerHTML=head;
+  var ps=card.querySelector(".packsum");
+  if(ps)ps.innerHTML=packSumText(dr);
+  var tail=card.querySelector(".buytail");
+  var html=noStart?'':!hasStock(dr)?'<div class="sub" style="margin-top:8px">Укажи, сколько есть — посчитаю докупку.</div>':(b.packs>0
+    ?'<div class="note w" style="margin:10px 0 0">Докупить '+b.packs+' '+plural(b.packs,"упаковку","упаковки","упаковок")+
+       (dr.lyo?" (флаконов)":"")+(b.price?' — '+fmtMoney(b.cost):' (цена не задана)')+
+       (dr.lyo&&b.pu?'<br>Одного флакона хватает на '+lyoDosesPerVial(dr,(dr.per&&dr.per[0])?dr.per[0].dose:0)+' уколов':'')+'</div>'
+    :(b.pu?'<div class="note g" style="margin:10px 0 0">Хватает до конца курса</div>'
+          :'<div class="sub" style="margin-top:8px">Укажи, сколько единиц в упаковке — посчитаю закупку.</div>'));
+  if(tail)tail.innerHTML=html;
+  var sum=document.getElementById("buySum");
+  if(sum&&!noStart){
+    var cc=courseCost(),bc=buyCost();
+    var big=sum.querySelectorAll(".big");
+    if(big.length===2){big[0].textContent=fmtMoney(bc.sum);big[1].textContent=fmtMoney(cc.sum)}
+  }
+}
+function buyListText(){
+  var L=["Список покупок"],tot=0;
+  (st.drugs||[]).forEach(function(dr){
+    var b=buyPlan(dr);if(b.packs<=0)return;
+    tot+=b.cost;
+    L.push("• "+dr.n+" — "+b.packs+" "+
+      (dr.lyo?plural(b.packs,"флакон","флакона","флаконов"):plural(b.packs,"упаковка","упаковки","упаковок"))+
+      (b.pu?" по "+b.pu+" "+(dr.unit||""):"")+(b.price?" — "+fmtMoney(b.cost):""));
+  });
+  if(L.length===1)return "Докупать пока нечего.";
+  L.push("");L.push("Итого: "+fmtMoney(tot));
+  return L.join("\n");
+}
+
+/* ---------- Здоровье ---------- */
+var chartKey="sys",leIdx=-1,leDraft=null;
+function saveDiary(){
+  var k=key(today()),o={};
+  ["sys","dia","hr","wt"].forEach(function(f){
+    var v=document.getElementById("v"+f.charAt(0).toUpperCase()+f.slice(1)).value;
+    if(v!=="")o[f]=v;
+  });
+  var cur=st.diary[k]||{};
+  if(cur.mood!==undefined)o.mood=cur.mood;
+  if(Object.keys(o).length)st.diary[k]=o;else delete st.diary[k];
+  save();drawHealth();
+}
+function drawVitalState(){
+  var d=diaryGet(today()),h="";
+  VITALS.forEach(function(V){
+    if(d[V.k]===undefined||d[V.k]==="")return;
+    var s=labState(V,+d[V.k]);
+    if(s==="crit")h+='<div class="note w" style="margin:10px 0 0"><b>'+V.n+' '+d[V.k]+'</b> — высоко. Померь повторно в покое через 10 минут.</div>';
+    else if(s==="high")h+='<div class="note" style="margin:10px 0 0">'+V.n+' '+d[V.k]+' — выше обычного диапазона ('+V.lo+'–'+V.hi+').</div>';
+  });
+  document.getElementById("vState").innerHTML=h;
+}
+function sparkline(series,labels,bands){
+  var W=330,H=150,P=28;
+  var all=series.reduce(function(a,s){return a.concat(s.v.filter(function(x){return x!=null}))},[]);
+  if(all.length<1)return '<div class="empty">Нет данных. Заполни показатели выше.</div>';
+  var mn=Math.min.apply(null,all),mx=Math.max.apply(null,all);
+  if(bands){mn=Math.min(mn,bands[0]);mx=Math.max(mx,bands[1])}
+  if(mn===mx){mn-=1;mx+=1}
+  var pad=(mx-mn)*0.12;mn-=pad;mx+=pad;
+  var n=labels.length;
+  function X(i){return n<2?W/2:P+i*(W-P-8)/(n-1)}
+  function Y(v){return H-P-(v-mn)/(mx-mn)*(H-P-10)}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto" role="img">';
+  if(bands)s+='<rect x="'+P+'" y="'+Y(bands[1])+'" width="'+(W-P-8)+'" height="'+Math.max(1,Y(bands[0])-Y(bands[1]))+'" fill="var(--ok-bg)"/>';
+  s+='<line x1="'+P+'" y1="'+(H-P)+'" x2="'+(W-8)+'" y2="'+(H-P)+'" stroke="var(--line2)" stroke-width="1"/>';
+  s+='<text x="2" y="14" font-size="10" fill="var(--faint)">'+Math.round(mx*10)/10+'</text>';
+  s+='<text x="2" y="'+(H-P)+'" font-size="10" fill="var(--faint)">'+Math.round(mn*10)/10+'</text>';
+  series.forEach(function(ser){
+    var pts=[],last=null;
+    ser.v.forEach(function(v,i){if(v!=null){pts.push(X(i)+","+Y(v));last={x:X(i),y:Y(v),v:v}}});
+    if(pts.length>1)s+='<polyline points="'+pts.join(" ")+'" fill="none" stroke="'+ser.c+'" stroke-width="2" stroke-linejoin="round"/>';
+    ser.v.forEach(function(v,i){if(v!=null)s+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="3" fill="'+ser.c+'"/>'});
+    if(last)s+='<text x="'+Math.min(last.x+6,W-26)+'" y="'+(last.y-7)+'" font-size="11" fill="'+ser.c+'">'+last.v+'</text>';
+  });
+  if(n>1){
+    s+='<text x="'+P+'" y="'+(H-8)+'" font-size="10" fill="var(--faint)">'+labels[0]+'</text>';
+    s+='<text x="'+(W-8)+'" y="'+(H-8)+'" font-size="10" fill="var(--faint)" text-anchor="end">'+labels[n-1]+'</text>';
+  }
+  return s+'</svg>';
+}
+function drawChart(){
+  var box=document.getElementById("chart"),pick=document.getElementById("chartPick");
+  var opts=[["sys","Давление"],["hr","Пульс"],["wt","Вес"],["mood","Самочувствие"]];
+  LABS.forEach(function(L){if(lastLab(L.k))opts.push([L.k,L.n])});
+  pick.innerHTML=opts.map(function(o){
+    return '<button data-ck="'+o[0]+'" class="'+(chartKey===o[0]?"on":"")+'" style="flex:0 0 auto">'+o[1]+'</button>'}).join("");
+  pick.querySelectorAll("[data-ck]").forEach(function(b){b.onclick=function(){chartKey=b.dataset.ck;drawChart()}});
+
+  var isLab=!!labByKey(chartKey);
+  if(isLab){
+    var L=labByKey(chartKey),e=labEntries().filter(function(x){return x.v&&x.v[chartKey]!==""&&x.v[chartKey]!==undefined});
+    box.innerHTML=sparkline([{v:e.map(function(x){return +x.v[chartKey]}),c:"var(--pm)"}],
+      e.map(function(x){var d=parseD(x.d);return d?fmt(d):x.d}),
+      (L.lo!==undefined&&L.hi!==undefined)?[L.lo,L.hi]:null)+
+      '<div class="sub" style="text-align:center">'+L.n+', '+L.u+(L.lo!==undefined?" · норма "+L.lo+"–"+L.hi:"")+'</div>';
+    return;
+  }
+  var days=[],labels=[];
+  for(var i=29;i>=0;i--){var d=addD(today(),-i);days.push(diaryGet(d));labels.push(d.getDate()+"."+pad(d.getMonth()+1))}
+  var ser,cap;
+  if(chartKey==="sys"){
+    ser=[{v:days.map(function(x){return x.sys?+x.sys:null}),c:"var(--warn)"},
+         {v:days.map(function(x){return x.dia?+x.dia:null}),c:"var(--pm)"}];
+    cap="Давление, мм рт.ст. · зелёная зона 60–135";
+    box.innerHTML=sparkline(ser,labels,[60,135])+'<div class="sub" style="text-align:center">'+cap+'</div>';return;
+  }
+  if(chartKey==="hr"){ser=[{v:days.map(function(x){return x.hr?+x.hr:null}),c:"var(--warn)"}];cap="Пульс в покое, уд/мин";
+    box.innerHTML=sparkline(ser,labels,[50,85])+'<div class="sub" style="text-align:center">'+cap+'</div>';return}
+  if(chartKey==="wt"){ser=[{v:days.map(function(x){return x.wt?+String(x.wt).replace(",","."):null}),c:"var(--ok)"}];
+    box.innerHTML=sparkline(ser,labels,null)+'<div class="sub" style="text-align:center">Вес, кг</div>';return}
+  ser=[{v:days.map(function(x){return x.mood!==undefined?x.mood+1:null}),c:"var(--pm)"}];
+  box.innerHTML=sparkline(ser,labels,null)+'<div class="sub" style="text-align:center">Самочувствие, 1–5</div>';
+}
+function drawLabList(){
+  var box=document.getElementById("labList"),e=labEntries();
+  if(!e.length){box.innerHTML='<div class="card"><div class="empty">Результатов пока нет</div></div>';return}
+  box.innerHTML="";
+  e.slice().reverse().forEach(function(en){
+    var idx=st.labs.indexOf(en);
+    var vals=Object.keys(en.v||{}).filter(function(k){return en.v[k]!==""});
+    var bad=vals.filter(function(k){var L=labByKey(k);return L&&labState(L,+en.v[k])!=="ok"});
+    var c=document.createElement("div");c.className="card";c.style.cursor="pointer";
+    var d=parseD(en.d);
+    c.innerHTML='<div style="padding:13px 0"><div class="nm">'+(d?fmt(d)+" "+d.getFullYear():en.d)+'</div>'+
+      '<div class="sub">'+vals.length+' '+plural(vals.length,"показатель","показателя","показателей")+
+      (bad.length?' · <span style="color:var(--warn)">'+bad.length+' вне нормы</span>':' · всё в норме')+'</div>'+
+      (bad.length?'<div style="margin-top:8px">'+bad.map(function(k){var L=labByKey(k);
+        return '<span class="tag dn" style="margin:0 6px 4px 0;display:inline-block">'+L.n+' '+en.v[k]+'</span>'}).join("")+'</div>':'')+
+      '</div>';
+    c.onclick=function(){openLab(idx)};
+    box.appendChild(c);
+  });
+}
+function openLab(i){
+  leIdx=i;
+  leDraft=i<0?{d:key(today()),v:{}}:JSON.parse(JSON.stringify(st.labs[i]));
+  document.getElementById("leDate").value=leDraft.d;
+  document.getElementById("leDel").style.display=i<0?"none":"";
+  var groups={},box=document.getElementById("leFields");
+  LABS.forEach(function(L){(groups[L.g]=groups[L.g]||[]).push(L)});
+  box.innerHTML=Object.keys(groups).map(function(g){
+    return '<h2>'+g+'</h2>'+groups[g].map(function(L){
+      return '<label style="margin-top:8px">'+L.n+', '+L.u+(L.lo!==undefined?' <span style="color:var(--faint)">норма '+L.lo+'–'+L.hi+'</span>':'')+'</label>'+
+        '<input type="number" inputmode="decimal" data-lk="'+L.k+'" value="'+(leDraft.v[L.k]||"")+'">'+
+        '<div class="sub" data-ls="'+L.k+'"></div>';
+    }).join("")}).join("");
+  box.querySelectorAll("input[data-lk]").forEach(function(inp){
+    inp.oninput=function(){
+      var k=inp.dataset.lk,L=labByKey(k),v=inp.value;
+      if(v==="")delete leDraft.v[k];else leDraft.v[k]=v;
+      var s=labState(L,+v),el=box.querySelector('[data-ls="'+k+'"]');
+      inp.style.borderColor=(s==="ok")?"var(--ok)":(s==="")?"var(--line2)":"var(--warn)";
+      el.textContent=s==="crit"?"Критично высоко":s==="high"?"Выше нормы":s==="low"?"Ниже нормы":"";
+      el.style.color=s==="crit"||s==="high"||s==="low"?"var(--warn)":"var(--dim)";
+    };
+    inp.dispatchEvent(new Event("input"));
+  });
+  document.getElementById("leDate").oninput=function(){leDraft.d=this.value};
+  show("labedit");document.getElementById("ttl").textContent=i<0?"Новые анализы":"Анализы";
+}
+function drawHealth(){
+  var d=diaryGet(today());
+  ["Sys","Dia","Hr","Wt"].forEach(function(f){
+    var el=document.getElementById("v"+f);if(el&&document.activeElement!==el)el.value=d[f.toLowerCase()]||"";
+  });
+  var mb=document.getElementById("vMood");
+  mb.innerHTML=MOOD.map(function(m,j){
+    return '<button data-m="'+j+'" class="'+(d.mood===j?"on":"")+'" style="flex:1 0 30%">'+m+'</button>'}).join("");
+  mb.querySelectorAll("[data-m]").forEach(function(b){b.onclick=function(){
+    var k=key(today()),o=st.diary[k]||{};
+    if(o.mood===+b.dataset.m)delete o.mood;else o.mood=+b.dataset.m;
+    if(Object.keys(o).length)st.diary[k]=o;else delete st.diary[k];
+    save();drawHealth()}});
+  drawVitalState();
+  var al=healthAlerts(),h="";
+  al.forEach(function(x){h+='<div class="note '+(x.lvl==="crit"?"w":"")+'">'+
+    (x.lvl==="crit"?'<b>Внимание.</b> ':'')+esc(x.text)+'</div>'});
+  document.getElementById("hAlerts").innerHTML=h;
+  var b=bestLabDay(),lw=document.getElementById("labWhen");
+  lw.innerHTML=b?('<div class="note">Ближайший укол — '+esc(b.drug.n)+', '+DL[dow(b.date)].toLowerCase()+' '+fmt(b.date)+
+    '. Кровь на гормоны сдают на минимуме концентрации: утром того же дня, до укола.</div>'):"";
+  drawChart();drawLabList();
+}
+
+function drawLab(){var sd=startD();
+  document.getElementById("labwhen").innerHTML=sd?
+    '<div class="note">4-я неделя — с '+fmt(addD(sd,21))+'. 8-я неделя — с '+fmt(addD(sd,49))+'.</div>':""}
+function buildLab(){
+  var t=document.getElementById("labtbl");t.innerHTML='<tr><th>Показатель</th><th>Старт</th><th>4 нед</th><th>8 нед</th></tr>';
+  LAB.forEach(function(name,i){
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td class="l" style="font-weight:600;color:var(--ink)">'+name+'</td>';
+    ["s","4","8"].forEach(function(c){
+      var td=document.createElement("td");td.style.textAlign="center";td.style.width="52px";
+      var kk="lab"+i+c,b=document.createElement("div");
+      b.className="bx"+(st.lab[kk]?" on":"");b.textContent="✓";b.style.margin="0 auto";
+      b.onclick=function(){st.lab[kk]=!st.lab[kk];b.className="bx"+(st.lab[kk]?" on":"");save()};
+      td.appendChild(b);tr.appendChild(td)});
+    t.appendChild(tr)});
+  var d=document.getElementById("labdates");d.innerHTML="";
+  [["Старт","ds"],["4-я неделя","d4"],["8-я неделя","d8"]].forEach(function(p){
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td style="font-weight:600">'+p[0]+'</td><td class="l"><input type="text" data-lk="'+p[1]+
+      '" placeholder="когда сдал" style="padding:8px 10px;font-size:15px"></td>';
+    d.appendChild(tr)});
+  d.querySelectorAll("input[data-lk]").forEach(function(inp){
+    inp.value=st.lab[inp.dataset.lk]||"";
+    inp.oninput=function(){st.lab[inp.dataset.lk]=inp.value;save()}});
+}
+function drawPauses(){
+  var box=document.getElementById("pauseList");if(!box)return;
+  var ps=pauses();
+  if(!ps.length){box.innerHTML='<div class="sub" style="margin-top:8px">Пауз нет</div>';return}
+  box.innerHTML="";
+  ps.forEach(function(p){
+    var i=st.pauses.indexOf(p),a=parseD(p.a),b=parseD(p.b),n=diffD(b,a)+1;
+    var el=document.createElement("div");el.className="card";el.style.padding="12px 14px";
+    el.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">'+
+      '<div><div class="nm">'+fmt(a)+' – '+fmt(b)+'</div>'+
+      '<div class="sub">'+n+' '+plural(n,"день","дня","дней")+'</div></div>'+
+      '<button class="btn sm" style="width:auto;color:var(--warn);border-color:var(--warn)" data-pd="'+i+'">Убрать</button></div>';
+    box.appendChild(el);
+  });
+  box.querySelectorAll("[data-pd]").forEach(function(b){b.onclick=function(){
+    st.pauses.splice(+b.dataset.pd,1);save();draw();drawPauses();toast("Пауза убрана")}});
+}
+function drawSet(){
+  var si=document.getElementById("setupinfo"),dts=daysToStart(),sd=startD();
+  if(!sd)si.innerHTML='<div class="note">Укажи первый день курса — приложение посчитает неделю и дозы на каждый день.</div>';
+  else if(dts>0)si.innerHTML='<div class="note">Курс начнётся '+fmt(sd)+' — через '+dts+' '+plural(dts,"день","дня","дней")+'.</div>';
+  else{var w=weekOf(today()),end=courseEnd();
+    si.innerHTML=isOver(today())?'<div class="note g">Курс завершён '+fmt(end)+'.</div>'
+      :(w===null
+        ?'<div class="note">Сейчас пауза. Последний день курса — '+fmt(end)+'.</div>'
+        :'<div class="note g">Идёт день '+(dayNo(today())+1)+'. Неделя '+w+' из '+totalWeeks()+'. Последний день — '+fmt(end)+
+         (pausedTotal()?' (сдвинут на '+pausedTotal()+' '+plural(pausedTotal(),"день","дня","дней")+' из-за пауз)':'')+'.</div>')}
+  drawPauses();
+  var a=adherence();
+  document.getElementById("adh").textContent=a?a.pct+"%":"—";
+  document.getElementById("adhs").textContent=a?a.dn+" из "+a.tot+" приёмов":"";
+  document.getElementById("streak").textContent=a?a.streak:"—";
+}
+
+/* ---------- Навигация ---------- */
+function show(v){
+  view=v;
+  ["day","plan","drugs","edit","cat","health","labedit","lab","buy","set"].forEach(function(x){
+    document.getElementById("v-"+x).className=(x===v?"":"hide")});
+  var tabOf={drugs:"plan",edit:"plan",labedit:"health",lab:"set",buy:"set"};
+  var tv=tabOf[v]||v;
+  document.querySelectorAll(".tabs button").forEach(function(x){x.classList.toggle("on",x.dataset.v===tv)});
+  if(v==="cat")drawCat();
+  if(v==="health")drawHealth();
+  if(v==="buy")drawBuy();
+  if(v==="plan"){drawPlan();drawWarns()}
+  if(v==="drugs")drawDrugs();
+  if(v==="lab")drawLab();
+  if(v==="set")drawSet();
+  if(v!=="edit")document.getElementById("ttl").textContent=
+    {day:"Сегодня",plan:"Схема курса",drugs:"Препараты",cat:"Справочник",health:"Здоровье",lab:"Контроль",buy:"Закупка и склад",set:"Курс"}[v];
+  scrollTo(0,0);
+}
+document.querySelectorAll(".tabs button").forEach(function(b){b.onclick=function(){
+  if(b.dataset.v==="cat")catMode="browse";
+  show(b.dataset.v)}});
+document.getElementById("pw").onclick=function(){cur=addD(cur,-7);draw()};
+document.getElementById("nw").onclick=function(){cur=addD(cur,7);draw()};
+document.getElementById("tdy").onclick=function(){cur=today();draw()};
+document.getElementById("addDrug").onclick=function(){openEdit(-1)};
+document.getElementById("catBrowse").onclick=function(){catMode="browse";drawCat();show("cat")};
+document.getElementById("edPick").onclick=function(){collectEdit();catMode="pick";catKind=(edType()==="sport")?"supp":"drug";catFilter="";drawCat();show("cat")};
+document.getElementById("catQ").oninput=function(){drawCat()};
+document.getElementById("goLab").onclick=function(){show("lab")};
+document.getElementById("edBack").onclick=function(){show("drugs")};
+document.getElementById("edAddPer").onclick=function(){edDraft.per.push(blankPer());renderPers()};
+document.getElementById("edCopy").onclick=function(){
+  collectEdit();
+  var cp=JSON.parse(JSON.stringify(edDraft));
+  cp.id=uid();cp.n=(cp.n||"Препарат")+" (копия)";
+  st.drugs.push(cp);save();
+  edIdx=st.drugs.length-1;edDraft=cp;openEditFromDraft();
+  toast("Создана копия — правь и сохраняй")};
+document.getElementById("edDel").onclick=function(){
+  if(edIdx<0)return;
+  if(!confirm("Удалить «"+(st.drugs[edIdx].n||"препарат")+"» из схемы?"))return;
+  st.drugs.splice(edIdx,1);save();draw();show("drugs");toast("Удалено")};
+document.getElementById("edSave").onclick=function(){
+  collectEdit();drawWarnEdit();
+  var errs=validateDrug(edDraft);
+  if(errs.length){document.getElementById("edWarn").innerHTML=
+    '<div class="note w">'+errs.map(esc).join("<br>")+'</div>';return}
+  document.getElementById("edWarn").innerHTML="";
+  if(edIdx<0)st.drugs.push(edDraft);else st.drugs[edIdx]=edDraft;
+  save();draw();show("drugs");toast("Сохранено")};
+document.getElementById("seedBtn").onclick=function(){
+  var have={};st.drugs.forEach(function(d){have[d.id]=1});
+  var add=seedDrugs().filter(function(d){return !have[d.id]});
+  if(!add.length)return toast("Уже загружено");
+  st.drugs=st.drugs.concat(add);save();draw();toast("Добавлено: "+add.length)};
+document.getElementById("clearBtn").onclick=function(){
+  if(!confirm("Удалить все препараты из схемы?"))return;
+  st.drugs=[];save();draw();toast("Список очищен")};
+function setStart(d){st.start=key(d);document.getElementById("startdate").value=st.start;save();cur=today();draw()}
+document.getElementById("qToday").onclick=function(){setStart(today())};
+document.getElementById("qMon").onclick=function(){var t=today(),dd=(8-t.getDay())%7||7;setStart(addD(t,dd))};
+document.getElementById("reset").onclick=function(){
+  if(!confirm("Стереть все данные?"))return;
+  st=JSON.parse(JSON.stringify(DEF));st.drugs=seedDrugs();
+  try{["kurs.v6","kurs.v5","kurs.v4","kurs.v3","kurs3","kurs2","kurs:v1"].forEach(function(k){localStorage.removeItem(k)})}catch(e){}
+  save();location.reload()};
+function refreshAllInputs(){
+  [["startdate","start"],["weeks","weeks"],["cTest","cTest"],["cTur","cTur"],["cAna","cAna"],["cGan","cGan"]]
+    .forEach(function(p){var e=document.getElementById(p[0]);if(e)e.value=st[p[1]]||""});
+  ["tAm","tDay","tPre","tPost","tPm","nLead","nRepeat","cur","warnDays"].forEach(function(id){
+    var e=document.getElementById(id);if(e&&st[id])e.value=st[id]});
+  var it=document.getElementById("impTxt");if(it)it.value="";
+  buildLab();drawPauses();draw();
+}
+function applyBackup(text){
+  try{
+    var m=migrate(JSON.parse(text));
+    if(!m||!m.drugs)throw 0;
+    st=m;save();refreshAllInputs();
+    var el=document.getElementById("bkState");
+    if(el)el.textContent="Загружено: препаратов "+st.drugs.length+", анализов "+st.labs.length+(st.start?", старт "+st.start:"");
+    return true;
+  }catch(e){
+    var el2=document.getElementById("bkState");
+    if(el2)el2.textContent="Файл не читается — это не копия приложения.";
+    return false;
+  }
+}
+document.getElementById("dlBtn").onclick=function(){
+  var s=JSON.stringify(st);
+  var blob=new Blob([s],{type:"application/json"});
+  var url=URL.createObjectURL(blob),el=document.createElement("a");
+  el.href=url;el.download="kurs-"+key(today())+".json";
+  document.body.appendChild(el);el.click();
+  setTimeout(function(){document.body.removeChild(el);URL.revokeObjectURL(url)},500);
+  toast("Копия скачана")};
+document.getElementById("quickDl").onclick=function(){document.getElementById("dlBtn").click()};
+document.getElementById("quickUp").onclick=function(){
+  var e=document.getElementById("upFile");
+  if(e&&e.scrollIntoView)e.scrollIntoView({block:"center"});
+  var s=document.getElementById("bkState");
+  if(s)s.textContent="Нажми «Выберите файл» ниже и укажи скачанную копию";};
+document.getElementById("upFile").onchange=function(){
+  var f=this.files&&this.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){applyBackup(String(r.result))};
+  r.onerror=function(){var el=document.getElementById("bkState");if(el)el.textContent="Не удалось прочитать файл"};
+  r.readAsText(f);
+  this.value="";
+};
+document.getElementById("expBtn").onclick=function(){
+  var s=JSON.stringify(st);document.getElementById("impTxt").value=s;
+  try{navigator.clipboard.writeText(s);toast("Скопировано")}catch(e){toast("Скопируй строку из поля ниже")}};
+document.getElementById("impBtn").onclick=function(){
+  var v=document.getElementById("impTxt").value.trim();
+  if(!v)return toast("Поле пустое");
+  if(applyBackup(v))toast("Восстановлено");else toast("Строка не читается")};
+
+document.querySelectorAll("#edType button").forEach(function(b){b.onclick=function(){
+  edDraft.type=b.dataset.ty;
+  if(b.dataset.ty==="sport")edDraft.cat="sport";
+  else if(edDraft.cat==="sport")edDraft.cat="course";
+  applyTypeUI()}});
+document.querySelectorAll("#edCatSel button").forEach(function(b){b.onclick=function(){
+  edDraft.cat=b.dataset.c;applyTypeUI()}});
+document.getElementById("edUnit").onchange=function(){edDraft.unit=this.value;applyTypeUI();drawWarnEdit()};
+document.getElementById("edRoute").onchange=function(){edDraft.route=this.value;applyTypeUI();drawWarnEdit()};
+document.querySelectorAll("#edLyo button").forEach(function(b){b.onclick=function(){
+  edDraft.lyo=(b.dataset.l==="1")?1:0;
+  if(edDraft.lyo){edDraft.vialUnit=edDraft.vialUnit||"мг";edDraft.unit=edDraft.vialUnit}
+  applyTypeUI();renderPers();drawWarnEdit()}});
+["edVialAmt","edSolvent"].forEach(function(id){
+  document.getElementById(id).oninput=function(){
+    edDraft[id==="edVialAmt"?"vialAmt":"solvent"]=this.value;drawLyoCalc()}});
+document.getElementById("edVialUnit").onchange=function(){
+  edDraft.vialUnit=this.value;edDraft.unit=this.value;
+  document.getElementById("edUnit").value=this.value;drawLyoCalc();renderPers()};
+document.getElementById("edServ").oninput=function(){edDraft.serv=this.value;drawWarnEdit()};
+document.querySelectorAll("#catKind button").forEach(function(b){b.onclick=function(){
+  catKind=b.dataset.k;drawCat()}});
+document.getElementById("notifBtn").onclick=function(){
+  if(!("Notification" in window))return toast("Браузер не поддерживает уведомления");
+  Notification.requestPermission().then(function(p){
+    document.getElementById("notifState").textContent=
+      p==="granted"?"Уведомления разрешены. Работают, пока приложение открыто.":"Уведомления не разрешены.";
+    if(p==="granted")scheduleNotifs();
+  })};
+document.getElementById("icsBtn").onclick=function(){
+  var r=buildICS();
+  if(!r)return toast("Сначала задай дату старта");
+  var blob=new Blob([r.text],{type:"text/calendar;charset=utf-8"});
+  var url=URL.createObjectURL(blob),el=document.createElement("a");
+  el.href=url;el.download="kurs.ics";document.body.appendChild(el);el.click();
+  setTimeout(function(){document.body.removeChild(el);URL.revokeObjectURL(url)},500);
+  toast("Событий выгружено: "+r.count)};
+var notifT=[];
+function scheduleNotifs(){
+  notifT.forEach(clearTimeout);notifT=[];
+  if(!("Notification" in window)||Notification.permission!=="granted")return;
+  var now=new Date(),times={am:val("tAm","08:00"),day:val("tDay","13:00"),pre:val("tPre","17:30"),post:val("tPost","19:30"),pm:val("tPm","22:00")};
+  TORDER.forEach(function(t){
+    var e=entriesFor(today(),t);if(!e.length)return;
+    var p=times[t].split(":"),at=new Date();at.setHours(+p[0],+p[1],0,0);
+    var ms=at-now;if(ms<=0||ms>86400000)return;
+    var body=e.map(function(x){return x.drug.n+" "+doseText(x.drug,x.per)}).join(", ");
+    notifT.push(setTimeout(function(){new Notification(TIMES[t],{body:body})},ms));
+    var rep=parseInt(st.nRepeat,10)||0;
+    if(rep>0)notifT.push(setTimeout(function(){
+      var left=entriesFor(today(),t).filter(function(x){return st.done[entryKey(key(today()),x.drug,x.per)]!==true});
+      if(left.length)new Notification(TIMES[t]+" — не отмечено",{body:left.map(function(x){return x.drug.n}).join(", ")});
+    },ms+rep*60000));
+  });
+}
+["tAm","tDay","tPre","tPost","tPm"].forEach(function(id){
+  var e=document.getElementById(id);
+  e.onchange=function(){st[id]=e.value;save();scheduleNotifs()}});
+
+
+["vSys","vDia","vHr","vWt"].forEach(function(id){
+  var e=document.getElementById(id);e.oninput=function(){saveDiary()}});
+document.getElementById("labAdd").onclick=function(){openLab(-1)};
+document.getElementById("leBack").onclick=function(){show("health")};
+document.getElementById("leSave").onclick=function(){
+  if(!parseD(leDraft.d))return toast("Укажи дату");
+  if(!Object.keys(leDraft.v).length)return toast("Не заполнено ни одного показателя");
+  if(leIdx<0)st.labs.push(leDraft);else st.labs[leIdx]=leDraft;
+  save();show("health");drawHealth();toast("Сохранено")};
+document.getElementById("leDel").onclick=function(){
+  if(leIdx<0)return;
+  if(!confirm("Удалить эти результаты?"))return;
+  st.labs.splice(leIdx,1);save();show("health");drawHealth();toast("Удалено")};
+document.querySelectorAll("#planMode button").forEach(function(b){
+  b.onclick=function(){setPlanMode(b.dataset.pm)}});
+document.getElementById("pauseAdd").onclick=function(){
+  var a=document.getElementById("pauseA").value,b=document.getElementById("pauseB").value;
+  var da=parseD(a),db=parseD(b);
+  if(!da||!db)return toast("Укажи обе даты");
+  if(db<da)return toast("Конец раньше начала");
+  st.pauses.push({a:a,b:b});save();
+  document.getElementById("pauseA").value="";document.getElementById("pauseB").value="";
+  draw();drawPauses();toast("Пауза добавлена")};
+document.getElementById("goBuy").onclick=function(){show("buy")};
+document.getElementById("buyBack").onclick=function(){show("set")};
+document.getElementById("buyList").onclick=function(){
+  var t=buyListText();
+  try{navigator.clipboard.writeText(t);toast("Список скопирован")}catch(e){}
+  alert(t)};
+document.getElementById("toDrugs").onclick=function(){show("drugs")};
+document.getElementById("toDrugs2").onclick=function(){show("drugs")};
+
+function bind(id,k){var e=document.getElementById(id);
+  e.onchange=e.oninput=function(){st[k]=e.value;save();draw()}}
+
+
+/* Установка как приложение: работает только по адресу http(s), в одиночном файле молча пропускается */
+(function(){
+  try{
+    if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
+      navigator.serviceWorker.register("./sw.js").catch(function(){});
+    }
+  }catch(e){}
+})();
+
+load(function(){
+  document.getElementById("startdate").value=st.start||"";bind("startdate","start");
+  document.getElementById("weeks").value=st.weeks||"";bind("weeks","weeks");
+  ["tAm","tDay","tPre","tPost","tPm","nLead","nRepeat"].forEach(function(id){
+    var e=document.getElementById(id);if(e&&st[id])e.value=st[id]});
+  ["nLead","nRepeat","cur","warnDays"].forEach(function(id){var e=document.getElementById(id);
+    if(st[id])e.value=st[id];
+    e.oninput=function(){st[id]=e.value;save()}});
+  ROUTES.forEach(function(r){var o=document.createElement("option");o.textContent=r;document.getElementById("edRoute").appendChild(o)});
+  setPlanMode("days");
+  buildLab();
+  if(!st.start)show("set");
+  draw();
+});
+</script>
+</body>
+</html>
