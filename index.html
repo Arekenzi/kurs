@@ -356,6 +356,38 @@ background:radial-gradient(circle,rgba(212,248,74,.55),rgba(212,248,74,0) 70%);a
 .khero .kr .f{transition:stroke-dasharray .6s cubic-bezier(.2,.8,.2,1),stroke-width .3s}
 @media(prefers-reduced-motion:reduce){#aura{display:none}.nind{transition:none}}
 
+.stg{animation:stg .6s cubic-bezier(.2,.85,.25,1) both}
+@keyframes stg{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
+#aura i:first-child{background:radial-gradient(closest-side,rgba(212,248,74,.24),transparent 70%)!important;animation-duration:14s!important}
+#aura i:last-child{background:radial-gradient(closest-side,rgba(143,160,255,.14),transparent 70%)!important;animation-duration:18s!important}
+.khero:before{content:"";position:absolute;inset:-1px;border-radius:28px;padding:1px;pointer-events:none;z-index:2;
+background:conic-gradient(from var(--a,0deg),transparent 0 70%,rgba(212,248,74,.9) 80%,transparent 90%);
+-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:rot 5s linear infinite}
+@property --a{syntax:"<angle>";initial-value:0deg;inherits:false}
+@keyframes rot{to{--a:360deg}}
+.khero .kr .f{animation:glow 3s ease-in-out infinite}
+@keyframes glow{50%{filter:drop-shadow(0 0 18px rgba(212,248,74,1))}}
+.btn.pri{animation:breath 2.6s ease-in-out infinite}
+@keyframes breath{0%,100%{box-shadow:0 12px 28px -14px rgba(212,248,74,.8)}50%{box-shadow:0 16px 44px -8px rgba(212,248,74,1),0 0 0 5px rgba(212,248,74,.12)}}
+.strip button.on .n{animation:dpulse 3s ease-in-out infinite}
+@keyframes dpulse{50%{box-shadow:0 0 0 6px rgba(212,248,74,.18),0 6px 18px -6px rgba(212,248,74,.9)}}
+.wn{position:fixed;inset:0;z-index:95;display:flex;align-items:flex-end;justify-content:center;background:rgba(5,6,5,.7);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.wn.out{opacity:0;transition:opacity .3s}
+.wn-in{width:100%;max-width:520px;max-height:92vh;overflow-y:auto;border-radius:32px 32px 0 0;padding:26px 20px calc(env(safe-area-inset-bottom) + 20px);
+background:radial-gradient(90% 60% at 50% 0%,rgba(212,248,74,.25),transparent 70%),#121410;border:1px solid rgba(212,248,74,.3);border-bottom:0;animation:wup .5s cubic-bezier(.2,.9,.3,1);text-align:center}
+@keyframes wup{from{transform:translateY(40%)}to{transform:none}}
+.wn-v{width:84px;height:84px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;background:var(--lime);box-shadow:0 0 40px rgba(212,248,74,.7),0 0 0 10px rgba(212,248,74,.12)}
+.wn-v b{font-family:var(--cond);font-weight:700;font-size:30px;color:#090A08}
+.wn-k{display:block;font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--lime)}
+.wn h2{font-family:var(--cond);font-weight:700;font-size:34px;margin:4px 0 14px;color:#fff;text-transform:none;letter-spacing:0}
+.wn-l{display:grid;gap:8px;text-align:left;margin-bottom:6px}
+.wn-l>div{display:flex;gap:12px;align-items:center;padding:12px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);animation:stg .55s cubic-bezier(.2,.85,.25,1) both}
+.wn-l>div:nth-child(2){animation-delay:.08s}.wn-l>div:nth-child(3){animation-delay:.16s}.wn-l>div:nth-child(4){animation-delay:.24s}.wn-l>div:nth-child(5){animation-delay:.32s}.wn-l>div:nth-child(6){animation-delay:.4s}
+.wn-l i{font-style:normal;font-size:26px;width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:grid;place-items:center;background:rgba(212,248,74,.12)}
+.wn-l p{margin:0;font-size:12.5px;color:var(--dim);line-height:1.35}
+.wn-l b{display:block;font-family:var(--cond);font-weight:600;font-size:16.5px;color:#fff}
+@media(prefers-reduced-motion:reduce){.stg,.khero:before,.khero .kr .f,.btn.pri,.strip button.on .n{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -3044,6 +3076,31 @@ if(blocks){var doneSet=null;
   if(newly){ripple(lastXY[0],lastXY[1]);var h=document.getElementById("khero");if(h&&h.classList.contains("all")&&!RM){h.classList.remove("win");void h.offsetWidth;h.classList.add("win");setTimeout(burst,250)}}
   doneSet=now},60)},true);
  new MutationObserver(function(){setTimeout(function(){doneSet=snap()},80)}).observe(blocks,{childList:true});}
+})();
+
+</script>
+<script>
+/* ===== заметный визуал + «что нового» ===== */
+(function(){
+var RM=false;try{RM=matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+function stagger(root){if(RM||!root)return;var els=Array.prototype.filter.call(root.children,function(e){return e.offsetHeight>0}).slice(0,14);
+ els.forEach(function(e,i){e.classList.remove("stg");void e.offsetWidth;e.style.animationDelay=(i*55)+"ms";e.classList.add("stg")});
+ setTimeout(function(){els.forEach(function(e){e.classList.remove("stg");e.style.animationDelay=""})},1400)}
+["day","health","plan","cat","set","drugs","lab","buy"].forEach(function(v){var el=document.getElementById("v-"+v);if(!el)return;var was=el.classList.contains("hide");
+ new MutationObserver(function(){var h=el.classList.contains("hide");if(was&&!h)stagger(el);was=h}).observe(el,{attributes:true,attributeFilter:["class"]})});
+setTimeout(function(){var d=document.querySelector("#v-day:not(.hide),#v-set:not(.hide)");if(d)stagger(d)},80);
+var V="2";
+function wn(){var seen=null;try{seen=localStorage.getItem("kurs.seenV")}catch(e){}if(seen===V)return;
+ var o=document.createElement("div");o.className="wn";o.innerHTML='<div class="wn-in"><div class="wn-v"><b>v'+V+'</b></div><span class="wn-k">обновление установлено</span><h2>Что нового</h2><div class="wn-l">'+
+ '<div><i>🎨</i><p><b>Новый дизайн</b>тёмная тема с лаймом, как в приложении тренировок</p></div>'+
+ '<div><i>⭕</i><p><b>Карточка «Сегодня»</b>кольцо приёмов, что осталось и что дальше</p></div>'+
+ '<div><i>🎉</i><p><b>Закрыл день — конфетти</b>волна при каждой отметке</p></div>'+
+ '<div><i>➕</i><p><b>Курс после 12 недели</b>+1/+2/+4 недели или «продолжать по схеме»</p></div>'+
+ '<div><i>📅</i><p><b>«Сейчас идёт неделя N»</b>если сбилась дата — пересчитает сам</p></div>'+
+ '<div><i>💾</i><p><b>Защита данных</b>напоминание о копии и восстановление из файла</p></div></div>'+
+ '<button class="btn pri" id="wnOk">Поехали</button></div>';
+ document.body.appendChild(o);document.getElementById("wnOk").onclick=function(){try{localStorage.setItem("kurs.seenV",V)}catch(e){}o.classList.add("out");setTimeout(function(){o.remove()},300)}}
+setTimeout(wn,700);
 })();
 
 </script>
