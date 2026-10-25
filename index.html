@@ -3089,20 +3089,72 @@ function stagger(root){if(RM||!root)return;var els=Array.prototype.filter.call(r
 ["day","health","plan","cat","set","drugs","lab","buy"].forEach(function(v){var el=document.getElementById("v-"+v);if(!el)return;var was=el.classList.contains("hide");
  new MutationObserver(function(){var h=el.classList.contains("hide");if(was&&!h)stagger(el);was=h}).observe(el,{attributes:true,attributeFilter:["class"]})});
 setTimeout(function(){var d=document.querySelector("#v-day:not(.hide),#v-set:not(.hide)");if(d)stagger(d)},80);
-var V="2";
+var V="3";
 function wn(){var seen=null;try{seen=localStorage.getItem("kurs.seenV")}catch(e){}if(seen===V)return;
  var o=document.createElement("div");o.className="wn";o.innerHTML='<div class="wn-in"><div class="wn-v"><b>v'+V+'</b></div><span class="wn-k">обновление установлено</span><h2>Что нового</h2><div class="wn-l">'+
- '<div><i>🎨</i><p><b>Новый дизайн</b>тёмная тема с лаймом, как в приложении тренировок</p></div>'+
- '<div><i>⭕</i><p><b>Карточка «Сегодня»</b>кольцо приёмов, что осталось и что дальше</p></div>'+
- '<div><i>🎉</i><p><b>Закрыл день — конфетти</b>волна при каждой отметке</p></div>'+
- '<div><i>➕</i><p><b>Курс после 12 недели</b>+1/+2/+4 недели или «продолжать по схеме»</p></div>'+
- '<div><i>📅</i><p><b>«Сейчас идёт неделя N»</b>если сбилась дата — пересчитает сам</p></div>'+
- '<div><i>💾</i><p><b>Защита данных</b>напоминание о копии и восстановление из файла</p></div></div>'+
+ '<div><i>📅</i><p><b>Календарь дисциплины</b>под приёмами на «Сегодня»: зелёный — всё принято, жёлтый — частично, красный — пропуск</p></div>'+
+ '<div><i>👆</i><p><b>Нажми на день</b>откроются приёмы этого дня — можно отметить задним числом</p></div>'+
+ '<div><i>📊</i><p><b>Процент за месяц</b>сколько дней закрыто полностью</p></div></div>'+
  '<button class="btn pri" id="wnOk">Поехали</button></div>';
  document.body.appendChild(o);document.getElementById("wnOk").onclick=function(){try{localStorage.setItem("kurs.seenV",V)}catch(e){}o.classList.add("out");setTimeout(function(){o.remove()},300)}}
 setTimeout(wn,700);
 })();
 
 </script>
+<style>
+.kcal{margin:18px 0 8px;padding:16px 14px 14px;border-radius:24px;background:radial-gradient(90% 70% at 100% 0%,rgba(212,248,74,.08),transparent 60%),rgba(26,29,24,.92);border:1px solid rgba(255,255,255,.07)}
+.kcal-h{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.kcal-h b{flex:1;font-family:var(--cond);font-weight:700;font-size:22px;letter-spacing:.01em;text-transform:capitalize;color:var(--ink)}
+.kcal-h button{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--ink);font-size:18px;cursor:pointer}
+.kcal-s{font-size:12.5px;color:#8B9384;margin:0 0 12px}.kcal-s em{font-style:normal;color:var(--lime);font-weight:600}
+.kcal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.kcal-g span{font-family:var(--cond);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#6E7568;text-align:center;padding-bottom:2px}
+.kcal-g button{aspect-ratio:1;border-radius:12px;border:0;background:rgba(255,255,255,.035);color:#6E7568;font-family:var(--cond);font-weight:600;font-size:15px;cursor:pointer;position:relative;padding:0}
+.kcal-g button.e{background:transparent;cursor:default}
+.kcal-g button.full{background:var(--lime);color:#090A08;box-shadow:0 4px 14px -6px rgba(212,248,74,.9)}
+.kcal-g button.part{background:rgba(242,196,107,.2);color:#F2C46B;box-shadow:inset 0 0 0 1px rgba(242,196,107,.45)}
+.kcal-g button.miss{background:rgba(255,138,122,.13);color:#FF8A7A}
+.kcal-g button.fut{color:#B9C0B2}
+.kcal-g button.td{box-shadow:inset 0 0 0 2px var(--lime)}
+.kcal-g button.full.td{box-shadow:0 0 0 3px rgba(212,248,74,.3)}
+.kcal-g button.sel:after{content:"";position:absolute;left:50%;bottom:4px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:currentColor}
+.kcal-l{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:11.5px;color:#8B9384}
+.kcal-l i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+body.light .kcal{background:#fff;border-color:rgba(0,0,0,.08)}
+</style>
+<script>
+(function(){
+var MN=["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"];
+var km=null;
+function host(){var c=document.getElementById("kcal");if(c)return c;var b=document.getElementById("blocks");if(!b)return null;
+ c=document.createElement("div");c.id="kcal";c.className="kcal";b.parentNode.insertBefore(c,b.nextSibling);return c}
+window.kcalShift=function(n){km=new Date(km.getFullYear(),km.getMonth()+n,1);drawKcal()};
+window.kcalGo=function(k){var p=k.split("-");cur=new Date(+p[0],+p[1]-1,+p[2]);draw();window.scrollTo({top:0,behavior:"smooth"})};
+window.drawKcal=function(){var c=host();if(!c)return;
+ if(!startD()){c.style.display="none";return}c.style.display="";
+ if(!km){var t=today();km=new Date(t.getFullYear(),t.getMonth(),1)}
+ var y=km.getFullYear(),m=km.getMonth(),n=new Date(y,m+1,0).getDate(),off=(new Date(y,m,1).getDay()+6)%7,tk=key(today()),ck=key(cur);
+ var h="",full=0,tot=0;
+ for(var i=0;i<off;i++)h+='<button class="e" tabindex="-1"></button>';
+ for(var d=1;d<=n;d++){var dt=new Date(y,m,d),k=key(dt),s=null,cls="";
+  try{s=dayStat(dt)}catch(e){}
+  if(!s||!s.t)cls="e";
+  else if(k>tk)cls="fut";
+  else{if(k<tk||s.c===s.t){tot++;if(s.c===s.t)full++}
+   cls=s.c===s.t?"full":(s.c>0||s.sk>0)?"part":(k===tk?"":"miss")}
+  if(k===tk)cls+=" td";if(k===ck)cls+=" sel";
+  h+='<button class="'+cls+'" '+(s&&s.t?'onclick="kcalGo(\''+k+'\')"':'tabindex="-1"')+'>'+d+'</button>'}
+ var pc=tot?Math.round(full/tot*100):0;
+ c.innerHTML='<div class="kcal-h"><b>'+MN[m]+' '+y+'</b><button onclick="kcalShift(-1)" aria-label="Назад">‹</button><button onclick="kcalShift(1)" aria-label="Вперёд">›</button></div>'+
+ '<p class="kcal-s">'+(tot?'Закрыто полностью <em>'+full+' из '+tot+'</em> дней · '+pc+' %':'В этом месяце приёмов нет')+'</p>'+
+ '<div class="kcal-g">'+DS.map(function(x){return "<span>"+x+"</span>"}).join("")+h+'</div>'+
+ '<div class="kcal-l"><span><i style="background:var(--lime)"></i>всё принято</span><span><i style="background:#F2C46B"></i>частично</span><span><i style="background:#FF8A7A"></i>пропуск</span></div>'};
+var _draw=draw;draw=function(){var r=_draw.apply(this,arguments);try{drawKcal()}catch(e){}return r};
+var kT=null,_save=save;save=function(){var r=_save.apply(this,arguments);clearTimeout(kT);kT=setTimeout(function(){try{drawKcal()}catch(e){}},120);return r};
+var _show=show;show=function(v){var r=_show.apply(this,arguments);if(v==="day")try{drawKcal()}catch(e){}return r};
+try{drawKcal()}catch(e){}
+})();
+</script>
+
 </body>
 </html>
