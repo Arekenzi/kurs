@@ -312,6 +312,17 @@ h1{font-size:clamp(28px,8.6vw,38px);line-height:1.02}
 .bk.set{margin:0 0 14px}
 .seg:has(>button:nth-child(4):last-child)>button{min-width:calc(50% - 6px)}
 
+/* доводка */
+.f3{grid-template-columns:1fr 1.3fr 1fr}
+.f3 input::placeholder,.f2 input::placeholder{font-size:13.5px}
+#catGrp button{flex:0 0 auto;padding:9px 13px;font-size:13px;min-width:44px}
+#catGrp button.on,.qk button.on{background:var(--lime);border-color:var(--lime);color:#090A08}
+.khero.nostart{cursor:pointer}
+.khero.nostart .kt h3{font-size:22px}
+.row .bx{align-self:center}
+.hd .cnt{min-width:34px;text-align:right}
+
+.bk label.btn,.bk .btn{text-transform:none;font-size:16px;letter-spacing:.03em}
 </style>
 </head>
 <body>
@@ -2046,7 +2057,7 @@ function drawCat(){
   [["","Все"]].concat(Object.keys(groups).map(function(k){return [k,groups[k]]})).forEach(function(p){
     var b=document.createElement("button");b.textContent=p[1];
     b.style.flex="0 0 auto";b.style.marginBottom="6px";
-    if(catFilter===p[0]){b.style.background="var(--ink)";b.style.color="var(--bg)";b.style.borderColor="var(--ink)"}
+    if(catFilter===p[0]){b.style.background="var(--lime)";b.style.color="#090A08";b.style.borderColor="var(--lime)";b.style.fontWeight="700"}
     b.onclick=function(){catFilter=p[0];drawCat()};g.appendChild(b)});
   var q=document.getElementById("catQ").value;
   var gk=Object.keys(groups);
@@ -2902,10 +2913,10 @@ function upd(){if(busy)return;busy=true;
    if(r.classList.contains("done"))done++;else if(!next){var blk=r.closest("[data-slot]");var hd=blk&&blk.querySelector(".hd .t");if(hd){var c=hd.cloneNode(true);Array.prototype.forEach.call(c.querySelectorAll("small"),function(x){x.remove()});next=c.textContent.replace(/[☀☾☽🌙]/g,"").replace(/\s+/g," ").trim();}var nm=r.querySelector(".nm");if(nm)next=(next?next+" · ":"")+nm.textContent.trim();}});
   var p=tot?done/tot:0,badge=(document.getElementById("badge")||{}).textContent||"",lab=document.getElementById("wklab");
   var dt=lab?((lab.querySelector("b")||lab).textContent.split("·")[0].trim().split(",")[0]):"";
-  var all=tot&&done===tot;
-  h.className="khero"+(all?" all":"");
+  var all=tot&&done===tot,nostart=!(st&&st.start);
+  h.className="khero"+(all?" all":"")+(nostart?" nostart":"");h.onclick=nostart?function(){show("set");window.scrollTo(0,0);}:null;
   h.innerHTML='<div class="kr"><svg viewBox="0 0 112 112"><circle class="b" cx="56" cy="56" r="'+R+'"/><circle class="f" cx="56" cy="56" r="'+R+'" stroke-dasharray="'+(C*p).toFixed(1)+' '+C.toFixed(1)+'"/></svg><b>'+done+'/'+tot+'<small>ПРИЁМОВ</small></b></div>'+
-  '<div class="kt"><span>'+(dt||badge||"курс")+'</span><h3>'+(!tot?"Сегодня ничего":all?"Всё принято":"Осталось "+(tot-done))+'</h3><p>'+(!tot?"по схеме на этот день приёмов нет":all?"день закрыт — отличная дисциплина":("дальше: "+(next||"")))+'</p></div>';
+  '<div class="kt"><span>'+(dt||badge||"курс")+'</span><h3>'+(nostart?"Курс не настроен":!tot?"Сегодня ничего":all?"Всё принято":"Осталось "+(tot-done))+'</h3><p>'+(nostart?"нажми и укажи первый день курса или текущую неделю":!tot?"по схеме на этот день приёмов нет":all?"день закрыт — отличная дисциплина":("дальше: "+(next||"")))+'</p></div>';
   if(dt)h.title=dt;}catch(e){}
  busy=false;}
 var t=null;function sch(){clearTimeout(t);t=setTimeout(upd,30);}
