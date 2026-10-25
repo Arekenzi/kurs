@@ -288,6 +288,30 @@ border:1px solid rgba(255,255,255,.07);box-shadow:0 12px 32px -12px rgba(0,0,0,.
 input,select,textarea{color-scheme:dark}
 input[type=time]{display:block;width:100%;padding:12px;font-size:16px;color:var(--ink);background:#1A1D18;border:1px solid var(--line2);border-radius:14px;-webkit-appearance:none;appearance:none;min-height:46px}
 
+.tgl{display:flex;align-items:center;gap:12px;width:100%;margin-top:10px;padding:14px 16px;border-radius:20px;background:var(--card);border:1px solid var(--line2);color:var(--ink);text-align:left;cursor:pointer;font:inherit}
+.tgl span{flex:1;min-width:0}.tgl b{display:block;font-family:var(--cond);font-weight:600;font-size:16px}.tgl small{display:block;font-size:12px;color:var(--dim);margin-top:2px}
+.tgl i{flex:0 0 50px;height:30px;border-radius:999px;background:var(--line2);position:relative;transition:background .2s}
+.tgl i:after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s}
+.tgl.on{border-color:rgba(212,248,74,.5)}.tgl.on i{background:var(--lime)}.tgl.on i:after{transform:translateX(20px)}
+.qk button{font-family:var(--cond);font-weight:600;font-size:14px}
+.bk{border-radius:22px;padding:16px;margin-bottom:14px;background:radial-gradient(90% 90% at 100% 0%,rgba(212,248,74,.14),transparent 60%),var(--card);border:1px solid rgba(212,248,74,.3)}
+.bk b{display:block;font-family:var(--cond);font-weight:700;font-size:20px;color:#fff}
+.bk span{display:block;font-size:13.5px;color:var(--dim);margin:4px 0 2px;line-height:1.45}
+.bk .btn{display:block;text-align:center}
+select{-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,#9AA294 50%),linear-gradient(135deg,#9AA294 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 13px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+/* переключатели: аккуратные плитки вместо растянутой капсулы */
+.seg{display:flex;flex-wrap:wrap;gap:6px;background:none;border:0;padding:0;border-radius:0}
+.seg button{flex:1 1 0;min-width:calc(33.333% - 6px);padding:11px 6px;border-radius:14px;background:var(--card);border:1px solid var(--line2);color:var(--soft,#BAC1B2)}
+.seg button.on{background:var(--lime);border-color:var(--lime);color:#090A08}
+#planMode button,#v-cat .seg button{min-width:0}
+h1{font-size:clamp(28px,8.6vw,38px);line-height:1.02}
+.top h1{min-width:0;overflow-wrap:anywhere}
+.wkbar .g{font-size:11.5px}
+.wkbar .g b{font-size:15px;line-height:1.2}
+.wkbar button{padding:9px 12px}
+.bk.set{margin:0 0 14px}
+.seg:has(>button:nth-child(4):last-child)>button{min-width:calc(50% - 6px)}
+
 </style>
 </head>
 <body>
@@ -486,7 +510,7 @@ input[type=time]{display:block;width:100%;padding:12px;font-size:16px;color:var(
     <input type="date" id="startdate">
     <div class="qk"><button id="qToday">Начал сегодня</button><button id="qMon">С понедельника</button></div>
     <label>Длительность курса, недель</label>
-    <input type="number" id="weeks" inputmode="numeric" min="1" max="52" placeholder="12">
+    <input type="number" id="weeks" inputmode="numeric" min="1" max="104" placeholder="12">
     <div id="setupinfo"></div>
     <h2>Время приёмов</h2>
     <div class="sub">Нужно для напоминаний и выгрузки в календарь.</div>
@@ -1113,7 +1137,7 @@ function num(v){var x=parseFloat(String(v==null?"":v).replace(",","."));return i
 function uid(){return "d"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 
 function startD(){return parseD(st.start)}
-function totalWeeks(){var w=parseInt(st.weeks,10);return (w>0&&w<=52)?w:12}
+function totalWeeks(){var w=parseInt(st.weeks,10);w=(w>0&&w<=104)?w:12;if(st.auto){var c=null;try{c=weekOf(today())}catch(e){}if(c&&c+2>w)w=c+2}return w}
 function pauses(){return (st.pauses||[]).filter(function(p){return parseD(p.a)&&parseD(p.b)})}
 function isPaused(d){
   return pauses().some(function(p){
@@ -1611,7 +1635,7 @@ var OLDMAP={ss31:["ss31","am"],turA:["tur","am"],turP:["tur","pm"],test:["test",
 function migrate(o){
   if(!o||typeof o!=="object")return null;
   var out=JSON.parse(JSON.stringify(DEF));
-  ["start","weeks","tAm","tDay","tPre","tPost","tPm","nLead","nRepeat","cur","warnDays"].forEach(function(k){if(o[k])out[k]=o[k]});
+  ["start","weeks","tAm","tDay","tPre","tPost","tPm","nLead","nRepeat","cur","warnDays","auto","lastBk"].forEach(function(k){if(o[k])out[k]=o[k]});
   out.diary=(o.diary&&typeof o.diary==="object")?o.diary:{};
   out.labs=Array.isArray(o.labs)?o.labs:[];
   out.pauses=Array.isArray(o.pauses)?o.pauses:[];
@@ -1736,7 +1760,7 @@ function draw(){
   if(!sd){b.textContent="Дата не задана";b.className="badge off"}
   else if(dts>0){b.textContent="Старт через "+dts+" "+plural(dts,"день","дня","дней");b.className="badge soon"}
   else if(isOver(today())){b.textContent="Курс завершён";b.className="badge end"}
-  else{b.textContent="Неделя "+tw+" из "+totalWeeks();b.className="badge"}
+  else{b.textContent=st.auto?"Неделя "+tw:"Неделя "+tw+" из "+totalWeeks();b.className="badge"}
 
   var l2=s.w===null?(sd?"до начала курса":"курс не задан"):(s.w>totalWeeks()?"после окончания":"неделя "+s.w);
   document.getElementById("wklab").innerHTML='<b>'+DL[dow(cur)]+", "+fmt(cur)+(isT?" · сегодня":"")+'</b>'+l2;
@@ -1755,7 +1779,7 @@ function draw(){
   if(!sd)h='<div class="note w"><b>Курс не настроен.</b> «Ещё» → задай дату старта. Если это новая версия приложения, а схема осталась в старой — там же «Загрузить копию».</div>';
   else if(s.w===null)h='<div class="note">Курс начнётся '+fmt(sd)+', это '+DL[dow(sd)].toLowerCase()+'.'+(dts>0?" Осталось "+dts+" "+plural(dts,"день","дня","дней")+".":"")+'</div>';
   else if(isPaused(cur))h='<div class="note"><b>Пауза в курсе.</b> В этот день приёмов нет, курс сдвинут на длительность паузы.</div>';
-  else if(s.w>totalWeeks())h='<div class="note g"><b>Курс окончен на '+totalWeeks()+'-й неделе.</b> Дальше — восстановление и контрольные анализы.</div>';
+  else if(s.w>totalWeeks())h='<div class="note g"><b>Курс окончен на '+totalWeeks()+'-й неделе.</b> Если продолжаешь по схеме — включи продление.<button class="btn pri" style="margin-top:10px" onclick="st.auto=true;save();draw()">Продолжить курс по схеме</button></div>';
   else{
     var y=dayStat(addD(cur,-1));
     if(isT&&y.t&&(y.c+y.sk)<y.t)h+='<div class="note w">Вчера не отмечено '+(y.t-y.c-y.sk)+' из '+y.t+'.</div>';
@@ -2523,7 +2547,7 @@ function openLab(i){
     inp.oninput=function(){
       var k=inp.dataset.lk,L=labByKey(k),v=inp.value;
       if(v==="")delete leDraft.v[k];else leDraft.v[k]=v;
-      var s=labState(L,+v),el=box.querySelector('[data-ls="'+k+'"]');
+      var s=labState(L,v===""?"":+v),el=box.querySelector('[data-ls="'+k+'"]');
       inp.style.borderColor=(s==="ok")?"var(--ok)":(s==="")?"var(--line2)":"var(--warn)";
       el.textContent=s==="crit"?"Критично высоко":s==="high"?"Выше нормы":s==="low"?"Ниже нормы":"";
       el.style.color=s==="crit"||s==="high"||s==="low"?"var(--warn)":"var(--dim)";
@@ -2607,7 +2631,7 @@ function drawSet(){
     si.innerHTML=isOver(today())?'<div class="note g">Курс завершён '+fmt(end)+'.</div>'
       :(w===null
         ?'<div class="note">Сейчас пауза. Последний день курса — '+fmt(end)+'.</div>'
-        :'<div class="note g">Идёт день '+(dayNo(today())+1)+'. Неделя '+w+' из '+totalWeeks()+'. Последний день — '+fmt(end)+
+        :'<div class="note g">Идёт день '+(dayNo(today())+1)+'. Неделя '+w+(st.auto?' — курс продолжается по схеме, без даты окончания':' из '+totalWeeks()+'. Последний день — '+fmt(end))+
          (pausedTotal()?' (сдвинут на '+pausedTotal()+' '+plural(pausedTotal(),"день","дня","дней")+' из-за пауз)':'')+'.</div>')}
   drawPauses();
   var a=adherence();
@@ -2888,6 +2912,50 @@ var t=null;function sch(){clearTimeout(t);t=setTimeout(upd,30);}
 new MutationObserver(sch).observe(document.getElementById("blocks"),{subtree:true,childList:true,attributes:true,attributeFilter:["class"]});
 var bd=document.getElementById("badge");if(bd)new MutationObserver(sch).observe(bd,{childList:true,characterData:true,subtree:true});
 upd();
+})();
+
+</script>
+<script>
+/* ===== продление курса, «сейчас неделя N», защита данных ===== */
+(function(){
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
+var set=document.getElementById("v-set"),wk=document.getElementById("weeks");
+if(wk){wk.max="104";
+ var box=document.createElement("div");
+ box.innerHTML='<div class="qk"><button id="ext1">+1 неделя</button><button id="ext2">+2 недели</button><button id="ext4">+4 недели</button></div>'+
+ '<button class="tgl" id="autoExt"><span><b>Продолжать по схеме</b><small>курс не заканчивается сам — идёт дальше, пока не выключишь</small></span><i></i></button>'+
+ '<h2>Сейчас идёт неделя</h2><div class="sub">Если сбилась дата — укажи текущую неделю, приложение само пересчитает первый день.</div>'+
+ '<div class="f2"><div><label>Неделя курса</label><input type="number" id="nowWeek" inputmode="numeric" min="1" max="104" placeholder="7"></div>'+
+ '<div><label>Курс начинался в</label><select id="startDow"><option value="1">понедельник</option><option value="2">вторник</option><option value="3">среду</option><option value="4">четверг</option><option value="5">пятницу</option><option value="6">субботу</option><option value="0">воскресенье</option></select></div></div>'+
+ '<button class="btn pri" id="setNow">Пересчитать</button>';
+ var info=document.getElementById("setupinfo");info.parentNode.insertBefore(box,info);
+ function paintAuto(){var b=document.getElementById("autoExt");if(b)b.classList.toggle("on",!!st.auto);
+  var n=document.getElementById("nowWeek"),w=weekOf(today());if(n&&w&&!n.value)n.placeholder=String(w);
+  var sd=startD(),s=document.getElementById("startDow");if(s&&sd)s.value=String(sd.getDay());}
+ function ext(n){var w=parseInt(st.weeks,10)||12;var cw=weekOf(today())||0;st.weeks=String(Math.min(104,Math.max(w,cw)+n));wk.value=st.weeks;save();draw();if(typeof drawSet==="function")drawSet();toast("Курс: "+st.weeks+" "+plural(+st.weeks,"неделя","недели","недель"));}
+ document.getElementById("ext1").onclick=function(){ext(1)};document.getElementById("ext2").onclick=function(){ext(2)};document.getElementById("ext4").onclick=function(){ext(4)};
+ document.getElementById("autoExt").onclick=function(){st.auto=!st.auto;save();paintAuto();draw();if(typeof drawSet==="function")drawSet();toast(st.auto?"Курс продолжается по схеме":"Курс закончится по длительности")};
+ document.getElementById("setNow").onclick=function(){var n=parseInt(document.getElementById("nowWeek").value,10);if(!(n>=1&&n<=104)){toast("Укажи номер недели");return;}
+  var dw=parseInt(document.getElementById("startDow").value,10),t=today(),back=(t.getDay()-dw+7)%7,d0=addD(t,-back),s=addD(d0,-(n-1)*7);
+  st.pauses=[];if((parseInt(st.weeks,10)||12)<n){st.weeks=String(n+1);wk.value=st.weeks;}
+  setStart(s);document.getElementById("nowWeek").value="";paintAuto();if(typeof drawSet==="function")drawSet();toast("Первый день курса — "+fmt(s)+". Сейчас неделя "+n);};
+ var obs=new MutationObserver(paintAuto);obs.observe(set,{attributes:true,attributeFilter:["class"]});paintAuto();}
+
+/* напоминание о резервной копии и восстановление после переустановки */
+var dl=document.getElementById("dlBtn");
+if(dl){var old=dl.onclick;dl.onclick=function(){st.lastBk=key(today());save();old&&old.call(this);};}
+var day=document.getElementById("v-day");
+function bkCard(){var c=document.getElementById("bkcard");if(c)c.remove();if(!day)return;
+ var empty=!st.start,last=st.lastBk?diffD(today(),parseD(st.lastBk)):999,h="";
+ if(empty)h='<div class="bk"><b>Переустановил приложение?</b><span>Данные живут внутри иконки. Загрузи резервную копию — схема, отметки и анализы вернутся.</span><label class="btn pri">Загрузить копию из файла<input type="file" accept=".json,.txt,application/json,text/plain" id="bkUp" hidden></label></div>';
+ else if(last>=7)h='<div class="bk"><b>'+(st.lastBk?"Копии уже "+last+" "+plural(last,"день","дня","дней"):"Резервной копии ещё нет")+'</b><span>Сохрани файл в «Файлы» — если удалить иконку или сменить телефон, данные восстановятся из него.</span><button class="btn pri" id="bkNow">Скачать копию</button></div>';
+ if(!h)return;var d=document.createElement("div");d.id="bkcard";d.innerHTML=h;
+ var hero=document.getElementById("khero");day.insertBefore(d,hero?hero.nextSibling:day.firstChild);
+ if(empty){var sv=document.getElementById("v-set");if(sv){var d2=d.cloneNode(true);d2.id="bkcard2";d2.firstChild.classList.add("set");var o=document.getElementById("bkcard2");if(o)o.remove();sv.insertBefore(d2,sv.firstChild);var u2=d2.querySelector("input[type=file]");if(u2){u2.id="bkUp2";u2.onchange=function(){var f=u2.files&&u2.files[0];if(!f)return;var r=new FileReader();r.onload=function(){applyBackup(String(r.result));var x=document.getElementById("bkcard2");if(x)x.remove();setTimeout(bkCard,300)};r.readAsText(f);};}}}else{var o2=document.getElementById("bkcard2");if(o2)o2.remove();}
+ var b=document.getElementById("bkNow");if(b)b.onclick=function(){dl.click();setTimeout(bkCard,300)};
+ var u=document.getElementById("bkUp");if(u)u.onchange=function(){var f=u.files&&u.files[0];if(!f)return;var r=new FileReader();r.onload=function(){applyBackup(String(r.result));setTimeout(bkCard,300)};r.readAsText(f);};}
+var _draw=draw;draw=function(){_draw.apply(this,arguments);try{bkCard()}catch(e){}};
+bkCard();
 })();
 
 </script>
