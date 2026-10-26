@@ -3315,5 +3315,20 @@ var _dc=drawCat;drawCat=function(){
 })();
 </script>
 
+<script>
+(function(){
+var _h=lyoHint;
+lyoHint=function(dr,dose){var ml=lyoMl(dr,dose),sol=num(dr.solvent);if(!ml)return "";
+ var s1=String(sol).replace(".",",");
+ if(sol&&Math.abs(ml-sol)<0.0005)return "весь флакон: развести в "+s1+" мл и ввести всё";
+ var s="набрать "+String(ml).replace(".",",")+" мл из "+s1+" мл";
+ if(dr.route==="п/к"){var u=lyoUnits(dr,dose);if(u>=1)s+=" · "+String(u).replace(".",",")+" ед инсулинового шприца";}
+ return s};
+var _c=drawLyoCalc;
+drawLyoCalc=function(){_c.apply(this,arguments);var el=document.getElementById("edLyoCalc");if(!el||!edDraft)return;
+ var sol=num(edDraft.solvent),all=(edDraft.per||[]).length&&(edDraft.per||[]).every(function(p){return !num(p.dose)||Math.abs(lyoMl(edDraft,p.dose)-sol)<0.0005});
+ if(all&&sol){var n=el.querySelector(".note.g");if(n)n.innerHTML='<b>Один флакон — один укол.</b><br>Разводишь в '+String(sol).replace(".",",")+' мл и вводишь всё. Ничего отмерять не нужно.'}};
+})();
+</script>
 </body>
 </html>
