@@ -1305,7 +1305,7 @@ function doseText(dr,p){return (p.dose||"")+" "+(dr.unit||"")}
 function doseMg(dr,p){
   var c=num(dr.conc),q=num(p.dose);
   if(!c||!q)return "";
-  if(dr.unit==="мг"||dr.unit==="мкг")return "";
+  if(dr.lyo||dr.unit==="мг"||dr.unit==="мкг"||dr.unit==="МЕ"||dr.unit==="ЕД")return "";
   return "= "+Math.round(c*q*100)/100+" мг";
 }
 function weeklyMg(dr,w){
@@ -1796,7 +1796,7 @@ function renderBlock(time,d,cls,icon,title,hint){
       '<div class="ds"><b>'+esc(doseText(dr,p))+'</b>'+(dr.route?' — '+esc(dr.route):'')+'</div>'+
       (mgv?'<div class="mg">'+mgv+'</div>':'')+
       (dr.note?'<div class="mg">'+esc(dr.note)+'</div>':'')+
-      (dr.lyo&&lyoHint(dr,p.dose)?'<div class="site" style="background:var(--am-bg);color:var(--am)">'+esc(lyoHint(dr,p.dose))+'</div>':'')+
+      (dr.lyo&&lyoSanity(dr,p.dose)?'<div class="site" style="background:rgba(255,92,72,.15);color:#FF8A7A;white-space:normal">⚠ '+esc(lyoSanity(dr,p.dose))+'</div>':(dr.lyo&&lyoHint(dr,p.dose)?'<div class="site" style="background:var(--am-bg);color:var(--am)">'+esc(lyoHint(dr,p.dose))+'</div>':''))+
       (site?'<div class="site">'+esc(site)+'</div>':'')+'</div>';
     r.onclick=function(){st.done[kk]=st.done[kk]===true?false:true;save();refreshRow(r,sk,kk,dr)};
     var sk=document.createElement("button");sk.className="skipbtn";

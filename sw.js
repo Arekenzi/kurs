@@ -1,5 +1,5 @@
 /* Кэш приложения: работает без интернета. Версию менять при обновлении файла. */
-var CACHE = "kurs-v9";
+var CACHE = "kurs-v10";
 var FILES = ["./", "./index.html", "./manifest.webmanifest",
              "./icon-192.png", "./icon-512.png", "./icon-maskable.png",
              "./apple-touch-icon.png", "./favicon-64.png"];
