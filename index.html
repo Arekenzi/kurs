@@ -388,6 +388,29 @@ background:radial-gradient(90% 60% at 50% 0%,rgba(201,169,110,.25),transparent 7
 .wn-l b{display:block;font-family:var(--cond);font-weight:600;font-size:16.5px;color:#fff}
 @media(prefers-reduced-motion:reduce){.stg,.khero:before,.khero .kr .f,.btn.pri,.strip button.on .n{animation:none!important}}
 
+/* v7: план анализов, вопросы к врачу */
+.lp7{background:var(--card,#121212);border:1px solid rgba(201,169,110,.35);border-radius:18px;padding:14px;margin:0 0 12px}
+.lp7>b{display:block;font-size:15px;margin-bottom:4px}.lp7>span{display:block;font-size:13px;opacity:.75;line-height:1.4}
+.lp7-q{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.lp7-q button,.lp7-q label{font:inherit;font-size:13px;padding:8px 12px;border-radius:999px;border:1px solid rgba(201,169,110,.45);background:none;color:#C9A96E;display:flex;align-items:center;gap:6px}
+.lp7-q input{background:none;border:0;color:inherit;font:inherit;width:auto;padding:0;margin:0}
+.lp7-h{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.lp7-h b{display:block;font-size:16px}.lp7-h span{font-size:13px;color:#C9A96E}.lp7-h span.soon{color:#E8C27A;font-weight:600}.lp7-h span.bad{color:var(--warn,#D9534F);font-weight:600}
+.lp7-h input{width:auto;max-width:150px;margin:0;font-size:13px;padding:6px 8px}
+.lp7-g{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 8px}
+.lp7-g button{font:inherit;font-size:12.5px;padding:6px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:none;color:inherit;opacity:.7}
+.lp7-g button.on{border-color:#C9A96E;background:rgba(201,169,110,.15);color:#E8D3A6;opacity:1}
+.lp7-l{font-size:13px;line-height:1.45}.lp7-n{font-size:12px;opacity:.6;margin-top:6px;line-height:1.4}
+.lp7-a{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.lp7-a .btn{flex:1 1 auto;margin:0;width:auto}
+.lp7t{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:0 0 12px;padding:12px 14px;border-radius:16px;border:1px solid rgba(201,169,110,.45);background:rgba(201,169,110,.1)}
+.lp7t.now{border-color:#E8C27A;background:rgba(232,194,122,.18)}
+.lp7t b{flex:1 1 100%;font-size:14.5px}.lp7t span{flex:1 1 60%;font-size:12.5px;opacity:.8;line-height:1.35}.lp7t .btn{margin:0;width:auto;flex:0 0 auto;padding:8px 14px}
+.q7{background:var(--card,#121212);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:12px;margin-bottom:12px}
+.q7-r{display:flex;align-items:flex-start;gap:8px;padding:8px 2px;border-bottom:1px solid rgba(255,255,255,.07)}
+.q7-r span{flex:1;font-size:14px;line-height:1.4}.q7-r i{display:block;font-style:normal;font-size:11px;opacity:.5;margin-top:2px}
+.q7-r button{background:none;border:0;color:inherit;opacity:.5;font-size:14px;padding:2px 6px}
+.q7-e{font-size:13px;opacity:.65;padding:2px 2px 8px}
+.q7-f{display:flex;gap:8px;margin-top:10px}.q7-f input{flex:1;margin:0;min-width:0}.q7-f .btn{margin:0;width:auto;flex:0 0 auto}
 </style>
 </head>
 <body>
@@ -3093,9 +3116,12 @@ function stagger(root){if(RM||!root)return;var els=Array.prototype.filter.call(r
 ["day","health","plan","cat","set","drugs","lab","buy"].forEach(function(v){var el=document.getElementById("v-"+v);if(!el)return;var was=el.classList.contains("hide");
  new MutationObserver(function(){var h=el.classList.contains("hide");if(was&&!h)stagger(el);was=h}).observe(el,{attributes:true,attributeFilter:["class"]})});
 setTimeout(function(){var d=document.querySelector("#v-day:not(.hide),#v-set:not(.hide)");if(d)stagger(d)},80);
-var V="6";
+var V="7";
 function wn(){var seen=null;try{seen=localStorage.getItem("kurs.seenV")}catch(e){}if(seen===V)return;
  var o=document.createElement("div");o.className="wn";o.innerHTML='<div class="wn-in"><div class="wn-v"><b>v'+V+'</b></div><span class="wn-k">обновление установлено</span><h2>Что нового</h2><div class="wn-l">'+
+ '<div><i>🧪</i><p><b>План анализов</b>в «Здоровье»: выбери дату (через 3 или 4 недели) и что сдавать — гормоны, кровь, печень, липиды. За 3 дня напоминание на экране «Сегодня», можно добавить в календарь</p></div>'+
+ '<div><i>❓</i><p><b>Вопросы к врачу</b>записывай вопросы, когда они появляются, — они попадут в «Отчёт для врача» вместе с датой следующей сдачи</p></div>'+
+ '<div><i>➕</i><p><b>Тестостерон свободный</b>новое поле в анализах с нормой и изменением к прошлой сдаче</p></div>'+
  '<div><i>☥</i><p><b>Стиль ANUBIS</b>чёрный с золотом, как в приложении тренировок, новая иконка</p></div>'+
  '<div><i>🩺</i><p><b>Давление за неделю</b>среднее за 7 и 30 дней, сколько замеров выше 135/85, тренд к месяцу</p></div>'+
  '<div><i>📄</i><p><b>Отчёт для врача</b>в «Здоровье»: что принимаешь, давление, анализы с нормами и изменениями — одной кнопкой отправить или распечатать</p></div>'+
@@ -3142,6 +3168,8 @@ function reportText(){var L=[],d=today(),sd=startD();L.push("СВОДКА ДЛЯ
     L.push("• "+Lb.n+": "+String(last.v[k]).replace(".",",")+" "+Lb.u+(Lb.lo!==undefined?" (норма "+Lb.lo+"–"+Lb.hi+")":"")+(s==="crit"?" — КРИТИЧНО":s==="high"?" — выше нормы":s==="low"?" — ниже нормы":"")+(t&&t.da!==last.d?", было "+String(t.a).replace(".",","):""));});}
   var al=healthAlerts();if(al.length){L.push("");L.push("ОБРАТИТЬ ВНИМАНИЕ:");al.forEach(function(a){L.push("• "+a.text)});}
   var ad=adherence();if(ad&&ad.tot&&ad.dn){L.push("");L.push("Соблюдение графика: "+ad.pct+"%.");}
+  try{var lp=st.lp7;if(lp&&!lp.done&&parseD(lp.d)){L.push("");L.push("СЛЕДУЮЩАЯ СДАЧА АНАЛИЗОВ: "+fmt(parseD(lp.d))+" "+parseD(lp.d).getFullYear());}
+   var Q=st.q7||[];if(Q.length){L.push("");L.push("ВОПРОСЫ К ВРАЧУ:");Q.forEach(function(q,i){L.push((i+1)+". "+q.t)});}}catch(e){}
   return L.join("\n");}
 function openReport(){var o=document.getElementById("rep6");if(o)o.remove();o=document.createElement("div");o.id="rep6";o.className="rep6";var txt=reportText();
   o.innerHTML='<div class="rep6-in"><div class="rep6-b"><b>Отчёт для врача</b><button id="rep6x" aria-label="Закрыть">✕</button></div><pre id="rep6t"></pre>'+
@@ -3491,5 +3519,60 @@ all();
 })();
 </script>
 
+<script>
+/* ===== курс v7: план анализов с напоминанием, вопросы к врачу, свободный тестостерон ===== */
+(function(){
+if(!LABS.some(function(x){return x.k==="ftst"}))LABS.push({k:"ftst",n:"Тестостерон свободный",u:"пг/мл",lo:4.5,hi:42,g:"Гормоны"});
+var PANEL7=[
+ {id:"h",n:"Гормоны",ks:["tst","ftst","e2","lh","fsh","shbg","prl"]},
+ {id:"b",n:"Кровь",ks:["hct","hgb","rbc","plt"]},
+ {id:"l",n:"Печень",ks:["alt","ast","ggt","bil"]},
+ {id:"p",n:"Липиды",ks:["chol","hdl","ldl","tg"]},
+ {id:"k",n:"Почки",ks:["crea","urea","egfr"]},
+ {id:"s",n:"ПСА",ks:["psa"]},
+ {id:"g",n:"Глюкоза",ks:["glu","hba1c"]}];
+function lp(){return st.lp7||null}
+function names(ks){return ks.map(function(k){var L=labByKey(k);return L?L.n:null}).filter(Boolean)}
+function planKs(p){var ks=[];(p.g||[]).forEach(function(id){var P=PANEL7.filter(function(x){return x.id===id})[0];if(P)P.ks.forEach(function(k){if(ks.indexOf(k)<0)ks.push(k)})});return ks}
+function left(p){var d=parseD(p.d);return d?diffD(d,today()):null}
+function leftTxt(n){return n===0?"сегодня":n===1?"завтра":n>1?"через "+n+" "+plural(n,"день","дня","дней"):"просрочено на "+(-n)+" "+plural(-n,"день","дня","дней")}
+function save7(){save();try{drawHealth()}catch(e){}try{draw()}catch(e){}}
+window.lpSet7=function(days){var p=lp()||{g:["h","b","l","p"]};p.d=key(addD(today(),days));p.done=0;st.lp7=p;save7();toast("Анализы — "+fmt(parseD(p.d)))};
+window.lpDate7=function(v){if(!parseD(v))return;var p=lp()||{g:["h","b","l","p"]};p.d=v;p.done=0;st.lp7=p;save7()};
+window.lpGrp7=function(id){var p=lp();if(!p)return;var i=(p.g||[]).indexOf(id);if(i<0)p.g.push(id);else p.g.splice(i,1);save7()};
+window.lpDel7=function(){delete st.lp7;save7()};
+window.lpDone7=function(){var p=lp();if(!p)return;openLab(-1);try{document.getElementById("leDate").value=key(today());leDraft.d=key(today())}catch(e){}show("labedit");p.done=1;save()};
+window.lpIcs7=function(){var p=lp();if(!p)return;var d=parseD(p.d);if(!d)return;var ds=key(d).replace(/-/g,"");
+ var L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//kurs//RU","BEGIN:VEVENT","UID:kurs-lab-"+ds+"@kurs","DTSTAMP:"+ds+"T060000Z","DTSTART:"+ds+"T080000","DTEND:"+ds+"T090000","SUMMARY:Сдать анализы","DESCRIPTION:"+names(planKs(p)).join(", ")+". Утром натощак.","BEGIN:VALARM","TRIGGER:-P1D","ACTION:DISPLAY","DESCRIPTION:Завтра анализы — утром натощак","END:VALARM","END:VEVENT","END:VCALENDAR"];
+ var blob=new Blob([L.join("\r\n")],{type:"text/calendar"}),f=null;try{f=new File([blob],"analizy.ics",{type:"text/calendar"})}catch(e){}
+ if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:"Анализы"}).catch(function(){});return}
+ var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="analizy.ics";document.body.appendChild(a);a.click();setTimeout(function(){a.remove()},500)};
+function card(){var p=lp(),h='<div class="lp7">';
+ if(!p||p.done){h+='<b>Следующая сдача анализов</b><span>'+(p&&p.done?"Прошлая сдача отмечена. Запланируй следующую — приложение напомнит.":"Запланируй дату — приложение напомнит на экране «Сегодня» и в календаре.")+'</span>'+
+  '<div class="lp7-q"><button onclick="lpSet7(21)">через 3 недели</button><button onclick="lpSet7(28)">через 4 недели</button><label>дата<input type="date" onchange="lpDate7(this.value)"></label></div></div>';return h}
+ var n=left(p),ks=planKs(p);
+ h+='<div class="lp7-h"><div><b>Анализы: '+fmt(parseD(p.d))+'</b><span class="'+(n<0?"bad":n<=3?"soon":"")+'">'+leftTxt(n)+'</span></div><input type="date" value="'+p.d+'" onchange="lpDate7(this.value)"></div>'+
+  '<div class="lp7-g">'+PANEL7.map(function(P){return '<button class="'+((p.g||[]).indexOf(P.id)>=0?"on":"")+'" onclick="lpGrp7(\''+P.id+'\')">'+P.n+'</button>'}).join("")+'</div>'+
+  '<div class="lp7-l">'+(ks.length?esc(names(ks).join(", ")):"Выбери, что сдавать")+'</div>'+
+  '<div class="lp7-n">Утром натощак, без тренировки накануне. Гормоны — в одной и той же лаборатории, чтобы сравнивать.</div>'+
+  '<div class="lp7-a"><button class="btn pri" onclick="lpDone7()">Сдал — внести результаты</button><button class="btn" onclick="lpIcs7()">В календарь</button><button class="btn" onclick="lpDel7()">Отменить</button></div></div>';
+ return h}
+/* вопросы к врачу */
+window.q7Add=function(){var i=document.getElementById("q7in");var t=(i&&i.value||"").trim();if(!t)return;st.q7=st.q7||[];st.q7.push({t:t,d:key(today())});save();drawQ()};
+window.q7Del=function(j){(st.q7||[]).splice(j,1);save();drawQ()};
+function drawQ(){var b=document.getElementById("q7");if(!b)return;var Q=st.q7||[];
+ b.innerHTML='<div class="q7">'+(Q.length?Q.map(function(q,j){return '<div class="q7-r"><span>'+esc(q.t)+'<i>'+fmt(parseD(q.d))+'</i></span><button onclick="q7Del('+j+')" aria-label="Удалить">✕</button></div>'}).join(""):'<div class="q7-e">Запиши, что хочешь спросить, — вопросы попадут в отчёт для врача.</div>')+
+ '<div class="q7-f"><input id="q7in" placeholder="Например: как часто сдавать гематокрит?" onkeydown="if(event.key===\'Enter\')q7Add()"><button class="btn pri" onclick="q7Add()">Добавить</button></div></div>'}
+var _dh=drawHealth;drawHealth=function(){var r=_dh.apply(this,arguments);
+ var lw=document.getElementById("labWhen");if(lw){var c=document.getElementById("lp7w");if(!c){c=document.createElement("div");c.id="lp7w";lw.parentNode.insertBefore(c,lw)}c.innerHTML=card()}
+ var rb=document.getElementById("repBtn");if(rb&&!document.getElementById("q7")){var h=document.createElement("h2");h.textContent="Вопросы к врачу";var d=document.createElement("div");d.id="q7";rb.parentNode.insertBefore(h,rb);rb.parentNode.insertBefore(d,rb)}
+ drawQ();return r};
+/* напоминание на «Сегодня» */
+var _dr=draw;draw=function(){var r=_dr.apply(this,arguments);try{var a=document.getElementById("alerts"),p=lp();var old=document.getElementById("lp7t");if(old)old.remove();
+ if(a&&p&&!p.done){var n=left(p);if(n!==null&&n<=3){var x=document.createElement("div");x.id="lp7t";x.className="lp7t"+(n<=0?" now":"");
+  x.innerHTML='<b>🧪 Анализы '+leftTxt(n)+'</b><span>'+esc(names(planKs(p)).slice(0,6).join(", "))+(planKs(p).length>6?" и др.":"")+' — утром натощак.</span><button class="btn" onclick="show(\'health\')">Открыть</button>';var vd=document.getElementById("v-day");vd.insertBefore(x,vd.firstChild)}}}catch(e){}return r};
+try{draw()}catch(e){}
+})();
+</script>
 </body>
 </html>
