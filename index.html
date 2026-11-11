@@ -411,6 +411,7 @@ background:radial-gradient(90% 60% at 50% 0%,rgba(201,169,110,.25),transparent 7
 .q7-r button{background:none;border:0;color:inherit;opacity:.5;font-size:14px;padding:2px 6px}
 .q7-e{font-size:13px;opacity:.65;padding:2px 2px 8px}
 .q7-f{display:flex;gap:8px;margin-top:10px}.q7-f input{flex:1;margin:0;min-width:0}.q7-f .btn{margin:0;width:auto;flex:0 0 auto}
+.bad8{border-color:#D9534F!important;box-shadow:0 0 0 1px #D9534F inset}.bad8t{color:#E27D6B;font-size:12.5px;margin:6px 0 0;min-height:0}
 </style>
 </head>
 <body>
@@ -1764,6 +1765,8 @@ function migrate(o){
     if(p.length===3){out.done[k]=true;return}
     if(p.length===2&&OLDMAP[p[1]])out.done[p[0]+"|"+OLDMAP[p[1]][0]+"|"+OLDMAP[p[1]][1]]=true;
   });
+  if(o.lp7&&typeof o.lp7==="object")out.lp7=o.lp7;
+  if(Array.isArray(o.q7))out.q7=o.q7;
   out.v=6;return out;
 }
 function readLocal(){
@@ -1825,7 +1828,7 @@ function renderBlock(time,d,cls,icon,title,hint){
       (dr.note?'<div class="mg">'+esc(dr.note)+'</div>':'')+
       (dr.lyo&&lyoSanity(dr,p.dose)?'<div class="site" style="background:rgba(255,92,72,.15);color:#FF8A7A;white-space:normal">⚠ '+esc(lyoSanity(dr,p.dose))+'</div>':(dr.lyo&&lyoHint(dr,p.dose)?'<div class="site" style="background:var(--am-bg);color:var(--am)">'+esc(lyoHint(dr,p.dose))+'</div>':''))+
       (site?'<div class="site">'+esc(site)+'</div>':'')+'</div>';
-    r.onclick=function(){st.done[kk]=st.done[kk]===true?false:true;save();refreshRow(r,sk,kk,dr)};
+    r.onclick=function(){if(kk.split("|")[0]>key(today())&&st.done[kk]!==true){toast("Этот день ещё не наступил");return}st.done[kk]=st.done[kk]===true?false:true;save();refreshRow(r,sk,kk,dr)};
     var sk=document.createElement("button");sk.className="skipbtn";
     sk.title="пропустил";sk.textContent=on==="skip"?"↺":"✕";
     sk.onclick=function(ev){ev.stopPropagation();
@@ -2532,10 +2535,17 @@ function buyListText(){
 var chartKey="sys",leIdx=-1,leDraft=null;
 function saveDiary(){
   var k=key(today()),o={};
+  var LIM={sys:[60,260],dia:[30,160],hr:[30,220],wt:[30,300]},bad=null;
   ["sys","dia","hr","wt"].forEach(function(f){
-    var v=document.getElementById("v"+f.charAt(0).toUpperCase()+f.slice(1)).value;
-    if(v!=="")o[f]=v;
+    var el=document.getElementById("v"+f.charAt(0).toUpperCase()+f.slice(1)),v=el.value;
+    var x=parseFloat(String(v).replace(",","."));
+    var ok=v===""||(x>=LIM[f][0]&&x<=LIM[f][1]);
+    el.classList.toggle("bad8",!ok);
+    if(v!==""&&ok)o[f]=v;else if(!ok)bad=f;
   });
+  if(o.sys&&o.dia&&+o.dia>=+o.sys){bad="dia";document.getElementById("vDia").classList.add("bad8");delete o.dia}
+  var hint=document.getElementById("vBad8");if(!hint){hint=document.createElement("div");hint.id="vBad8";hint.className="bad8t";var vs=document.getElementById("vState");if(vs)vs.parentNode.insertBefore(hint,vs)}
+  hint.textContent=bad?({sys:"Верхнее давление — от 60 до 260.",dia:"Нижнее давление — от 30 до 160 и меньше верхнего.",hr:"Пульс — от 30 до 220.",wt:"Вес — от 30 до 300 кг."})[bad]+" Неверное значение не сохранено.":"";
   var cur=st.diary[k]||{};
   if(cur.mood!==undefined)o.mood=cur.mood;
   if(Object.keys(o).length)st.diary[k]=o;else delete st.diary[k];
@@ -2820,8 +2830,11 @@ function refreshAllInputs(){
 }
 function applyBackup(text){
   try{
-    var m=migrate(JSON.parse(text));
+    var raw=JSON.parse(text);
+    if(!raw||typeof raw!=="object"||Array.isArray(raw)||!(Array.isArray(raw.drugs)||raw.diary||Array.isArray(raw.labs)||raw.start||raw.done))throw 0;
+    var m=migrate(raw);
     if(!m||!m.drugs)throw 0;
+    if(!confirm("Заменить текущие данные данными из копии? Препаратов в копии: "+(Array.isArray(raw.drugs)?raw.drugs.length:0)+", анализов: "+(Array.isArray(raw.labs)?raw.labs.length:0)+(raw.start?", старт "+raw.start:"")+"."))return false;
     st=m;save();refreshAllInputs();
     var el=document.getElementById("bkState");
     if(el)el.textContent="Загружено: препаратов "+st.drugs.length+", анализов "+st.labs.length+(st.start?", старт "+st.start:"");
@@ -2856,11 +2869,11 @@ document.getElementById("upFile").onchange=function(){
 };
 document.getElementById("expBtn").onclick=function(){
   var s=JSON.stringify(st);document.getElementById("impTxt").value=s;
-  try{navigator.clipboard.writeText(s);toast("Скопировано")}catch(e){toast("Скопируй строку из поля ниже")}};
+  try{navigator.clipboard.writeText(s).then(function(){toast("Скопировано")},function(){toast("Скопируй строку из поля ниже")})}catch(e){toast("Скопируй строку из поля ниже")}};
 document.getElementById("impBtn").onclick=function(){
   var v=document.getElementById("impTxt").value.trim();
   if(!v)return toast("Поле пустое");
-  if(applyBackup(v))toast("Восстановлено");else toast("Строка не читается")};
+  if(applyBackup(v))toast("Восстановлено");else toast("Не восстановлено: это не копия приложения или отменено")};
 
 document.querySelectorAll("#edType button").forEach(function(b){b.onclick=function(){
   edDraft.type=b.dataset.ty;
@@ -2929,6 +2942,11 @@ document.getElementById("leBack").onclick=function(){show("health")};
 document.getElementById("leSave").onclick=function(){
   if(!parseD(leDraft.d))return toast("Укажи дату");
   if(!Object.keys(leDraft.v).length)return toast("Не заполнено ни одного показателя");
+  if(diffD(parseD(leDraft.d),today())>0)return toast("Дата сдачи не может быть в будущем");
+  var bad=Object.keys(leDraft.v).filter(function(k){var x=parseFloat(String(leDraft.v[k]).replace(",","."));return !(x>=0)||!isFinite(x)||x>100000});
+  if(bad.length){var L0=labByKey(bad[0]);return toast("Проверь значение: "+(L0?L0.n:bad[0]))}
+  if(leIdx<0){var same=-1;st.labs.forEach(function(x,i){if(x.d===leDraft.d)same=i});if(same>=0){Object.keys(leDraft.v).forEach(function(k){st.labs[same].v[k]=leDraft.v[k]});leIdx=same;leDraft=st.labs[same];toast("Добавлено к сдаче этого дня")}}
+  if(st.lp7&&!st.lp7.done&&parseD(st.lp7.d)&&(st.lp7.pend||diffD(parseD(leDraft.d),parseD(st.lp7.d))>=-7))st.lp7.done=1;
   if(leIdx<0)st.labs.push(leDraft);else st.labs[leIdx]=leDraft;
   save();show("health");drawHealth();toast("Сохранено")};
 document.getElementById("leDel").onclick=function(){
@@ -2969,7 +2987,7 @@ function bind(id,k){var e=document.getElementById(id);
 
 load(function(){
   document.getElementById("startdate").value=st.start||"";bind("startdate","start");
-  document.getElementById("weeks").value=st.weeks||"";bind("weeks","weeks");
+  document.getElementById("weeks").value=st.weeks||"";bind("weeks","weeks");(function(){var e=document.getElementById("weeks");var f=function(){var w=parseInt(e.value,10);if(e.value!==""&&!(w>=1&&w<=104)){toast("Длительность — от 1 до 104 недель");e.value=totalWeeks();st.weeks=String(totalWeeks());save()}};e.addEventListener("change",f);e.addEventListener("blur",f)})();
   ["tAm","tDay","tPre","tPost","tPm","nLead","nRepeat"].forEach(function(id){
     var e=document.getElementById(id);if(e&&st[id])e.value=st[id]});
   ["nLead","nRepeat","cur","warnDays"].forEach(function(id){var e=document.getElementById(id);
@@ -3008,7 +3026,7 @@ function upd(){if(busy)return;busy=true;
   var all=tot&&done===tot,nostart=!(st&&st.start);
   h.className="khero"+(all?" all":"")+(nostart?" nostart":"");h.onclick=nostart?function(){show("set");window.scrollTo(0,0);}:null;
   h.innerHTML='<div class="kr"><svg viewBox="0 0 112 112"><circle class="b" cx="56" cy="56" r="'+R+'"/><circle class="f" cx="56" cy="56" r="'+R+'" stroke-dasharray="'+(C*p).toFixed(1)+' '+C.toFixed(1)+'"/></svg><b>'+done+'/'+tot+'<small>ПРИЁМОВ</small></b></div>'+
-  '<div class="kt"><span>'+(dt||badge||"курс")+'</span><h3>'+(nostart?"Курс не настроен":!tot?"Сегодня ничего":all?"Всё принято":"Осталось "+(tot-done))+'</h3><p>'+(nostart?"нажми и укажи первый день курса или текущую неделю":!tot?"по схеме на этот день приёмов нет":all?"день закрыт — отличная дисциплина":("дальше: "+(next||"")))+'</p></div>';
+  '<div class="kt"><span>'+(dt||badge||"курс")+'</span><h3>'+(nostart?"Курс не настроен":!tot?"Сегодня ничего":all?"Всё принято":(typeof cur!=="undefined"&&cur&&diffD(cur,today())<0)?"Не отмечено "+(tot-done):"Осталось "+(tot-done))+'</h3><p>'+(nostart?"нажми и укажи первый день курса или текущую неделю":!tot?"по схеме на этот день приёмов нет":all?"день закрыт — отличная дисциплина":(typeof cur!=="undefined"&&cur&&diffD(cur,today())<0)?"прошедший день — отметь, что было принято":("дальше: "+(next||"")))+'</p></div>';
   if(dt)h.title=dt;}catch(e){}
  busy=false;}
 var t=null;function sch(){clearTimeout(t);t=setTimeout(upd,30);}
@@ -3116,9 +3134,11 @@ function stagger(root){if(RM||!root)return;var els=Array.prototype.filter.call(r
 ["day","health","plan","cat","set","drugs","lab","buy"].forEach(function(v){var el=document.getElementById("v-"+v);if(!el)return;var was=el.classList.contains("hide");
  new MutationObserver(function(){var h=el.classList.contains("hide");if(was&&!h)stagger(el);was=h}).observe(el,{attributes:true,attributeFilter:["class"]})});
 setTimeout(function(){var d=document.querySelector("#v-day:not(.hide),#v-set:not(.hide)");if(d)stagger(d)},80);
-var V="7";
-function wn(){var seen=null;try{seen=localStorage.getItem("kurs.seenV")}catch(e){}if(seen===V)return;
+var V="8";
+function wn(){var seen=null;try{seen=localStorage.getItem("kurs.seenV")}catch(e){}if(seen===V)return;if(!seen&&!(st&&st.start)&&!(st&&st.labs&&st.labs.length)&&!(st&&st.diary&&Object.keys(st.diary).length)){try{localStorage.setItem("kurs.seenV",V)}catch(e){}return;}
  var o=document.createElement("div");o.className="wn";o.innerHTML='<div class="wn-in"><div class="wn-v"><b>v'+V+'</b></div><span class="wn-k">обновление установлено</span><h2>Что нового</h2><div class="wn-l">'+
+ '<div><i>🛡</i><p><b>Надёжнее</b>план анализов и вопросы к врачу больше не теряются после перезапуска; восстановление из копии спрашивает подтверждение и не принимает чужие файлы</p></div>'+
+ '<div><i>✅</i><p><b>Проверка значений</b>давление, пульс и вес вне разумных пределов не сохраняются; анализы — без будущих дат, сдачи одного дня объединяются; будущие дни нельзя отметить заранее</p></div>'+
  '<div><i>🧪</i><p><b>План анализов</b>в «Здоровье»: выбери дату (через 3 или 4 недели) и что сдавать — гормоны, кровь, печень, липиды. За 3 дня напоминание на экране «Сегодня», можно добавить в календарь</p></div>'+
  '<div><i>❓</i><p><b>Вопросы к врачу</b>записывай вопросы, когда они появляются, — они попадут в «Отчёт для врача» вместе с датой следующей сдачи</p></div>'+
  '<div><i>➕</i><p><b>Тестостерон свободный</b>новое поле в анализах с нормой и изменением к прошлой сдаче</p></div>'+
@@ -3148,8 +3168,8 @@ function drawBpAvg(){var box=document.getElementById("bpAvg");if(!box)return;var
   if(w.n&&m.n>w.n){var ds=w.sys-bpStats(30).sys;if(Math.abs(ds)>=4)tr=ds>0?'<span class="bp6-t up">▲ +'+ds+' к месяцу</span>':'<span class="bp6-t dn">▼ '+ds+' к месяцу</span>';}
   box.innerHTML='<div class="card bp6 '+L.c+'"><div class="bp6-h"><div><span>среднее за 7 дней</span><b>'+(w.n?w.sys+'/'+w.dia:'—')+'</b><em>'+L.t+'</em></div>'+
    '<div class="bp6-r"><span>за 30 дней</span><b>'+(m.n?m.sys+'/'+m.dia:'—')+'</b><span>пульс '+(w.nh?w.hr:(m.nh?m.hr:'—'))+'</span></div></div>'+tr+
-   '<div class="bp6-f">'+(w.n?w.n+' '+plural(w.n,'замер','замера','замеров')+' за неделю':'за неделю замеров нет')+(w.hiN?' · '+w.hiN+' выше 135/85':'')+(w.mx?' · максимум '+w.mx.s+'/'+w.mx.d:'')+'</div>'+
-   (L.c==="high"||L.c==="crit"?'<div class="note w" style="margin:10px 0 0">Среднее домашнее давление '+(L.c==="crit"?'высокое':'выше 135/85')+'. Это повод обсудить с врачом и сдать гематокрит и липиды. Не меряй сразу после тренировки и кофе.</div>':'')+'</div>';}
+   '<div class="bp6-f">'+(w.n?w.n+' '+plural(w.n,'замер','замера','замеров')+' за неделю':'за неделю замеров нет')+(w.hiN?' · '+w.hiN+' 135/85 и выше':'')+(w.mx?' · максимум '+w.mx.s+'/'+w.mx.d:'')+'</div>'+
+   (L.c==="high"||L.c==="crit"?'<div class="note w" style="margin:10px 0 0">Среднее домашнее давление '+(L.c==="crit"?'высокое':'135/85 и выше')+'. Это повод обсудить с врачом и сдать гематокрит и липиды. Не меряй сразу после тренировки и кофе.</div>':'')+'</div>';}
 function labTrend(k){var e=labEntries().filter(function(x){return x.v&&x.v[k]!==undefined&&x.v[k]!==""});if(e.length<2)return null;var a=+e[e.length-2].v[k],b=+e[e.length-1].v[k];return{a:a,b:b,d:Math.round((b-a)*100)/100,da:e[e.length-2].d}}
 var _drawLabList6=drawLabList;
 drawLabList=function(){_drawLabList6();try{var box=document.getElementById("labList");if(!box)return;var keys=["hct","hgb","e2","alt","ast","ldl","hdl","psa"].filter(function(k){return labByKey(k)&&labTrend(k)});
@@ -3177,7 +3197,7 @@ function openReport(){var o=document.getElementById("rep6");if(o)o.remove();o=do
    '<div class="sub">Покажи врачу на приёме или отправь заранее. Честные данные — лучшее, что можно сделать для своего здоровья.</div></div>';
   document.body.appendChild(o);document.getElementById("rep6t").textContent=txt;
   document.getElementById("rep6x").onclick=function(){o.remove()};
-  document.getElementById("rep6c").onclick=function(){try{navigator.clipboard.writeText(txt).then(function(){toast("Скопировано")})}catch(e){toast("Не удалось скопировать")}};
+  document.getElementById("rep6c").onclick=function(){try{navigator.clipboard.writeText(txt).then(function(){toast("Скопировано")},function(){toast("Не удалось скопировать — выдели текст и скопируй вручную")})}catch(e){toast("Не удалось скопировать")}};
   document.getElementById("rep6s").onclick=function(){if(navigator.share)navigator.share({title:"Сводка для врача",text:txt}).catch(function(){});else document.getElementById("rep6c").onclick()};
   document.getElementById("rep6p").onclick=function(){document.body.classList.add("print6");window.print();setTimeout(function(){document.body.classList.remove("print6")},500)};}
 var _drawHealth6=drawHealth;
@@ -3541,7 +3561,7 @@ window.lpSet7=function(days){var p=lp()||{g:["h","b","l","p"]};p.d=key(addD(toda
 window.lpDate7=function(v){if(!parseD(v))return;var p=lp()||{g:["h","b","l","p"]};p.d=v;p.done=0;st.lp7=p;save7()};
 window.lpGrp7=function(id){var p=lp();if(!p)return;var i=(p.g||[]).indexOf(id);if(i<0)p.g.push(id);else p.g.splice(i,1);save7()};
 window.lpDel7=function(){delete st.lp7;save7()};
-window.lpDone7=function(){var p=lp();if(!p)return;openLab(-1);try{document.getElementById("leDate").value=key(today());leDraft.d=key(today())}catch(e){}show("labedit");p.done=1;save()};
+window.lpDone7=function(){var p=lp();if(!p)return;openLab(-1);try{document.getElementById("leDate").value=key(today());leDraft.d=key(today())}catch(e){}show("labedit");p.pend=1;save()};
 window.lpIcs7=function(){var p=lp();if(!p)return;var d=parseD(p.d);if(!d)return;var ds=key(d).replace(/-/g,"");
  var L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//kurs//RU","BEGIN:VEVENT","UID:kurs-lab-"+ds+"@kurs","DTSTAMP:"+ds+"T060000Z","DTSTART:"+ds+"T080000","DTEND:"+ds+"T090000","SUMMARY:Сдать анализы","DESCRIPTION:"+names(planKs(p)).join(", ")+". Утром натощак.","BEGIN:VALARM","TRIGGER:-P1D","ACTION:DISPLAY","DESCRIPTION:Завтра анализы — утром натощак","END:VALARM","END:VEVENT","END:VCALENDAR"];
  var blob=new Blob([L.join("\r\n")],{type:"text/calendar"}),f=null;try{f=new File([blob],"analizy.ics",{type:"text/calendar"})}catch(e){}
